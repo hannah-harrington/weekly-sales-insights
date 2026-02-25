@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>V3 — Clean &amp; Minimal | Weekly Sales Insights</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #ffffff;
+  --bg-hover: #fafafa;
+  --accent: #008060;
+  --accent-light: #f0faf5;
+  --accent2: #5c6ac4;
+  --accent2-light: #f3f4fc;
+  --warm: #d97706;
+  --warm-light: #fef9ee;
+  --rose: #be185d;
+  --rose-light: #fef1f7;
+  --text-1: #111111;
+  --text-2: #666666;
+  --text-3: #999999;
+  --border: #e8e8e8;
+  --border-light: #f0f0f0;
+  --font: 'Inter', -apple-system, sans-serif;
+  --font-serif: 'Instrument Serif', Georgia, serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --max-w: 880px;
+  --radius: 8px;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text-1);
+  font-size: 16px;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* Nav dots — side navigation */
+.nav-dots {
+  position: fixed; right: 20px; top: 50%; transform: translateY(-50%);
+  z-index: 200; display: flex; flex-direction: column; gap: 10px;
+}
+.nav-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--border); border: none; cursor: pointer;
+  transition: all .2s;
+}
+.nav-dot:hover, .nav-dot.active { background: var(--accent); transform: scale(1.5); }
+
+/* Progress — thin top line */
+.progress-track {
+  position: fixed; top: 0; left: 0; right: 0; height: 2px;
+  background: transparent; z-index: 300;
+}
+.progress-fill { height: 100%; width: 0%; background: var(--accent); transition: width 60ms linear; }
+
+/* Toggle */
+.view-toggle {
+  position: fixed; top: 16px; right: 56px; z-index: 200;
+  display: flex; background: var(--bg); border: 1px solid var(--border);
+  border-radius: 6px; overflow: hidden;
+}
+.toggle-btn {
+  font-family: var(--font); font-size: 12px; font-weight: 500;
+  padding: 6px 16px; border: none; background: transparent;
+  color: var(--text-3); cursor: pointer; transition: all .15s;
+}
+.toggle-btn:first-child { border-right: 1px solid var(--border); }
+.toggle-btn.active { color: var(--text-1); background: var(--bg-hover); }
+
+.wrap { max-width: var(--max-w); margin: 0 auto; padding: 0 32px; }
+
+/* ── HERO ── */
+.hero {
+  padding: 80px 32px 48px; max-width: var(--max-w); margin: 0 auto;
+}
+.hero-kicker {
+  font-family: var(--font-mono); font-size: 12px; color: var(--text-3);
+  margin-bottom: 12px;
+}
+.hero h1 {
+  font-family: var(--font-serif); font-weight: 400;
+  font-size: clamp(2.5rem, 5vw, 3.5rem); line-height: 1.1;
+  color: var(--text-1); letter-spacing: -.02em;
+}
+.hero .sub {
+  font-size: 15px; color: var(--text-3); margin-top: 8px; font-weight: 400;
+}
+.hero .sub strong { color: var(--accent); font-weight: 500; }
+
+.hero-personal { padding: 64px 32px 40px; }
+.hero-personal .breadcrumb {
+  font-size: 13px; color: var(--text-3); margin-bottom: 12px;
+}
+.hero-personal .breadcrumb a {
+  color: var(--text-3); transition: color .15s; text-decoration: none;
+}
+.hero-personal .breadcrumb a:hover { color: var(--accent); }
+.hero-personal h1 { font-size: clamp(2rem, 4vw, 3rem); }
+
+/* ── SECTIONS ── */
+.section { padding: 40px 0; border-top: 1px solid var(--border); }
+.section:first-of-type { border-top: none; }
+.section-head {
+  font-family: var(--font-serif); font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+  font-weight: 400; color: var(--text-1); margin-bottom: 4px;
+  letter-spacing: -.01em;
+}
+.section-sub {
+  font-size: 14px; color: var(--text-3); margin-bottom: 24px;
+}
+
+/* ── FILTER BAR ── */
+.filter-bar {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 24px;
+}
+.filter-tag {
+  font-family: var(--font); font-size: 12px; font-weight: 500;
+  padding: 5px 12px; border: 1px solid var(--border);
+  border-radius: 4px; background: transparent;
+  color: var(--text-3); cursor: pointer; transition: all .15s;
+}
+.filter-tag:hover { border-color: var(--accent); color: var(--accent); }
+.filter-tag.active { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+
+/* ── TOP SIGNALS — list style ── */
+.top-list { list-style: none; }
+.top-item {
+  display: grid; grid-template-columns: 32px 1fr auto;
+  gap: 12px; align-items: center;
+  padding: 14px 0; border-bottom: 1px solid var(--border-light);
+  transition: background .15s;
+}
+.top-item:hover { background: var(--bg-hover); margin: 0 -12px; padding-left: 12px; padding-right: 12px; }
+.top-item:last-child { border-bottom: none; }
+.top-num {
+  font-family: var(--font-mono); font-size: 12px; color: var(--text-3);
+  text-align: center;
+}
+.top-info {}
+.top-title {
+  font-family: var(--font-serif); font-size: 17px; font-weight: 400;
+  color: var(--text-1); line-height: 1.3;
+}
+.top-meta { font-size: 13px; color: var(--text-3); }
+.top-right { text-align: right; }
+.top-owner {
+  font-size: 12px; color: var(--accent); font-weight: 500;
+  cursor: pointer; transition: color .15s;
+}
+.top-owner:hover { text-decoration: underline; }
+.top-type {
+  display: inline-block; padding: 2px 7px; border-radius: 3px;
+  font-size: 10px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: .5px; margin-top: 2px;
+}
+.type-mqa { background: var(--accent-light); color: var(--accent); }
+.type-hvp { background: var(--rose-light); color: var(--rose); }
+.type-people { background: var(--accent2-light); color: var(--accent2); }
+.type-activity { background: var(--warm-light); color: var(--warm); }
+
+/* ── DEFINITIONS — tooltip popovers ── */
+.defs-row {
+  display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px;
+}
+.def-trigger {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-family: var(--font); font-size: 13px; font-weight: 500;
+  padding: 5px 12px; border: 1px solid var(--border);
+  border-radius: 4px; background: transparent;
+  color: var(--text-2); cursor: pointer; transition: all .15s;
+}
+.def-trigger:hover { border-color: var(--accent); color: var(--accent); }
+.def-trigger .q {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 16px; height: 16px; border-radius: 50%; font-size: 10px;
+  font-weight: 700; background: var(--border-light); color: var(--text-3);
+}
+.def-popover {
+  display: none; background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 16px 20px;
+  font-size: 14px; color: var(--text-2); line-height: 1.75;
+  margin-bottom: 20px; box-shadow: 0 4px 16px rgba(0,0,0,.05);
+}
+.def-popover.open { display: block; }
+.def-popover-title {
+  font-family: var(--font-serif); font-size: 16px;
+  color: var(--text-1); margin-bottom: 6px;
+}
+
+/* ── SELLER GRID — compact list ── */
+.sellers-list { list-style: none; }
+.seller-row {
+  display: grid; grid-template-columns: 1fr auto auto;
+  gap: 16px; align-items: center;
+  padding: 12px 0; border-bottom: 1px solid var(--border-light);
+  cursor: pointer; transition: all .15s;
+}
+.seller-row:hover { background: var(--bg-hover); margin: 0 -12px; padding-left: 12px; padding-right: 12px; }
+.seller-row:last-child { border-bottom: none; }
+.seller-name {
+  font-family: var(--font-serif); font-size: 16px; font-weight: 400;
+  color: var(--text-1);
+}
+.seller-pills { display: flex; gap: 4px; }
+.pill {
+  display: inline-block; padding: 2px 7px; border-radius: 3px;
+  font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .5px;
+}
+.pill-mqa { background: var(--accent-light); color: var(--accent); }
+.pill-hvp { background: var(--rose-light); color: var(--rose); }
+.pill-people { background: var(--accent2-light); color: var(--accent2); }
+.pill-activity { background: var(--warm-light); color: var(--warm); }
+.seller-count {
+  font-family: var(--font-mono); font-size: 12px; color: var(--text-3); min-width: 32px; text-align: right;
+}
+
+/* ── STAT CELLS ── */
+.stats-row {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+  background: var(--border); border-radius: var(--radius); overflow: hidden;
+  margin-bottom: 40px;
+}
+.stat-cell {
+  background: var(--bg); padding: 28px 16px; text-align: center;
+}
+.stat-num {
+  font-family: var(--font-mono); font-size: 36px; font-weight: 700;
+  letter-spacing: -1px; line-height: 1;
+}
+.stat-num-mqa { color: var(--accent); }
+.stat-num-hvp { color: var(--rose); }
+.stat-num-people { color: var(--accent2); }
+.stat-num-activity { color: var(--warm); }
+.stat-label { font-size: 12px; color: var(--text-3); margin-top: 6px; font-weight: 500; }
+
+/* ── DATA TABLES ── */
+.signal-section { margin-bottom: 36px; }
+.signal-heading {
+  font-family: var(--font-serif); font-size: 18px; font-weight: 400;
+  display: flex; align-items: center; gap: 8px; margin-bottom: 4px;
+}
+.signal-desc { font-size: 13px; color: var(--text-3); margin-bottom: 12px; }
+.badge {
+  display: inline-block; padding: 2px 7px; border-radius: 3px;
+  font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .5px;
+}
+.badge-mqa { background: var(--accent-light); color: var(--accent); }
+.badge-hvp { background: var(--rose-light); color: var(--rose); }
+.badge-people { background: var(--accent2-light); color: var(--accent2); }
+.badge-activity { background: var(--warm-light); color: var(--warm); }
+
+.data-table {
+  width: 100%; border-collapse: collapse; font-size: 13px;
+}
+.data-table th {
+  text-align: left; padding: 8px 12px;
+  border-bottom: 1px solid var(--text-1);
+  font-size: 11px; font-weight: 600; color: var(--text-2);
+  text-transform: uppercase; letter-spacing: .04em;
+}
+.data-table td {
+  padding: 10px 12px; border-bottom: 1px solid var(--border-light);
+  vertical-align: top; line-height: 1.6; color: var(--text-1);
+}
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: var(--bg-hover); }
+
+/* ── ARCHIVE ── */
+.archive-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 0; border-bottom: 1px solid var(--border-light);
+  font-size: 14px; color: var(--text-1); cursor: pointer; transition: color .15s;
+}
+.archive-item:hover { color: var(--accent); }
+.archive-item span:last-child { color: var(--text-3); }
+
+/* ── IDENTITY NOTICE ── */
+.identity-notice {
+  font-size: 13px; color: var(--text-3); margin-bottom: 28px;
+  padding: 8px 12px; border-left: 2px solid var(--accent);
+}
+.identity-notice a { color: var(--accent); font-weight: 500; }
+
+/* ── FOOTER ── */
+.footer {
+  text-align: center; font-size: 11px; color: var(--text-3);
+  padding: 32px 0 48px; border-top: 1px solid var(--border); margin-top: 24px;
+}
+.footer-keys {
+  margin-top: 8px; font-family: var(--font-mono); font-size: 10px; color: var(--border);
+}
+
+/* ── ANIMATIONS ── */
+.reveal { opacity: 0; transition: opacity .3s ease; }
+.reveal.visible { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { transition: none !important; opacity: 1 !important; }
+}
+
+@media (max-width: 700px) {
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .nav-dots { display: none; }
+  .top-item { grid-template-columns: 24px 1fr; }
+  .top-right { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+
+<div class="nav-dots" id="navDots">
+  <button class="nav-dot active" title="Top"></button>
+  <button class="nav-dot" title="Signals"></button>
+  <button class="nav-dot" title="Reports"></button>
+  <button class="nav-dot" title="Sellers"></button>
+  <button class="nav-dot" title="Archive"></button>
+</div>
+
+<div class="view-toggle">
+  <button class="toggle-btn active" id="togMaster">Dashboard</button>
+  <button class="toggle-btn" id="togSeller">Seller View</button>
+</div>
+
+<div id="masterView"></div>
+<div id="personalView" style="display:none"></div>
+
+<script>
+(function() {
+'use strict';
+
+var SELLERS = [
+  { id:'alexandre_saroian', name:'Alexandre Saroian', mqa:3, hvp:1, people:2, activity:8, total:14 },
+  { id:'anthony_anastasi', name:'Anthony Anastasi', mqa:4, hvp:1, people:3, activity:4, total:12 },
+  { id:'nick_essling', name:'Nick Essling', mqa:3, hvp:0, people:3, activity:10, total:16 },
+  { id:'kristy_shimkus', name:'Kristy Shimkus', mqa:0, hvp:0, people:1, activity:13, total:14 },
+  { id:'nicole_smelzer', name:'Nicole Smelzer', mqa:0, hvp:0, people:2, activity:27, total:29 },
+  { id:'cassie_steinberg', name:'Cassie Steinberg', mqa:1, hvp:0, people:4, activity:5, total:10 },
+  { id:'aaron_holl', name:'Aaron Holl', mqa:1, hvp:0, people:0, activity:0, total:1 },
+  { id:'morgan_sanchez', name:'Morgan Moran de Sanchez', mqa:0, hvp:0, people:2, activity:10, total:12 }
+];
+
+var HIGHLIGHTS = [
+  { type:'hvp', title:'University of Houston', sub:'600 engagement pts this week', owner:'Nick Essling' },
+  { type:'hvp', title:'Crystal Clean', sub:'82 engagement pts this week', owner:'Kristy Shimkus' },
+  { type:'hvp', title:'ARC Document Solutions', sub:'81 engagement pts this week', owner:'Anthony Anastasi' },
+  { type:'mqa', title:'Hitachi High-Tech', sub:'69 engagement pts this week', owner:'Alexandre Saroian' },
+  { type:'mqa', title:'Curves', sub:'188 engagement pts (3 mo.)', owner:'Anthony Anastasi' }
+];
+
+var SIGNAL_TYPES = {
+  mqa: { label:'Accounts Moved to MQA', short:'MQA',
+    desc:'A Marketing Qualified Account (MQA) crossed a significant engagement threshold through marketing activity \u2014 not sales outreach. These accounts have had zero sales engagement in the last 30 days.' },
+  hvp: { label:'High-Value Page Visits', short:'HVP',
+    desc:'Accounts that had a Closed Lost opportunity in the last 12 months but are back visiting Shopify Plus pages this week.' },
+  new_people: { label:'Newly Engaged People', short:'People',
+    desc:'Brand-new contacts from target buying-committee titles who engaged with Shopify for the first time ever this week.' },
+  activity: { label:'Activity Details', short:'Activity',
+    desc:'The specific activities (webinars, events, email clicks) that drove engagement from newly engaged people.' }
+};
+
+var SAMPLE_SIGNALS = {
+  mqa: [
+    { account:'Dormer Pramet', grade:'D', stage:'MQA', engagement:'39', keywords:'', priority:'D2C - Medium' },
+    { account:'William Grant & Sons', grade:'C', stage:'MQA', engagement:'105', keywords:'retail', priority:'D2C - Low' },
+    { account:'Hilton Foods', grade:'C', stage:'MQA', engagement:'40', keywords:'retail', priority:'D2C - Low' }
+  ],
+  hvp: [{ account:'Hitachi High-Tech', grade:'A', stage:'MQA', engagement:'69', keywords:'retail', priority:'D2C - Low' }],
+  new_people: [
+    { account:'Lyreco UK', name:'Thomas Hodgetts', title:'Manager, Digital Marketing', email:'thomas.hodgetts@lyreco.com', engagement:'0.1' },
+    { account:'UK Greetings', name:'Suki Nandhra', title:'Manager, eCommerce Trading', email:'suki.nandhra@ukgreetings.co.uk', engagement:'16.6' }
+  ],
+  activity: [
+    { account:'UK Greetings', name:'Suki Nandhra', title:'Manager, eCommerce Trading', category:'High Intent Lead Capture', details:'2023-Retail-ContactUs' },
+    { account:'UK Greetings', name:'Suki Nandhra', title:'Manager, eCommerce Trading', category:'All Others', details:'The easiest way to get started with Shopify POS' },
+    { account:'UK Greetings', name:'Suki Nandhra', title:'Manager, eCommerce Trading', category:'All Others', details:'Start setting up your store' },
+    { account:'Lyreco UK', name:'Thomas Hodgetts', title:'Manager, Digital Marketing', category:'All Others', details:'Quick question' }
+  ]
+};
+
+function esc(s) { return s == null ? '' : String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+var $ = function(s) { return document.querySelector(s); };
+var $$ = function(s) { return document.querySelectorAll(s); };
+
+var typeCls = { hvp:'type-hvp', mqa:'type-mqa', new_people:'type-people', activity:'type-activity' };
+
+function renderMaster() {
+  var html = '';
+
+  html += '<div class="hero">';
+  html += '<div class="hero-kicker">weekly-sales-insights / 2026-02-23</div>';
+  html += '<h1>Weekly Sales Insights</h1>';
+  html += '<div class="sub">Engagement signals from the past 7 days \u2014 <strong>35 sellers</strong>, 35 with signals</div>';
+  html += '</div>';
+
+  // Filters
+  html += '<div class="wrap"><div class="section" id="sec-filters">';
+  html += '<div class="filter-bar">';
+  html += '<button class="filter-tag active">All</button>';
+  html += '<button class="filter-tag">MQA (27)</button>';
+  html += '<button class="filter-tag">HVP (8)</button>';
+  html += '<button class="filter-tag">People (34)</button>';
+  html += '<button class="filter-tag">Activity (112)</button>';
+  html += '</div>';
+
+  // Top Signals
+  html += '<div class="section-head reveal">Top Signals</div>';
+  html += '<div class="section-sub reveal">Strongest engagement this week</div>';
+  html += '<ul class="top-list">';
+  HIGHLIGHTS.forEach(function(h, i) {
+    html += '<li class="top-item reveal">';
+    html += '<span class="top-num">' + (i+1) + '</span>';
+    html += '<span class="top-info"><span class="top-title">' + esc(h.title) + '</span><br><span class="top-meta">' + esc(h.sub) + '</span></span>';
+    html += '<span class="top-right"><span class="top-owner">@ ' + esc(h.owner) + '</span><br><span class="top-type ' + (typeCls[h.type] || '') + '">' + esc(h.type) + '</span></span>';
+    html += '</li>';
+  });
+  html += '</ul></div>';
+
+  // Definitions
+  html += '<div class="section" id="sec-defs">';
+  html += '<div class="section-head reveal">Report Types</div>';
+  html += '<div class="section-sub reveal">Click any type to see what it tracks</div>';
+  html += '<div class="defs-row reveal">';
+  ['mqa','hvp','new_people','activity'].forEach(function(t) {
+    html += '<button class="def-trigger" data-def="' + t + '"><span class="q">?</span> ' + esc(SIGNAL_TYPES[t].short) + '</button>';
+  });
+  html += '</div>';
+  ['mqa','hvp','new_people','activity'].forEach(function(t) {
+    html += '<div class="def-popover" id="def-' + t + '">';
+    html += '<div class="def-popover-title">' + esc(SIGNAL_TYPES[t].label) + '</div>';
+    html += esc(SIGNAL_TYPES[t].desc);
+    html += '</div>';
+  });
+  html += '</div>';
+
+  // Sellers
+  html += '<div class="section" id="sec-sellers">';
+  html += '<div class="section-head reveal">Sellers</div>';
+  html += '<div class="section-sub reveal">' + SELLERS.length + ' sellers with signals this week</div>';
+  html += '<ul class="sellers-list">';
+  SELLERS.forEach(function(s) {
+    html += '<li class="seller-row reveal" data-seller="' + s.id + '">';
+    html += '<span class="seller-name">' + esc(s.name) + '</span>';
+    html += '<span class="seller-pills">';
+    if (s.mqa > 0) html += '<span class="pill pill-mqa">' + s.mqa + '</span>';
+    if (s.hvp > 0) html += '<span class="pill pill-hvp">' + s.hvp + '</span>';
+    if (s.people > 0) html += '<span class="pill pill-people">' + s.people + '</span>';
+    if (s.activity > 0) html += '<span class="pill pill-activity">' + s.activity + '</span>';
+    html += '</span>';
+    html += '<span class="seller-count">' + s.total + '</span>';
+    html += '</li>';
+  });
+  html += '</ul></div>';
+
+  // Archive
+  html += '<div class="section" id="sec-archive">';
+  html += '<div class="section-head reveal">Archive</div>';
+  html += '<div class="section-sub reveal">Previous weeks</div>';
+  html += '<div class="archive-item reveal"><span>Week of 2026-02-16</span><span>&rarr;</span></div>';
+  html += '</div>';
+
+  html += '<div class="footer">Confidential \u2014 Shopify Internal Use Only \u00B7 Week of 2026-02-23';
+  html += '<div class="footer-keys">\u2318K search \u00B7 \u2318[ back \u00B7 \u2318] forward</div>';
+  html += '</div>';
+
+  html += '</div>';
+
+  $('#masterView').innerHTML = html;
+  bindMasterEvents();
+  initReveal();
+}
+
+function renderPersonal() {
+  var html = '';
+
+  html += '<div class="hero hero-personal">';
+  html += '<div class="breadcrumb"><a href="#" id="backBtn">Dashboard</a> / Alexandre Saroian</div>';
+  html += '<h1>Alexandre Saroian</h1>';
+  html += '<div class="sub">Week of <strong>February 23, 2026</strong> \u2014 14 total signals</div>';
+  html += '</div>';
+
+  html += '<div class="wrap" style="padding-top:32px;padding-bottom:48px;">';
+
+  html += '<div class="identity-notice">Viewing as Alexandre Saroian. <a href="#" id="clearId">Switch view</a></div>';
+
+  // Stats
+  html += '<div class="stats-row reveal">';
+  var stats = [
+    { num:3, label:'MQA', cls:'mqa' },
+    { num:1, label:'HVP', cls:'hvp' },
+    { num:2, label:'People', cls:'people' },
+    { num:8, label:'Activity', cls:'activity' }
+  ];
+  stats.forEach(function(s) {
+    html += '<div class="stat-cell"><div class="stat-num stat-num-' + s.cls + '">' + s.num + '</div><div class="stat-label">' + s.label + '</div></div>';
+  });
+  html += '</div>';
+
+  function renderTable(type, headers, rows) {
+    var st = SIGNAL_TYPES[type];
+    var cls = type === 'new_people' ? 'people' : type;
+    html += '<div class="signal-section reveal">';
+    html += '<div class="signal-heading"><span class="badge badge-' + cls + '">' + esc(st.short) + '</span> ' + esc(st.label) + '</div>';
+    html += '<div class="signal-desc">' + esc(st.desc) + '</div>';
+    html += '<table class="data-table"><thead><tr>';
+    headers.forEach(function(h) { html += '<th>' + esc(h) + '</th>'; });
+    html += '</tr></thead><tbody>';
+    rows.forEach(function(r) {
+      html += '<tr>';
+      r.forEach(function(c) { html += '<td>' + esc(c) + '</td>'; });
+      html += '</tr>';
+    });
+    html += '</tbody></table></div>';
+  }
+
+  renderTable('mqa', ['Account','Grade','Stage','Engagement','Keywords','Priority'],
+    SAMPLE_SIGNALS.mqa.map(function(r) { return [r.account,r.grade,r.stage,r.engagement,r.keywords,r.priority]; }));
+  renderTable('hvp', ['Account','Grade','Stage','Engagement','Keywords','Priority'],
+    SAMPLE_SIGNALS.hvp.map(function(r) { return [r.account,r.grade,r.stage,r.engagement,r.keywords,r.priority]; }));
+  renderTable('new_people', ['Account','Name','Title','Email','Engagement'],
+    SAMPLE_SIGNALS.new_people.map(function(r) { return [r.account,r.name,r.title,r.email,r.engagement]; }));
+  renderTable('activity', ['Account','Name','Title','Category','Details'],
+    SAMPLE_SIGNALS.activity.map(function(r) { return [r.account,r.name,r.title,r.category,r.details]; }));
+
+  html += '<div class="footer">Confidential \u2014 Shopify Internal Use Only \u00B7 Week of 2026-02-23</div>';
+  html += '</div>';
+
+  $('#personalView').innerHTML = html;
+  $('#backBtn').addEventListener('click', function(e) { e.preventDefault(); switchView('master'); });
+  $('#clearId').addEventListener('click', function(e) { e.preventDefault(); switchView('master'); });
+  initReveal();
+}
+
+function bindMasterEvents() {
+  $$('.seller-row').forEach(function(el) {
+    el.addEventListener('click', function() { switchView('seller'); });
+  });
+  $$('.top-owner').forEach(function(el) {
+    el.addEventListener('click', function() { switchView('seller'); });
+  });
+  $$('.filter-tag').forEach(function(b) {
+    b.addEventListener('click', function() {
+      $$('.filter-tag').forEach(function(x) { x.classList.remove('active'); });
+      this.classList.add('active');
+    });
+  });
+  $$('.def-trigger').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var t = this.dataset.def;
+      var pop = document.getElementById('def-' + t);
+      var isOpen = pop.classList.contains('open');
+      $$('.def-popover').forEach(function(p) { p.classList.remove('open'); });
+      if (!isOpen) pop.classList.add('open');
+    });
+  });
+}
+
+function switchView(view) {
+  if (view === 'seller') {
+    renderPersonal();
+    $('#masterView').style.display = 'none';
+    $('#personalView').style.display = 'block';
+    $('#togMaster').classList.remove('active');
+    $('#togSeller').classList.add('active');
+  } else {
+    renderMaster();
+    $('#personalView').style.display = 'none';
+    $('#masterView').style.display = 'block';
+    $('#togSeller').classList.remove('active');
+    $('#togMaster').classList.add('active');
+  }
+  window.scrollTo(0, 0);
+}
+
+function initReveal() {
+  function check() {
+    document.querySelectorAll('.reveal:not(.visible)').forEach(function(el) {
+      if (el.getBoundingClientRect().top < window.innerHeight * 0.95) el.classList.add('visible');
+    });
+  }
+  check(); setTimeout(check, 100); setTimeout(check, 300);
+  window.addEventListener('scroll', check, { passive: true });
+}
+
+window.addEventListener('scroll', function() {
+  var fill = document.getElementById('progressFill');
+  if (!fill) return;
+  var pct = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100;
+  fill.style.width = Math.min(pct, 100) + '%';
+}, { passive: true });
+
+$('#togMaster').addEventListener('click', function() { switchView('master'); });
+$('#togSeller').addEventListener('click', function() { switchView('seller'); });
+
+renderMaster();
+
+})();
+</script>
+</body>
+</html>

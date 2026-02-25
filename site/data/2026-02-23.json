@@ -1,0 +1,3515 @@
+{
+  "meta": {
+    "week_of": "2026-02-23",
+    "generated_at": "2026-02-24T16:15:35.000678+00:00",
+    "sources": [
+      "demandbase"
+    ],
+    "total_sellers": 35,
+    "sellers_with_signals": 35
+  },
+  "identity": {
+    "admins": [
+      "hannah.harrington@shopify.com"
+    ],
+    "coaches": {},
+    "seller_emails": {
+      "aaron.holl@shopify.com": "aaron_holl",
+      "alden.morse@shopify.com": "alden_morse",
+      "alexandra.seigenberg@shopify.com": "alexandra_seigenberg",
+      "alexandre.saroian@shopify.com": "alexandre_saroian",
+      "anakaren.olivo@shopify.com": "anakaren_olivo",
+      "anastasia.sfregola@shopify.com": "anastasia_sfregola",
+      "anthony.anastasi@shopify.com": "anthony_anastasi",
+      "capucine.delval@shopify.com": "capucine_delval",
+      "cassie.steinberg@shopify.com": "cassie_steinberg",
+      "chris.andreoli@shopify.com": "chris_andreoli",
+      "colin.behenna@shopify.com": "colin_behenna",
+      "colton.powell@shopify.com": "colton_powell",
+      "daisy.wright@shopify.com": "daisy_wright",
+      "danielle.salvatore@shopify.com": "danielle_salvatore",
+      "dev.admin@shopify.com": "dev_admin",
+      "erin.choi@shopify.com": "erin_choi",
+      "fiona.taurel@shopify.com": "fiona_taurel",
+      "gavin.spencer@shopify.com": "gavin_spencer",
+      "ivka.shepard@shopify.com": "ivka_shepard",
+      "john.beringer@shopify.com": "john_beringer",
+      "kristin.sutton@shopify.com": "kristin_sutton",
+      "kristy.shimkus@shopify.com": "kristy_shimkus",
+      "madeline.michelson@shopify.com": "madeline_michelson",
+      "melanie.wollnitza@shopify.com": "melanie_wollnitza",
+      "morgan.sanchez@shopify.com": "morgan_moran_de_sanchez",
+      "nick.essling@shopify.com": "nick_essling",
+      "nick.herrera@shopify.com": "nick_herrera",
+      "nicolas.berg@shopify.com": "nicolas_berg",
+      "nicole.smelzer@shopify.com": "nicole_smelzer",
+      "rebecca.pallister@shopify.com": "rebecca_pallister",
+      "ryan.kernus@shopify.com": "ryan_kernus",
+      "samantha.schultz@shopify.com": "samantha_schultz",
+      "scott.cohen@shopify.com": "scott_cohen",
+      "simon.bennett@shopify.com": "simon_bennett",
+      "tanner.andresen@shopify.com": "tanner_andresen"
+    }
+  },
+  "signal_types": {
+    "mqa": {
+      "label": "Accounts Moved to MQA (No Sales Touches)",
+      "short_label": "MQA",
+      "color": "green",
+      "source": "demandbase",
+      "description": "A Marketing Qualified Account (MQA) is an account that crossed a significant engagement threshold through marketing activity — not sales outreach. An account reaches MQA when it either: (1) accumulates 200+ marketing engagement points from campaigns, form fills, and visits to key pages in the last 3 months, or (2) has 2+ senior contacts (Director, VP, C-suite) each with 30+ marketing engagement points. These accounts were flagged this week and have had zero sales engagement in the last 30 days.",
+      "display_columns": [
+        {
+          "key": "account",
+          "label": "Account"
+        },
+        {
+          "key": "grade",
+          "label": "Grade"
+        },
+        {
+          "key": "journey_stage",
+          "label": "Stage"
+        },
+        {
+          "key": "engagement_3mo",
+          "label": "Engagement (3 mo.)"
+        },
+        {
+          "key": "keywords",
+          "label": "Intent Keywords"
+        },
+        {
+          "key": "priority",
+          "label": "Priority"
+        }
+      ]
+    },
+    "hvp": {
+      "label": "Accounts Visiting High-Value Pages (Lost Opp in Last 12 Mo.)",
+      "short_label": "HVP",
+      "color": "rose",
+      "source": "demandbase",
+      "description": "Accounts that had a Closed Lost opportunity in the last 12 months but are back visiting Shopify Plus pages this week. These are re-engagement opportunities — the timing is right to reopen the conversation.",
+      "display_columns": [
+        {
+          "key": "account",
+          "label": "Account"
+        },
+        {
+          "key": "grade",
+          "label": "Grade"
+        },
+        {
+          "key": "journey_stage",
+          "label": "Stage"
+        },
+        {
+          "key": "engagement_7d",
+          "label": "Engagement (7 days)"
+        },
+        {
+          "key": "keywords",
+          "label": "Intent Keywords"
+        },
+        {
+          "key": "priority",
+          "label": "Priority"
+        }
+      ]
+    },
+    "new_people": {
+      "label": "Newly Engaged People This Week",
+      "short_label": "People",
+      "color": "indigo",
+      "source": "demandbase",
+      "description": "Brand-new contacts from target buying-committee titles (marketing, ecommerce, digital, C-suite) who engaged with Shopify for the first time ever this week. Fresh inbound signals from people who weren't previously in our orbit.",
+      "display_columns": [
+        {
+          "key": "account",
+          "label": "Account"
+        },
+        {
+          "key": "full_name",
+          "label": "Name"
+        },
+        {
+          "key": "title",
+          "label": "Title"
+        },
+        {
+          "key": "email",
+          "label": "Email"
+        },
+        {
+          "key": "engagement_7d",
+          "label": "Engagement (7 days)"
+        }
+      ]
+    },
+    "activity": {
+      "label": "Newly Engaged People — Activity Details",
+      "short_label": "Activity",
+      "color": "amber",
+      "source": "demandbase",
+      "description": "The specific activities (webinars, events, email clicks, campaigns) that drove engagement from the newly engaged people above. Use this to personalize your outreach based on what they actually interacted with.",
+      "display_columns": [
+        {
+          "key": "account",
+          "label": "Account"
+        },
+        {
+          "key": "full_name",
+          "label": "Name"
+        },
+        {
+          "key": "title",
+          "label": "Title"
+        },
+        {
+          "key": "category",
+          "label": "Category"
+        },
+        {
+          "key": "details",
+          "label": "Details"
+        }
+      ]
+    }
+  },
+  "sellers": {
+    "aaron_holl": {
+      "name": "Aaron Holl",
+      "email": "aaron.holl@shopify.com",
+      "team": "Unassigned",
+      "segment": "Enterprise",
+      "summary": {
+        "mqa": 1,
+        "hvp": 0,
+        "new_people": 0,
+        "activity": 0,
+        "total": 1
+      },
+      "signals": {
+        "mqa": [
+          {
+            "account": "Vince Holding Corp",
+            "website": "http://byvince.com",
+            "grade": "",
+            "journey_stage": "MQA",
+            "engagement_3mo": "41.125",
+            "keywords": "",
+            "categories": "",
+            "priority": "Ads - Low;B2B - Low;CSM - Low;D2C - High;Lending - Low;Retail - High",
+            "territory": "AMER_Enterprise_All_Lifestyle_A_All_01"
+          }
+        ],
+        "hvp": [],
+        "new_people": [],
+        "activity": []
+      }
+    },
+    "alden_morse": {
+      "name": "Alden Morse",
+      "email": "alden.morse@shopify.com",
+      "team": "Unassigned",
+      "segment": "Enterprise",
+      "summary": {
+        "mqa": 4,
+        "hvp": 0,
+        "new_people": 2,
+        "activity": 5,
+        "total": 11
+      },
+      "signals": {
+        "mqa": [
+          {
+            "account": "N C Machinery",
+            "website": "ncmachinery.com",
+            "grade": "A",
+            "journey_stage": "MQA",
+            "engagement_3mo": "49.385",
+            "keywords": "retail",
+            "categories": "",
+            "priority": "B2B - Low;D2C - Low;Retail - Low",
+            "territory": "AMER_Enterprise_All_Emerging_A_All_02"
+          },
+          {
+            "account": "Grocers Supply",
+            "website": "grocerssupply.com",
+            "grade": "",
+            "journey_stage": "MQA",
+            "engagement_3mo": "41.015",
+            "keywords": "",
+            "categories": "",
+            "priority": "B2B - Low",
+            "territory": "AMER_Enterprise_All_Emerging_A_All_02"
+          },
+          {
+            "account": "Air Distribution Technologies",
+            "website": "airdistribution.com",
+            "grade": "",
+            "journey_stage": "MQA",
+            "engagement_3mo": "82.2556",
+            "keywords": "",
+            "categories": "",
+            "priority": "B2B - Low",
+            "territory": "AMER_Enterprise_All_Emerging_A_All_02"
+          },
+          {
+            "account": "Sealmaster",
+            "website": "sealmaster.net",
+            "grade": "",
+            "journey_stage": "MQA",
+            "engagement_3mo": "64.1184",
+            "keywords": "",
+            "categories": "",
+            "priority": "B2B - Low",
+            "territory": "AMER_Enterprise_All_Emerging_A_All_02"
+          }
+        ],
+        "hvp": [],
+        "new_people": [
+          {
+            "account": "TE Connectivity US",
+            "full_name": "Arantxa Angulo",
+            "title": "Strategic Sourcing Mgr",
+            "email": "arantxa.angulo@te.com",
+            "engagement_7d": "0.2",
+            "first_engagement_date": "2026-02-20T00:00:00Z",
+            "account_tier": "Tier 2",
+            "categories": "",
+            "territory": ""
+          },
+          {
+            "account": "Combe Incorporated",
+            "full_name": "Nicolas Perrone",
+            "title": "eCommerce Analyst",
+            "email": "nperrone@combe.com",
+            "engagement_7d": "0.125",
+            "first_engagement_date": "2026-02-20T00:00:00Z",
+            "account_tier": "Tier 3",
+            "categories": "",
+            "territory": ""
+          }
+        ],
+        "activity": [
+          {
+            "account": "Combe Incorporated",
+            "full_name": "Nicolas Perrone",
+            "title": "eCommerce Analyst",
+            "category": "All Others",
+            "details": "Email: Contact Request: Shopify",
+            "territory": "AMER_Enterprise_All_Emerging_A_All_02"
+          },
+          {
+            "account": "TE Connectivity US",
+            "full_name": "Arantxa Angulo",
+            "title": "Strategic Sourcing Mgr",
+            "category": "All Others",
+            "details": "Email: e-RFP Digital Ecosystem 2026 - Shopify submission",
+            "territory": "AMER_Enterprise_All_Emerging_A_All_02"
+          },
+          {
+            "account": "TE Connectivity US",
+            "full_name": "Arantxa Angulo",
+            "title": "Strategic Sourcing Mgr",
+            "category": "All Others",
+            "details": "Email: Re: e-RFP Digital Ecosystem 2026 - Shopify submission",
+            "territory": "AMER_Enterprise_All_Emerging_A_All_02"
+          },
+          {
+            "account": "Combe Incorporated",
+            "full_name": "Nicolas Perrone",
+            "title": "eCommerce Analyst",
+            "category": "Change Person Data",
+            "details": "sfdcOwnerId changed from 0058V00000COSrPQAX to 0058V00000E7gevQAB",
+            "territory": "AMER_Enterprise_All_Emerging_A_All_02"
+          },
+          {
+            "account": "Combe Incorporated",
+            "full_name": "Nicolas Perrone",
+            "title": "eCommerce Analyst",
+            "category": "Change Person Data",
+            "details": "status changed from New to In Progress",
+            "territory": "AMER_Enterprise_All_Emerging_A_All_02"
+          }
+        ]
+      }
+    },
+    "alexandra_seigenberg": {
+      "name": "Alexandra Seigenberg",
+      "email": "alexandra.seigenberg@shopify.com",
+      "team": "Unassigned",
+      "segment": "Enterprise",
+      "summary": {
+        "mqa": 0,
+        "hvp": 0,
+        "new_people": 1,
+        "activity": 13,
+        "total": 14
+      },
+      "signals": {
+        "mqa": [],
+        "hvp": [],
+        "new_people": [
+          {
+            "account": "Kohl’s, Inc.",
+            "full_name": "Courtney Graybill",
+            "title": "VP Digital Experience",
+            "email": "courtney.graybill@kohls.com",
+            "engagement_7d": "0.3",
+            "first_engagement_date": "2026-02-17T00:00:00Z",
+            "account_tier": "Tier 1",
+            "categories": "Segment Top Account;Territory Top Account",
+            "territory": ""
+          }
+        ],
+        "activity": [
+          {
+            "account": "Kohl’s, Inc.",
+            "full_name": "Courtney Graybill",
+            "title": "VP Digital Experience",
+            "category": "All Others",
+            "details": "Email:  Let’s Explore Your 2026 Ecommerce Goals with Shopify",
+            "territory": "AMER_Enterprise_All_Lifestyle_A_All_06"
+          },
+          {
+            "account": "Kohl’s, Inc.",
+            "full_name": "Courtney Graybill",
+            "title": "VP Digital Experience",
+            "category": "All Others",
+            "details": "Email: Re:  Let’s Explore Your 2026 Ecommerce Goals with Shopify",
+            "territory": "AMER_Enterprise_All_Lifestyle_A_All_06"
+          },
+          {
+            "account": "Kohl’s, Inc.",
+            "full_name": "Courtney Graybill",
+            "title": "VP Digital Experience",
+            "category": "Member of Audience",
+            "details": "Added as a Member to the Audience SUPPRESSION: Existing Director+ Contacts associated to BoB Accounts (Global)",
+            "territory": "AMER_Enterprise_All_Lifestyle_A_All_06"
+          },
+          {
+            "account": "Kohl’s, Inc.",
+            "full_name": "Courtney Graybill",
+            "title": "VP Digital Experience",
+            "category": "Change Person Data",
+            "details": "status changed from New Sales Ready to In Progress",
+            "territory": "AMER_Enterprise_All_Lifestyle_A_All_06"
+          },
+          {
+            "account": "Kohl’s, Inc.",
+            "full_name": "Courtney Graybill",
+            "title": "VP Digital Experience",
+            "category": "Change Person Data",
+            "details": "website changed from (No Value) to corporate.kohls.com",
+            "territory": "AMER_Enterprise_All_Lifestyle_A_All_06"
+          },
+          {
+            "account": "Kohl’s, Inc.",
+            "full_name": "Courtney Graybill",
+            "title": "VP Digital Experience",
+            "category": "Change Person Data",
+            "details": "sfdcOwnerId changed from 0058V00000COSrPQAX to 005OG00000ATA7uYAH",
+            "territory": "AMER_Enterprise_All_Lifestyle_A_All_06"
+          },
+          {
+            "account": "Kohl’s, Inc.",
+            "full_name": "Courtney Graybill",
+            "title": "VP Digital Experience",
+            "category": "Change Person Data",
+            "details": "status changed from Marketing Nurture to Expired",
+            "territory": "AMER_Enterprise_All_Lifestyle_A_All_06"
+          },
+          {
+            "account": "Kohl’s, Inc.",
+            "full_name": "Courtney Graybill",
+            "title": "VP Digital Experience",
+            "category": "Change Person Data",
+            "details": "status changed from Expired to New Sales Ready",
+            "territory": "AMER_Enterprise_All_Lifestyle_A_All_06"
+          },
+          {
+            "account": "Kohl’s, Inc.",
+            "full_name": "Courtney Graybill",
+            "title": "VP Digital Experience",
+            "category": "Member of Automation",
+            "details": "Member of Automation WIRLS Followup",
+            "territory": "AMER_Enterprise_All_Lifestyle_A_All_06"
+          },
+          {
+            "account": "Kohl’s, Inc.",
+            "full_name": "Courtney Graybill",
+            "title": "VP Digital Experience",
+            "category": "Webinar",
+            "details": "2026-02 Shopify/Constructor/Forrester Agentic Commerce Webinar – Global",
+            "territory": "AMER_Enterprise_All_Lifestyle_A_All_06"
+          },
+          {
+            "account": "Kohl’s, Inc.",
+            "full_name": "Courtney Graybill",
+            "title": "VP Digital Experience",
+            "category": "Change Person Data",
+            "details": "status changed from New to Marketing Nurture",
+            "territory": "AMER_Enterprise_All_Lifestyle_A_All_06"
+          },
+          {
+            "account": "Kohl’s, Inc.",
+            "full_name": "Courtney Graybill",
+            "title": "VP Digital Experience",
+            "category": "Added to Salesloft",
+            "details": "Added to Salesloft Cadence WIR Followup - Genesis , assignee genesis.mirandalongo@shopify.com, person 7266672",
+            "territory": "AMER_Enterprise_All_Lifestyle_A_All_06"
+          },
+          {
+            "account": "Kohl’s, Inc.",
+            "full_name": "Courtney Graybill",
+            "title": "VP Digital Experience",
+            "category": "Events - Conference",
+            "details": "25Q1_CNPPARM-WIRLS 2025 Attendee List -Plus-AMER-EN",
+            "territory": "AMER_Enterprise_All_Lifestyle_A_All_06"
+          }
+        ]
+      }
+    },
+    "alexandre_saroian": {
+      "name": "Alexandre Saroian",
+      "email": "alexandre.saroian@shopify.com",
+      "team": "Unassigned",
+      "segment": "Enterprise",
+      "summary": {
+        "mqa": 3,
+        "hvp": 1,
+        "new_people": 2,
+        "activity": 8,
+        "total": 14
+      },
+      "signals": {
+        "mqa": [
+          {
+            "account": "Dormer Pramet",
+            "website": "dormerpramet.com",
+            "grade": "D",
+            "journey_stage": "MQA",
+            "engagement_3mo": "39.4425",
+            "keywords": "",
+            "categories": "",
+            "priority": "D2C - Medium",
+            "territory": "EMEA_Enterprise_North_All_A_All_02"
+          },
+          {
+            "account": "William Grant & sons",
+            "website": "williamgrant.com",
+            "grade": "C",
+            "journey_stage": "MQA",
+            "engagement_3mo": "105.1214",
+            "keywords": "retail",
+            "categories": "",
+            "priority": "D2C - Low",
+            "territory": "EMEA_Enterprise_North_All_A_All_02"
+          },
+          {
+            "account": "Hilton Foods",
+            "website": "hiltonfoods.com",
+            "grade": "C",
+            "journey_stage": "MQA",
+            "engagement_3mo": "39.7425",
+            "keywords": "retail",
+            "categories": "",
+            "priority": "D2C - Low",
+            "territory": "EMEA_Enterprise_North_All_A_All_02"
+          }
+        ],
+        "hvp": [
+          {
+            "account": "Hitachi High-Tech Analytical Science Ltd.",
+            "website": "hitachi-hightech.com",
+            "grade": "A",
+            "journey_stage": "MQA",
+            "engagement_7d": "69.255",
+            "keywords": "retail",
+            "categories": "",
+            "priority": "D2C - Low",
+            "territory": "EMEA_Enterprise_North_All_A_All_02"
+          }
+        ],
+        "new_people": [
+          {
+            "account": "Lyreco UK & Ireland",
+            "full_name": "Thomas Hodgetts",
+            "title": "Manager, Digital Marketing",
+            "email": "thomas.hodgetts@lyreco.com",
+            "engagement_7d": "0.125",
+            "first_engagement_date": "2026-02-17T15:41:55Z",
+            "account_tier": "",
+            "categories": "",
+            "territory": ""
+          },
+          {
+            "account": "UK Greetings",
+            "full_name": "Suki Nandhra",
+            "title": "Manager, eCommerce Trading",
+            "email": "suki.nandhra@ukgreetings.co.uk",
+            "engagement_7d": "16.5625",
+            "first_engagement_date": "2026-02-17T00:00:00Z",
+            "account_tier": "",
+            "categories": "",
+            "territory": ""
+          }
+        ],
+        "activity": [
+          {
+            "account": "UK Greetings",
+            "full_name": "Suki Nandhra",
+            "title": "Manager, eCommerce Trading",
+            "category": "High Intent Lead Capture",
+            "details": "2023-Retail-ContactUs",
+            "territory": "EMEA_Enterprise_North_All_A_All_02"
+          },
+          {
+            "account": "UK Greetings",
+            "full_name": "Suki Nandhra",
+            "title": "Manager, eCommerce Trading",
+            "category": "All Others",
+            "details": "[Mozart] The easiest way to get started with Shopify POS",
+            "territory": "EMEA_Enterprise_North_All_A_All_02"
+          },
+          {
+            "account": "UK Greetings",
+            "full_name": "Suki Nandhra",
+            "title": "Manager, eCommerce Trading",
+            "category": "All Others",
+            "details": "[Mozart] Start setting up your store",
+            "territory": "EMEA_Enterprise_North_All_A_All_02"
+          },
+          {
+            "account": "UK Greetings",
+            "full_name": "Suki Nandhra",
+            "title": "Manager, eCommerce Trading",
+            "category": "All Others",
+            "details": "[Mozart] Your free trial ends tomorrow",
+            "territory": "EMEA_Enterprise_North_All_A_All_02"
+          },
+          {
+            "account": "UK Greetings",
+            "full_name": "Suki Nandhra",
+            "title": "Manager, eCommerce Trading",
+            "category": "All Others",
+            "details": "[Mozart] Let’s set up your new store",
+            "territory": "EMEA_Enterprise_North_All_A_All_02"
+          },
+          {
+            "account": "UK Greetings",
+            "full_name": "Suki Nandhra",
+            "title": "Manager, eCommerce Trading",
+            "category": "All Others",
+            "details": "[Mozart] Extend your trial for just £1",
+            "territory": "EMEA_Enterprise_North_All_A_All_02"
+          },
+          {
+            "account": "UK Greetings",
+            "full_name": "Suki Nandhra",
+            "title": "Manager, eCommerce Trading",
+            "category": "All Others",
+            "details": "[Mozart] Get an additional 3 months of Shopify for £1/mo",
+            "territory": "EMEA_Enterprise_North_All_A_All_02"
+          },
+          {
+            "account": "Lyreco UK & Ireland",
+            "full_name": "Thomas Hodgetts",
+            "title": "Manager, Digital Marketing",
+            "category": "All Others",
+            "details": "[Mozart] Quick question",
+            "territory": "EMEA_Enterprise_North_All_A_All_02"
+          }
+        ]
+      }
+    },
+    "anakaren_olivo": {
+      "name": "Anakaren Olivo",
+      "email": "anakaren.olivo@shopify.com",
+      "team": "Unassigned",
+      "segment": "Enterprise",
+      "summary": {
+        "mqa": 0,
+        "hvp": 0,
+        "new_people": 2,
+        "activity": 6,
+        "total": 8
+      },
+      "signals": {
+        "mqa": [],
+        "hvp": [],
+        "new_people": [
+          {
+            "account": "Richemont - Purdey",
+            "full_name": "Alex Bohea",
+            "title": "E-Commerce Trading Manager",
+            "email": "alex.bohea@purdey.com",
+            "engagement_7d": "0.125",
+            "first_engagement_date": "2026-02-19T00:00:00Z",
+            "account_tier": "Tier 2",
+            "categories": "",
+            "territory": ""
+          },
+          {
+            "account": "Orlebar Brown",
+            "full_name": "Kavita Kumar",
+            "title": "Head of Ecommerce",
+            "email": "kavita.kumar@orlebarbrown.com",
+            "engagement_7d": "14.0625",
+            "first_engagement_date": "2026-02-20T00:00:00Z",
+            "account_tier": "",
+            "categories": "",
+            "territory": ""
+          }
+        ],
+        "activity": [
+          {
+            "account": "Orlebar Brown",
+            "full_name": "Kavita Kumar",
+            "title": "Head of Ecommerce",
+            "category": "Events - Partner",
+            "details": "LuxeAncillary-EPAM-PM-Plus-EMEA-United Arab Emirates_Q126MQZOMX",
+            "territory": "EMEA_GA_All_All_X_All_02"
+          },
+          {
+            "account": "Richemont - Purdey",
+            "full_name": "Alex Bohea",
+            "title": "E-Commerce Trading Manager",
+            "category": "All Others",
+            "details": "Email: New Shopify Markets Feature Auto Release - April 1st",
+            "territory": "EMEA_GA_All_All_X_All_02"
+          },
+          {
+            "account": "Orlebar Brown",
+            "full_name": "Kavita Kumar",
+            "title": "Head of Ecommerce",
+            "category": "Change Person Data",
+            "details": "website changed from orlebarbrown.com to www.orlebarbrown.com",
+            "territory": "EMEA_GA_All_All_X_All_02"
+          },
+          {
+            "account": "Orlebar Brown",
+            "full_name": "Kavita Kumar",
+            "title": "Head of Ecommerce",
+            "category": "Change Status in SFDC Campaign",
+            "details": "Changed status in Salesforce Campaign Q1-2026-Shoptalk Luxe-VIP Dinner-Multiple-EMEA-United Arab Emirates_Q126ITYSRK: Previous status: Sent, new status Attended",
+            "territory": "EMEA_GA_All_All_X_All_02"
+          },
+          {
+            "account": "Orlebar Brown",
+            "full_name": "Kavita Kumar",
+            "title": "Head of Ecommerce",
+            "category": "Change Person Data",
+            "details": "website changed from www.orlebarbrown.com to orlebarbrown.com",
+            "territory": "EMEA_GA_All_All_X_All_02"
+          },
+          {
+            "account": "Orlebar Brown",
+            "full_name": "Kavita Kumar",
+            "title": "Head of Ecommerce",
+            "category": "Events - Tradeshow",
+            "details": "Q1-2026-Shoptalk Luxe-VIP Dinner-Multiple-EMEA-United Arab Emirates_Q126ITYSRK",
+            "territory": "EMEA_GA_All_All_X_All_02"
+          }
+        ]
+      }
+    },
+    "anastasia_sfregola": {
+      "name": "Anastasia Sfregola",
+      "email": "anastasia.sfregola@shopify.com",
+      "team": "Unassigned",
+      "segment": "Enterprise",
+      "summary": {
+        "mqa": 1,
+        "hvp": 0,
+        "new_people": 2,
+        "activity": 3,
+        "total": 6
+      },
+      "signals": {
+        "mqa": [
+          {
+            "account": "Grupo Mistral",
+            "website": "grupomistral.com",
+            "grade": "",
+            "journey_stage": "MQA",
+            "engagement_3mo": "37.0",
+            "keywords": "retail",
+            "categories": "",
+            "priority": "",
+            "territory": "EMEA_Enterprise_South_All_A_All_01"
+          }
+        ],
+        "hvp": [],
+        "new_people": [
+          {
+            "account": "PC componentes",
+            "full_name": "Esther Esquivias",
+            "title": "Marketing Ecommerce",
+            "email": "esther.esquivias@pccomponentes.com",
+            "engagement_7d": "0.125",
+            "first_engagement_date": "2026-02-20T00:00:00Z",
+            "account_tier": "Tier 1",
+            "categories": "",
+            "territory": ""
+          },
+          {
+            "account": "AWWG",
+            "full_name": "Pilar Lavirgen",
+            "title": "E-commerce Manager",
+            "email": "pilar.redondo@awwg.com",
+            "engagement_7d": "0.25",
+            "first_engagement_date": "2026-02-20T00:00:00Z",
+            "account_tier": "Tier 1",
+            "categories": "",
+            "territory": ""
+          }
+        ],
+        "activity": [
+          {
+            "account": "PC componentes",
+            "full_name": "Esther Esquivias",
+            "title": "Marketing Ecommerce",
+            "category": "All Others",
+            "details": "PC Componentes x Shopify",
+            "territory": "EMEA_Enterprise_South_All_A_All_01"
+          },
+          {
+            "account": "AWWG",
+            "full_name": "Pilar Lavirgen",
+            "title": "E-commerce Manager",
+            "category": "All Others",
+            "details": "Email: Hi Pilar - SFCC & Shop Pay",
+            "territory": "EMEA_Enterprise_South_All_A_All_01"
+          },
+          {
+            "account": "AWWG",
+            "full_name": "Pilar Lavirgen",
+            "title": "E-commerce Manager",
+            "category": "All Others",
+            "details": "Email: Hi Pilar - SFCC & Shop Pay",
+            "territory": "EMEA_Enterprise_South_All_A_All_01"
+          }
+        ]
+      }
+    },
+    "anthony_anastasi": {
+      "name": "Anthony Anastasi",
+      "email": "anthony.anastasi@shopify.com",
+      "team": "Unassigned",
+      "segment": "Enterprise",
+      "summary": {
+        "mqa": 4,
+        "hvp": 1,
+        "new_people": 3,
+        "activity": 4,
+        "total": 12
+      },
+      "signals": {
+        "mqa": [
+          {
+            "account": "Curves",
+            "website": "curves.com",
+            "grade": "C",
+            "journey_stage": "Engaged",
+            "engagement_3mo": "188.22079",
+            "keywords": "e commerce, point of sale, e commerce platform",
+            "categories": "",
+            "priority": "",
+            "territory": "AMER_Enterprise_All_Emerging_A_All_04"
+          },
+          {
+            "account": "Integrated Silicon Solution Inc",
+            "website": "issi.com",
+            "grade": "B",
+            "journey_stage": "MQA",
+            "engagement_3mo": "45.52",
+            "keywords": "",
+            "categories": "",
+            "priority": "",
+            "territory": "AMER_Enterprise_All_Emerging_A_All_04"
+          },
+          {
+            "account": "xperiencerg.com",
+            "website": "xperiencerg.com",
+            "grade": "C",
+            "journey_stage": "Engaged",
+            "engagement_3mo": "65.8615",
+            "keywords": "retail, e commerce, revenue growth",
+            "categories": "",
+            "priority": "",
+            "territory": "AMER_Enterprise_All_Emerging_A_All_04"
+          },
+          {
+            "account": "Renolit",
+            "website": "renolit.com",
+            "grade": "A",
+            "journey_stage": "MQA",
+            "engagement_3mo": "36.195",
+            "keywords": "",
+            "categories": "",
+            "priority": "",
+            "territory": "AMER_Enterprise_All_Emerging_A_All_04"
+          }
+        ],
+        "hvp": [
+          {
+            "account": "ARC Document Solutions",
+            "website": "e-arc.com",
+            "grade": "",
+            "journey_stage": "MQA",
+            "engagement_7d": "81.4125",
+            "keywords": "retail, e commerce, cross border",
+            "categories": "",
+            "priority": "",
+            "territory": "AMER_Enterprise_All_Emerging_A_All_04"
+          }
+        ],
+        "new_people": [
+          {
+            "account": "MGM Resorts International",
+            "full_name": "Joy M",
+            "title": "VP of operations",
+            "email": "joy@shannonridge.com",
+            "engagement_7d": "0.15",
+            "first_engagement_date": "2026-02-18T16:23:28Z",
+            "account_tier": "Tier 3",
+            "categories": "",
+            "territory": ""
+          },
+          {
+            "account": "MAC Trailer",
+            "full_name": "Dennis Postiy",
+            "title": "Vice President",
+            "email": "dpostiy@mactrailer.com",
+            "engagement_7d": "7.5",
+            "first_engagement_date": "2026-02-17T00:00:00Z",
+            "account_tier": "Tier 5",
+            "categories": "",
+            "territory": ""
+          },
+          {
+            "account": "RETAILORS",
+            "full_name": "Trevor Stitt",
+            "title": "Group Marketing Manger",
+            "email": "trevors@retailors.com",
+            "engagement_7d": "5.0",
+            "first_engagement_date": "2026-02-18T00:00:00Z",
+            "account_tier": "",
+            "categories": "",
+            "territory": ""
+          }
+        ],
+        "activity": [
+          {
+            "account": "MAC Trailer",
+            "full_name": "Dennis Postiy",
+            "title": "Vice President",
+            "category": "Events - Partner",
+            "details": "Q1-2026 Acumatica Summit-Acumatica--Plus-AMER_Q126UKOGYK",
+            "territory": "AMER_Enterprise_All_Emerging_A_All_04"
+          },
+          {
+            "account": "RETAILORS",
+            "full_name": "Trevor Stitt",
+            "title": "Group Marketing Manger",
+            "category": "Events - Partner",
+            "details": "Q1-2026_NRF BIH Webinar TWP_PM-APAC-ANZ_Q126NUDNQN",
+            "territory": "AMER_Enterprise_All_Emerging_A_All_04"
+          },
+          {
+            "account": "MGM Resorts International",
+            "full_name": "Joy M",
+            "title": "VP of operations",
+            "category": "All Others",
+            "details": "[Mozart] [Last chance] Exclusive AI demos: How lean commerce teams scale faster",
+            "territory": "AMER_Enterprise_All_Emerging_A_All_04"
+          },
+          {
+            "account": "MAC Trailer",
+            "full_name": "Dennis Postiy",
+            "title": "Vice President",
+            "category": "Member of Audience",
+            "details": "Added as a Member to the Audience SUPPRESSION: Existing Director+ Contacts associated to BoB Accounts (Global)",
+            "territory": "AMER_Enterprise_All_Emerging_A_All_04"
+          }
+        ]
+      }
+    },
+    "capucine_delval": {
+      "name": "Capucine Delval",
+      "email": "capucine.delval@shopify.com",
+      "team": "Unassigned",
+      "segment": "Enterprise",
+      "summary": {
+        "mqa": 0,
+        "hvp": 0,
+        "new_people": 1,
+        "activity": 2,
+        "total": 3
+      },
+      "signals": {
+        "mqa": [],
+        "hvp": [],
+        "new_people": [
+          {
+            "account": "Groupe Chanel",
+            "full_name": "Nicolas Goron",
+            "title": "Global Director, Strategy & Portfolio Digital Platforms",
+            "email": "nicolas.goron@chanel.com",
+            "engagement_7d": "0.1875",
+            "first_engagement_date": "2026-02-20T00:00:00Z",
+            "account_tier": "Tier 3",
+            "categories": "",
+            "territory": ""
+          }
+        ],
+        "activity": [
+          {
+            "account": "Groupe Chanel",
+            "full_name": "Nicolas Goron",
+            "title": "Global Director, Strategy & Portfolio Digital Platforms",
+            "category": "All Others",
+            "details": "Email: Groupe Chanel / Shopify - Prise de contact",
+            "territory": "EMEA_GA_All_All_A_All_02"
+          },
+          {
+            "account": "Groupe Chanel",
+            "full_name": "Nicolas Goron",
+            "title": "Global Director, Strategy & Portfolio Digital Platforms",
+            "category": "Member of Audience",
+            "details": "Added as a Member to the Audience BoB - ENT - EMEA - People",
+            "territory": "EMEA_GA_All_All_A_All_02"
+          }
+        ]
+      }
+    },
+    "cassie_steinberg": {
+      "name": "Cassie Steinberg",
+      "email": "cassie.steinberg@shopify.com",
+      "team": "Unassigned",
+      "segment": "Enterprise",
+      "summary": {
+        "mqa": 0,
+        "hvp": 0,
+        "new_people": 2,
+        "activity": 4,
+        "total": 6
+      },
+      "signals": {
+        "mqa": [],
+        "hvp": [],
+        "new_people": [
+          {
+            "account": "Chicago Bulls",
+            "full_name": "Matthew Bishop",
+            "title": "Digital Operations & Content Producer",
+            "email": "mbishop@okcthunder.com",
+            "engagement_7d": "0.2",
+            "first_engagement_date": "2026-02-17T03:41:42Z",
+            "account_tier": "Tier 4",
+            "categories": "",
+            "territory": ""
+          },
+          {
+            "account": "Melaleuca",
+            "full_name": "Kellie Sue Keller",
+            "title": "Marketing Pressional",
+            "email": "kelliekeller74@gmail.com",
+            "engagement_7d": "0.2",
+            "first_engagement_date": "2026-02-20T01:24:59Z",
+            "account_tier": "Tier 2",
+            "categories": "",
+            "territory": "AMER_Large_All_A_B2B_04"
+          }
+        ],
+        "activity": [
+          {
+            "account": "Melaleuca",
+            "full_name": "Kellie Sue Keller",
+            "title": "Marketing Pressional",
+            "category": "All Others",
+            "details": "[Mozart] You’re earning 1% back on all sales!",
+            "territory": "AMER_Enterprise_All_Lifestyle_A_All_02"
+          },
+          {
+            "account": "Chicago Bulls",
+            "full_name": "Matthew Bishop",
+            "title": "Digital Operations & Content Producer",
+            "category": "All Others",
+            "details": "[Mozart] Security comparison guide: Adobe and Shopify",
+            "territory": "AMER_Enterprise_All_Lifestyle_A_All_02"
+          },
+          {
+            "account": "Chicago Bulls",
+            "full_name": "Matthew Bishop",
+            "title": "Digital Operations & Content Producer",
+            "category": "All Others",
+            "details": "[Mozart] Comparing growth: Shopify and Adobe",
+            "territory": "AMER_Enterprise_All_Lifestyle_A_All_02"
+          },
+          {
+            "account": "Melaleuca",
+            "full_name": "Kellie Sue Keller",
+            "title": "Marketing Pressional",
+            "category": "All Others",
+            "details": "[Mozart] Let’s set up your new store",
+            "territory": "AMER_Enterprise_All_Lifestyle_A_All_02"
+          }
+        ]
+      }
+    },
+    "chris_andreoli": {
+      "name": "Chris Andreoli",
+      "email": "chris.andreoli@shopify.com",
+      "team": "Unassigned",
+      "segment": "Enterprise",
+      "summary": {
+        "mqa": 0,
+        "hvp": 0,
+        "new_people": 1,
+        "activity": 6,
+        "total": 7
+      },
+      "signals": {
+        "mqa": [],
+        "hvp": [],
+        "new_people": [
+          {
+            "account": "KUIU",
+            "full_name": "Kelly Helthall",
+            "title": "SVP Ecommerce",
+            "email": "kellyh@kuiu.com",
+            "engagement_7d": "19.3125",
+            "first_engagement_date": "2026-02-20T00:00:00Z",
+            "account_tier": "Tier 3",
+            "categories": "",
+            "territory": ""
+          }
+        ],
+        "activity": [
+          {
+            "account": "KUIU",
+            "full_name": "Kelly Helthall",
+            "title": "SVP Ecommerce",
+            "category": "Webinar",
+            "details": "Upmarket-W26-Editions-Webinar-Plus-AMER_Q425ZIGFSW",
+            "territory": "AMER_Enterprise_All_Lifestyle_X_All_03"
+          },
+          {
+            "account": "KUIU",
+            "full_name": "Kelly Helthall",
+            "title": "SVP Ecommerce",
+            "category": "All Others",
+            "details": "[Mozart] Webinar unlocked",
+            "territory": "AMER_Enterprise_All_Lifestyle_X_All_03"
+          },
+          {
+            "account": "KUIU",
+            "full_name": "Kelly Helthall",
+            "title": "SVP Ecommerce",
+            "category": "All Others",
+            "details": "[Mozart] Start setting up your store",
+            "territory": "AMER_Enterprise_All_Lifestyle_X_All_03"
+          },
+          {
+            "account": "KUIU",
+            "full_name": "Kelly Helthall",
+            "title": "SVP Ecommerce",
+            "category": "All Others",
+            "details": "[Mozart] Let’s set up your new store",
+            "territory": "AMER_Enterprise_All_Lifestyle_X_All_03"
+          },
+          {
+            "account": "KUIU",
+            "full_name": "Kelly Helthall",
+            "title": "SVP Ecommerce",
+            "category": "Change Person Data",
+            "details": "status changed from New to New Sales Ready",
+            "territory": "AMER_Enterprise_All_Lifestyle_X_All_03"
+          },
+          {
+            "account": "KUIU",
+            "full_name": "Kelly Helthall",
+            "title": "SVP Ecommerce",
+            "category": "Change Person Data",
+            "details": "sfdcOwnerId changed from 0058V00000COSrPQAX to 005OG000007dIQrYAM",
+            "territory": "AMER_Enterprise_All_Lifestyle_X_All_03"
+          }
+        ]
+      }
+    },
+    "colin_behenna": {
+      "name": "Colin Behenna",
+      "email": "colin.behenna@shopify.com",
+      "team": "Unassigned",
+      "segment": "Enterprise",
+      "summary": {
+        "mqa": 3,
+        "hvp": 0,
+        "new_people": 3,
+        "activity": 10,
+        "total": 16
+      },
+      "signals": {
+        "mqa": [
+          {
+            "account": "Western Forest Products",
+            "website": "westernforest.com",
+            "grade": "",
+            "journey_stage": "MQA",
+            "engagement_3mo": "51.6025",
+            "keywords": "",
+            "categories": "",
+            "priority": "B2B - Low;D2C - Low;Retail - Low",
+            "territory": "AMER_Enterprise_All_Consumer_A_All_01"
+          },
+          {
+            "account": "ALPHA BAKING COMPANY, INC",
+            "website": "alphabaking.com",
+            "grade": "A",
+            "journey_stage": "MQA",
+            "engagement_3mo": "45.415",
+            "keywords": "",
+            "categories": "",
+            "priority": "B2B - Low;D2C - Low;Retail - Low",
+            "territory": "AMER_Enterprise_All_Consumer_A_All_01"
+          },
+          {
+            "account": "WDs",
+            "website": "winndixie.com",
+            "grade": "A",
+            "journey_stage": "MQA",
+            "engagement_3mo": "59.1325",
+            "keywords": "",
+            "categories": "",
+            "priority": "B2B - Low;D2C - Low;Retail - Low",
+            "territory": "AMER_Enterprise_All_Consumer_A_All_01"
+          }
+        ],
+        "hvp": [],
+        "new_people": [
+          {
+            "account": "Verano",
+            "full_name": "Robert Smith",
+            "title": "Vice President of Sales & Marketing",
+            "email": "robert.smith@verano.com",
+            "engagement_7d": "0.15",
+            "first_engagement_date": "2026-02-20T00:00:00Z",
+            "account_tier": "",
+            "categories": "",
+            "territory": ""
+          },
+          {
+            "account": "WDs",
+            "full_name": "Rich Hamilton",
+            "title": "COO",
+            "email": "rich_hamilton@wargameds.com",
+            "engagement_7d": "15.15",
+            "first_engagement_date": "2026-02-19T00:00:00Z",
+            "account_tier": "Tier 4",
+            "categories": "",
+            "territory": ""
+          },
+          {
+            "account": "Weber Inc.",
+            "full_name": "James Forward",
+            "title": "Omni-Channel Systems, Data and Analytics Manager",
+            "email": "jforward@weber.com",
+            "engagement_7d": "0.25",
+            "first_engagement_date": "2026-02-19T10:16:28Z",
+            "account_tier": "Tier 2",
+            "categories": "",
+            "territory": ""
+          }
+        ],
+        "activity": [
+          {
+            "account": "WDs",
+            "full_name": "Rich Hamilton",
+            "title": "COO",
+            "category": "Webinar",
+            "details": "ShopCampaignsAdvertistingWebinar-Shop-AMER_Q126INYANN",
+            "territory": "AMER_Enterprise_All_Consumer_A_All_01"
+          },
+          {
+            "account": "WDs",
+            "full_name": "Rich Hamilton",
+            "title": "COO",
+            "category": "All Others",
+            "details": "[Mozart] No risk, no fuss advertising with Shop Campaigns",
+            "territory": "AMER_Enterprise_All_Consumer_A_All_01"
+          },
+          {
+            "account": "Verano",
+            "full_name": "Robert Smith",
+            "title": "Vice President of Sales & Marketing",
+            "category": "All Others",
+            "details": "Email: Elevate Your Business with Shopify's Unified Inventory Management",
+            "territory": "AMER_Enterprise_All_Consumer_A_All_01"
+          },
+          {
+            "account": "Weber Inc.",
+            "full_name": "James Forward",
+            "title": "Omni-Channel Systems, Data and Analytics Manager",
+            "category": "All Others",
+            "details": "[Mozart] Thank you for registering your interest for Shopify Connect Sydney 2026!",
+            "territory": "AMER_Enterprise_All_Consumer_A_All_01"
+          },
+          {
+            "account": "Weber Inc.",
+            "full_name": "James Forward",
+            "title": "Omni-Channel Systems, Data and Analytics Manager",
+            "category": "All Others",
+            "details": "[Mozart] Thank you for registering your interest for Shopify Connect Sydney 2026!",
+            "territory": "AMER_Enterprise_All_Consumer_A_All_01"
+          },
+          {
+            "account": "WDs",
+            "full_name": "Rich Hamilton",
+            "title": "COO",
+            "category": "Member of Audience",
+            "details": "Added as a Member to the Audience SUPPRESSION: Existing Director+ Contacts associated to BoB Accounts (Global)",
+            "territory": "AMER_Enterprise_All_Consumer_A_All_01"
+          },
+          {
+            "account": "WDs",
+            "full_name": "Rich Hamilton",
+            "title": "COO",
+            "category": "Change Status in SFDC Campaign",
+            "details": "Changed status in Salesforce Campaign ShopCampaignsAdvertistingWebinar-Shop-AMER_Q126INYANN: Previous status: Registered, new status Attended",
+            "territory": "AMER_Enterprise_All_Consumer_A_All_01"
+          },
+          {
+            "account": "Verano",
+            "full_name": "Robert Smith",
+            "title": "Vice President of Sales & Marketing",
+            "category": "Change Person Data",
+            "details": "status changed from New Sales Ready to In Progress",
+            "territory": "AMER_Enterprise_All_Consumer_A_All_01"
+          },
+          {
+            "account": "Weber Inc.",
+            "full_name": "James Forward",
+            "title": "Omni-Channel Systems, Data and Analytics Manager",
+            "category": "Events - Experiential Marketing",
+            "details": "ANZ Shopify Connect Q1 2026 SYD-Hybrid-APAC-Australia_Q126JBUTJE",
+            "territory": "AMER_Enterprise_All_Consumer_A_All_01"
+          },
+          {
+            "account": "Verano",
+            "full_name": "Robert Smith",
+            "title": "Vice President of Sales & Marketing",
+            "category": "Outbound Sales Motions",
+            "details": "Marketstar-Retail-AMER_Q325PWYREY",
+            "territory": "AMER_Enterprise_All_Consumer_A_All_01"
+          }
+        ]
+      }
+    },
+    "colton_powell": {
+      "name": "Colton Powell",
+      "email": "colton.powell@shopify.com",
+      "team": "Unassigned",
+      "segment": "Enterprise",
+      "summary": {
+        "mqa": 0,
+        "hvp": 0,
+        "new_people": 1,
+        "activity": 3,
+        "total": 4
+      },
+      "signals": {
+        "mqa": [],
+        "hvp": [],
+        "new_people": [
+          {
+            "account": "The Walt Disney Company (Master)",
+            "full_name": "Lauren Cachia",
+            "title": "Assistant Manager, E-Commerce Operations & Logistics",
+            "email": "lauren.cachia@disney.com",
+            "engagement_7d": "5.2",
+            "first_engagement_date": "2026-02-18T00:00:00Z",
+            "account_tier": "Tier 1",
+            "categories": "",
+            "territory": ""
+          }
+        ],
+        "activity": [
+          {
+            "account": "The Walt Disney Company (Master)",
+            "full_name": "Lauren Cachia",
+            "title": "Assistant Manager, E-Commerce Operations & Logistics",
+            "category": "Events - Partner",
+            "details": "Q1-2026_NRF BIH Webinar TWP_PM-APAC-ANZ_Q126NUDNQN",
+            "territory": "AMER_GA_All_All_A_All_02"
+          },
+          {
+            "account": "The Walt Disney Company (Master)",
+            "full_name": "Lauren Cachia",
+            "title": "Assistant Manager, E-Commerce Operations & Logistics",
+            "category": "All Others",
+            "details": "[Mozart] Here's how you can grow your business at scale with Shopify Plus",
+            "territory": "AMER_GA_All_All_A_All_02"
+          },
+          {
+            "account": "The Walt Disney Company (Master)",
+            "full_name": "Lauren Cachia",
+            "title": "Assistant Manager, E-Commerce Operations & Logistics",
+            "category": "All Others",
+            "details": "[Mozart] Here's how you can grow your business at scale with Shopify Plus",
+            "territory": "AMER_GA_All_All_A_All_02"
+          }
+        ]
+      }
+    },
+    "daisy_wright": {
+      "name": "Daisy Wright",
+      "email": "daisy.wright@shopify.com",
+      "team": "Unassigned",
+      "segment": "Enterprise",
+      "summary": {
+        "mqa": 1,
+        "hvp": 1,
+        "new_people": 0,
+        "activity": 0,
+        "total": 2
+      },
+      "signals": {
+        "mqa": [
+          {
+            "account": "Pixelle Specialty Solutions",
+            "website": "pixelle.com",
+            "grade": "C",
+            "journey_stage": "MQA",
+            "engagement_3mo": "50.0979",
+            "keywords": "",
+            "categories": "",
+            "priority": "D2C - Low;Retail - Low",
+            "territory": "AMER_Enterprise_All_Consumer_A_All_05"
+          }
+        ],
+        "hvp": [
+          {
+            "account": "Design Within Reach",
+            "website": "dwr.com",
+            "grade": "A",
+            "journey_stage": "MQA",
+            "engagement_7d": "49.3875",
+            "keywords": "e commerce, total cost of ownership, retail",
+            "categories": "Territory Top Account",
+            "priority": "D2C - High",
+            "territory": "AMER_Enterprise_All_Consumer_A_All_05"
+          }
+        ],
+        "new_people": [],
+        "activity": []
+      }
+    },
+    "danielle_salvatore": {
+      "name": "Danielle Salvatore",
+      "email": "danielle.salvatore@shopify.com",
+      "team": "Unassigned",
+      "segment": "Enterprise",
+      "summary": {
+        "mqa": 1,
+        "hvp": 0,
+        "new_people": 4,
+        "activity": 5,
+        "total": 10
+      },
+      "signals": {
+        "mqa": [
+          {
+            "account": "Paradox Interactive",
+            "website": "http://paradoxinteractive.com",
+            "grade": "A",
+            "journey_stage": "MQA",
+            "engagement_3mo": "45.9225",
+            "keywords": "",
+            "categories": "",
+            "priority": "",
+            "territory": "EMEA_Enterprise_North_All_A_All_03"
+          }
+        ],
+        "hvp": [],
+        "new_people": [
+          {
+            "account": "Pandora A/S",
+            "full_name": "Raquel Martinez",
+            "title": "Co-Owner",
+            "email": "info@joyeriariver.com",
+            "engagement_7d": "0.1",
+            "first_engagement_date": "2026-02-19T00:00:00Z",
+            "account_tier": "Tier 1",
+            "categories": "",
+            "territory": ""
+          },
+          {
+            "account": "Byggmax",
+            "full_name": "Richard Almqvist",
+            "title": "Manager, Marketing",
+            "email": "richard.almqvist@byggmax.com",
+            "engagement_7d": "0.125",
+            "first_engagement_date": "2026-02-22T03:41:38Z",
+            "account_tier": "",
+            "categories": "",
+            "territory": ""
+          },
+          {
+            "account": "Byggmax",
+            "full_name": "David Ekström",
+            "title": "Chef Performance Marketing",
+            "email": "david.ekstroem@byggmax.se",
+            "engagement_7d": "0.1",
+            "first_engagement_date": "2026-02-22T03:41:43Z",
+            "account_tier": "",
+            "categories": "",
+            "territory": ""
+          },
+          {
+            "account": "Byggmax",
+            "full_name": "Sanna Westman",
+            "title": "Marketing Manager",
+            "email": "sanna.westman@byggmax.se",
+            "engagement_7d": "0.125",
+            "first_engagement_date": "2026-02-22T03:41:36Z",
+            "account_tier": "",
+            "categories": "",
+            "territory": ""
+          }
+        ],
+        "activity": [
+          {
+            "account": "Byggmax",
+            "full_name": "Sanna Westman",
+            "title": "Marketing Manager",
+            "category": "All Others",
+            "details": "[Mozart] Is your commerce platform working as hard as you?",
+            "territory": "EMEA_Enterprise_North_All_A_All_03"
+          },
+          {
+            "account": "Byggmax",
+            "full_name": "Richard Almqvist",
+            "title": "Manager, Marketing",
+            "category": "All Others",
+            "details": "[Mozart] Is your commerce platform working as hard as you?",
+            "territory": "EMEA_Enterprise_North_All_A_All_03"
+          },
+          {
+            "account": "Byggmax",
+            "full_name": "David Ekström",
+            "title": "Chef Performance Marketing",
+            "category": "All Others",
+            "details": "[Mozart] Is your commerce platform working as hard as you?",
+            "territory": "EMEA_Enterprise_North_All_A_All_03"
+          },
+          {
+            "account": "Pandora A/S",
+            "full_name": "Raquel Martinez",
+            "title": "Co-Owner",
+            "category": "All Others",
+            "details": "Email: Raquel ¿Hablamos?",
+            "territory": "EMEA_Enterprise_North_All_A_All_03"
+          },
+          {
+            "account": "Pandora A/S",
+            "full_name": "Raquel Martinez",
+            "title": "Co-Owner",
+            "category": "Outbound Sales Motions",
+            "details": "Marketstar-Retail-EMEA_Q425GABDZH",
+            "territory": "EMEA_Enterprise_North_All_A_All_03"
+          }
+        ]
+      }
+    },
+    "dev_admin": {
+      "name": "Dev Admin",
+      "email": "dev.admin@shopify.com",
+      "team": "Unassigned",
+      "segment": "Enterprise",
+      "summary": {
+        "mqa": 1,
+        "hvp": 0,
+        "new_people": 0,
+        "activity": 0,
+        "total": 1
+      },
+      "signals": {
+        "mqa": [
+          {
+            "account": "Celio",
+            "website": "celio.com",
+            "grade": "A",
+            "journey_stage": "MQA",
+            "engagement_3mo": "35.0225",
+            "keywords": "",
+            "categories": "",
+            "priority": "",
+            "territory": "EMEA_Enterprise_FR_All_A_All_01"
+          }
+        ],
+        "hvp": [],
+        "new_people": [],
+        "activity": []
+      }
+    },
+    "erin_choi": {
+      "name": "Erin Choi",
+      "email": "erin.choi@shopify.com",
+      "team": "Unassigned",
+      "segment": "Enterprise",
+      "summary": {
+        "mqa": 4,
+        "hvp": 1,
+        "new_people": 0,
+        "activity": 0,
+        "total": 5
+      },
+      "signals": {
+        "mqa": [
+          {
+            "account": "Milk Specialties",
+            "website": "milkspecialties.com",
+            "grade": "C",
+            "journey_stage": "MQA",
+            "engagement_3mo": "127.7263",
+            "keywords": "e commerce, retail, ai models",
+            "categories": "",
+            "priority": "D2C - Low",
+            "territory": "AMER_Enterprise_All_Consumer_A_All_03"
+          },
+          {
+            "account": "John B. Sanfilippo & Son, Inc.",
+            "website": "jbssinc.com",
+            "grade": "B",
+            "journey_stage": "MQA",
+            "engagement_3mo": "65.2425",
+            "keywords": "",
+            "categories": "",
+            "priority": "D2C - Low",
+            "territory": "AMER_Enterprise_All_Consumer_A_All_03"
+          },
+          {
+            "account": "PACE Supply",
+            "website": "pacesupply.com",
+            "grade": "A",
+            "journey_stage": "MQA",
+            "engagement_3mo": "65.52",
+            "keywords": "retail",
+            "categories": "",
+            "priority": "D2C - Low",
+            "territory": "AMER_Enterprise_All_Consumer_A_All_03"
+          },
+          {
+            "account": "Wienerschnitzel",
+            "website": "http://wienerschnitzel.com",
+            "grade": "",
+            "journey_stage": "MQA",
+            "engagement_3mo": "49.0575",
+            "keywords": "retail",
+            "categories": "",
+            "priority": "D2C - Low;Retail - Low",
+            "territory": "AMER_Enterprise_All_Consumer_A_All_03"
+          }
+        ],
+        "hvp": [
+          {
+            "account": "PACE Supply",
+            "website": "pacesupply.com",
+            "grade": "A",
+            "journey_stage": "MQA",
+            "engagement_7d": "16.415",
+            "keywords": "retail",
+            "categories": "",
+            "priority": "D2C - Low",
+            "territory": "AMER_Enterprise_All_Consumer_A_All_03"
+          }
+        ],
+        "new_people": [],
+        "activity": []
+      }
+    },
+    "fiona_taurel": {
+      "name": "Fiona Taurel",
+      "email": "fiona.taurel@shopify.com",
+      "team": "Unassigned",
+      "segment": "Enterprise",
+      "summary": {
+        "mqa": 4,
+        "hvp": 0,
+        "new_people": 0,
+        "activity": 0,
+        "total": 4
+      },
+      "signals": {
+        "mqa": [
+          {
+            "account": "LVMH - TAG Heuer",
+            "website": "tagheuer.com",
+            "grade": "A",
+            "journey_stage": "MQA",
+            "engagement_3mo": "154.6563",
+            "keywords": "conversion rate, e commerce, retail",
+            "categories": "",
+            "priority": "",
+            "territory": "EMEA_GA_All_All_A_All_02"
+          },
+          {
+            "account": "Hermès - Hermès International",
+            "website": "hermes.com",
+            "grade": "A",
+            "journey_stage": "MQA",
+            "engagement_3mo": "165.99249",
+            "keywords": "e commerce, retail",
+            "categories": "",
+            "priority": "",
+            "territory": "EMEA_GA_All_All_A_All_02"
+          },
+          {
+            "account": "Sephora Jordan & Palastine",
+            "website": "http://sephora.ae",
+            "grade": "",
+            "journey_stage": "MQA",
+            "engagement_3mo": "79.4608",
+            "keywords": "retail",
+            "categories": "",
+            "priority": "",
+            "territory": "EMEA_GA_All_All_A_All_02"
+          },
+          {
+            "account": "GIVENCHY",
+            "website": "givenchy.com",
+            "grade": "A",
+            "journey_stage": "All Other",
+            "engagement_3mo": "0.125",
+            "keywords": "",
+            "categories": "",
+            "priority": "",
+            "territory": "EMEA_GA_All_All_A_All_02"
+          }
+        ],
+        "hvp": [],
+        "new_people": [],
+        "activity": []
+      }
+    },
+    "gavin_spencer": {
+      "name": "Gavin Spencer",
+      "email": "gavin.spencer@shopify.com",
+      "team": "Unassigned",
+      "segment": "Enterprise",
+      "summary": {
+        "mqa": 0,
+        "hvp": 0,
+        "new_people": 1,
+        "activity": 1,
+        "total": 2
+      },
+      "signals": {
+        "mqa": [],
+        "hvp": [],
+        "new_people": [
+          {
+            "account": "Unilever (Master)",
+            "full_name": "Konstantina Valsamou",
+            "title": "Global Marketing Manager",
+            "email": "konstantina.valsamou@unilever.com",
+            "engagement_7d": "0.125",
+            "first_engagement_date": "2026-02-18T00:00:00Z",
+            "account_tier": "Tier 2",
+            "categories": "",
+            "territory": ""
+          }
+        ],
+        "activity": [
+          {
+            "account": "Unilever (Master)",
+            "full_name": "Konstantina Valsamou",
+            "title": "Global Marketing Manager",
+            "category": "All Others",
+            "details": "Email: Re: [External] - Re: Homecare x Shopify connect",
+            "territory": "EMEA_GA_All_All_X_All_01"
+          }
+        ]
+      }
+    },
+    "ivka_shepard": {
+      "name": "Ivka Shepard",
+      "email": "ivka.shepard@shopify.com",
+      "team": "Unassigned",
+      "segment": "Enterprise",
+      "summary": {
+        "mqa": 3,
+        "hvp": 0,
+        "new_people": 2,
+        "activity": 3,
+        "total": 8
+      },
+      "signals": {
+        "mqa": [
+          {
+            "account": "BMZ",
+            "website": "bmz-group.com",
+            "grade": "B",
+            "journey_stage": "MQA",
+            "engagement_3mo": "41.3975",
+            "keywords": "",
+            "categories": "",
+            "priority": "B2B - Low;D2C - Low;Retail - Low",
+            "territory": "AMER_Enterprise_All_Consumer_A_All_02"
+          },
+          {
+            "account": "U.S. Sugar",
+            "website": "ussugar.com",
+            "grade": "",
+            "journey_stage": "MQA",
+            "engagement_3mo": "42.495",
+            "keywords": "",
+            "categories": "",
+            "priority": "",
+            "territory": "AMER_Enterprise_All_Consumer_A_All_02"
+          },
+          {
+            "account": "Great Plains Manufacturing",
+            "website": "greatplainsmfg.com",
+            "grade": "C",
+            "journey_stage": "MQA",
+            "engagement_3mo": "50.555",
+            "keywords": "",
+            "categories": "",
+            "priority": "B2B - Low;D2C - Low;Retail - Low",
+            "territory": "AMER_Enterprise_All_Consumer_A_All_02"
+          }
+        ],
+        "hvp": [],
+        "new_people": [
+          {
+            "account": "Crate & Barrel",
+            "full_name": "Connor McGury",
+            "title": "Sr. Manager, CX Strategy & Innovation",
+            "email": "cmcgury@crateandbarrel.com",
+            "engagement_7d": "0.125",
+            "first_engagement_date": "2026-02-18T00:00:00Z",
+            "account_tier": "Tier 1",
+            "categories": "Segment Top Account",
+            "territory": ""
+          },
+          {
+            "account": "Goldbergs Group",
+            "full_name": "Sergio Martinez",
+            "title": "Manager, Information Technology",
+            "email": "smartinez@goldbergsgroup.com",
+            "engagement_7d": "0.125",
+            "first_engagement_date": "2026-02-16T17:44:38Z",
+            "account_tier": "",
+            "categories": "",
+            "territory": ""
+          }
+        ],
+        "activity": [
+          {
+            "account": "Crate & Barrel",
+            "full_name": "Connor McGury",
+            "title": "Sr. Manager, CX Strategy & Innovation",
+            "category": "All Others",
+            "details": "Email: Interested in Shopify?",
+            "territory": "AMER_Enterprise_All_Consumer_A_All_02"
+          },
+          {
+            "account": "Crate & Barrel",
+            "full_name": "Connor McGury",
+            "title": "Sr. Manager, CX Strategy & Innovation",
+            "category": "Webinar",
+            "details": "2026-02 Shopify/Constructor/Forrester Agentic Commerce Webinar – Global",
+            "territory": "AMER_Enterprise_All_Consumer_A_All_02"
+          },
+          {
+            "account": "Crate & Barrel",
+            "full_name": "Connor McGury",
+            "title": "Sr. Manager, CX Strategy & Innovation",
+            "category": "Change Person Data",
+            "details": "status changed from New Sales Ready to In Progress",
+            "territory": "AMER_Enterprise_All_Consumer_A_All_02"
+          }
+        ]
+      }
+    },
+    "john_beringer": {
+      "name": "John Beringer",
+      "email": "john.beringer@shopify.com",
+      "team": "Unassigned",
+      "segment": "Enterprise",
+      "summary": {
+        "mqa": 2,
+        "hvp": 0,
+        "new_people": 1,
+        "activity": 2,
+        "total": 5
+      },
+      "signals": {
+        "mqa": [
+          {
+            "account": "ESSILOR CANADA",
+            "website": "essilor.ca",
+            "grade": "",
+            "journey_stage": "MQA",
+            "engagement_3mo": "37.6725",
+            "keywords": "",
+            "categories": "",
+            "priority": "B2B - Low;D2C - Low;Retail - Low",
+            "territory": "AMER_GA_All_All_A_All_05"
+          },
+          {
+            "account": "L'Oréal S.A. - skinbetter science",
+            "website": "skinbetter.com",
+            "grade": "A",
+            "journey_stage": "MQA",
+            "engagement_3mo": "43.3275",
+            "keywords": "retail",
+            "categories": "Segment Top Account",
+            "priority": "",
+            "territory": "EMEA_GA_All_All_A_All_02"
+          }
+        ],
+        "hvp": [],
+        "new_people": [
+          {
+            "account": "Microsoft",
+            "full_name": "Emma Smith",
+            "title": "Head of Information Technology",
+            "email": "emma.smith54@microsoft.com",
+            "engagement_7d": "22.5",
+            "first_engagement_date": "2026-02-18T00:00:00Z",
+            "account_tier": "Tier 3",
+            "categories": "Segment Top Account",
+            "territory": ""
+          }
+        ],
+        "activity": [
+          {
+            "account": "Microsoft",
+            "full_name": "Emma Smith",
+            "title": "Head of Information Technology",
+            "category": "High Intent Lead Capture",
+            "details": "2023-Retail-ContactUs",
+            "territory": "AMER_GA_All_All_A_All_02"
+          },
+          {
+            "account": "Microsoft",
+            "full_name": "Emma Smith",
+            "title": "Head of Information Technology",
+            "category": "Member of Audience",
+            "details": "Added as a Member to the Audience SUPPRESSION: Existing Director+ Contacts associated to BoB Accounts (Global)",
+            "territory": "AMER_GA_All_All_A_All_02"
+          }
+        ]
+      }
+    },
+    "kristin_sutton": {
+      "name": "Kristin Sutton",
+      "email": "kristin.sutton@shopify.com",
+      "team": "Unassigned",
+      "segment": "Enterprise",
+      "summary": {
+        "mqa": 0,
+        "hvp": 0,
+        "new_people": 1,
+        "activity": 1,
+        "total": 2
+      },
+      "signals": {
+        "mqa": [],
+        "hvp": [],
+        "new_people": [
+          {
+            "account": "iHerb",
+            "full_name": "Jerome Roulland-Taefi",
+            "title": "VP Finance",
+            "email": "jerome.roulland-taefi@iherb.com",
+            "engagement_7d": "0.15",
+            "first_engagement_date": "2026-02-19T00:00:00Z",
+            "account_tier": "Tier 5",
+            "categories": "",
+            "territory": ""
+          }
+        ],
+        "activity": [
+          {
+            "account": "iHerb",
+            "full_name": "Jerome Roulland-Taefi",
+            "title": "VP Finance",
+            "category": "All Others",
+            "details": "Email: 2B AI Users Researching Supplements + Zero CAC",
+            "territory": "AMER_Enterprise_All_Lifestyle_A_All_09"
+          }
+        ]
+      }
+    },
+    "kristy_shimkus": {
+      "name": "Kristy Shimkus",
+      "email": "kristy.shimkus@shopify.com",
+      "team": "Unassigned",
+      "segment": "Enterprise",
+      "summary": {
+        "mqa": 3,
+        "hvp": 2,
+        "new_people": 0,
+        "activity": 0,
+        "total": 5
+      },
+      "signals": {
+        "mqa": [
+          {
+            "account": "Phillips & Temro Industries",
+            "website": "phillipsandtemro.com",
+            "grade": "A",
+            "journey_stage": "Engaged",
+            "engagement_3mo": "41.285",
+            "keywords": "retail",
+            "categories": "",
+            "priority": "",
+            "territory": "AMER_Enterprise_All_Emerging_A_All_05"
+          },
+          {
+            "account": "franklinempire.com",
+            "website": "franklinempire.com",
+            "grade": "C",
+            "journey_stage": "MQA",
+            "engagement_3mo": "38.1175",
+            "keywords": "",
+            "categories": "",
+            "priority": "",
+            "territory": "AMER_Enterprise_All_Emerging_A_All_05"
+          },
+          {
+            "account": "SRC Holdings",
+            "website": "srcholdings.com",
+            "grade": "D",
+            "journey_stage": "Engaged",
+            "engagement_3mo": "27.06",
+            "keywords": "",
+            "categories": "",
+            "priority": "",
+            "territory": "AMER_Enterprise_All_Emerging_A_All_05"
+          }
+        ],
+        "hvp": [
+          {
+            "account": "Plusgrade LLC",
+            "website": "http://plusgrade.com",
+            "grade": "",
+            "journey_stage": "MQA",
+            "engagement_7d": "59.8456",
+            "keywords": "e commerce, retail, large language models",
+            "categories": "",
+            "priority": "",
+            "territory": "AMER_Enterprise_All_Emerging_A_All_05"
+          },
+          {
+            "account": "Crystal Clean",
+            "website": "crystal-clean.com",
+            "grade": "",
+            "journey_stage": "MQA",
+            "engagement_7d": "82.4375",
+            "keywords": "retail, data security, data security concerns",
+            "categories": "",
+            "priority": "",
+            "territory": "AMER_Enterprise_All_Emerging_A_All_05"
+          }
+        ],
+        "new_people": [],
+        "activity": []
+      }
+    },
+    "madeline_michelson": {
+      "name": "Madeline Michelson",
+      "email": "madeline.michelson@shopify.com",
+      "team": "Unassigned",
+      "segment": "Enterprise",
+      "summary": {
+        "mqa": 0,
+        "hvp": 0,
+        "new_people": 2,
+        "activity": 10,
+        "total": 12
+      },
+      "signals": {
+        "mqa": [],
+        "hvp": [],
+        "new_people": [
+          {
+            "account": "Fashionphile, LLC",
+            "full_name": "Jeff Shim",
+            "title": "Head of Digital",
+            "email": "jeff.shim@fashionphile.com",
+            "engagement_7d": "0.225",
+            "first_engagement_date": "2026-02-20T03:50:49Z",
+            "account_tier": "Tier 1",
+            "categories": "",
+            "territory": ""
+          },
+          {
+            "account": "Ruggable - Ruggable",
+            "full_name": "Cam McNeill",
+            "title": "Managing Director",
+            "email": "camjamesmcneill@gmail.com",
+            "engagement_7d": "0.75",
+            "first_engagement_date": "2026-02-19T11:41:37Z",
+            "account_tier": "Tier 1",
+            "categories": "",
+            "territory": ""
+          }
+        ],
+        "activity": [
+          {
+            "account": "Fashionphile, LLC",
+            "full_name": "Jeff Shim",
+            "title": "Head of Digital",
+            "category": "All Others",
+            "details": "[Mozart] Gary, boost sales by offering premium installments",
+            "territory": "AMER_Enterprise_All_Lifestyle_X_All_01"
+          },
+          {
+            "account": "Ruggable - Ruggable",
+            "full_name": "Cam McNeill",
+            "title": "Managing Director",
+            "category": "All Others",
+            "details": "[Mozart] 💡 Your next business model: Digital products",
+            "territory": "AMER_Enterprise_All_Consumer_X_All_05"
+          },
+          {
+            "account": "Ruggable - Ruggable",
+            "full_name": "Cam McNeill",
+            "title": "Managing Director",
+            "category": "All Others",
+            "details": "[Mozart] Give Shopify another shot",
+            "territory": "AMER_Enterprise_All_Consumer_X_All_05"
+          },
+          {
+            "account": "Ruggable - Ruggable",
+            "full_name": "Cam McNeill",
+            "title": "Managing Director",
+            "category": "All Others",
+            "details": "[Mozart] Here's how you can grow your business at scale with Shopify Plus",
+            "territory": "AMER_Enterprise_All_Consumer_X_All_05"
+          },
+          {
+            "account": "Ruggable - Ruggable",
+            "full_name": "Cam McNeill",
+            "title": "Managing Director",
+            "category": "All Others",
+            "details": "[Mozart] Here's how you can grow your business at scale with Shopify Plus",
+            "territory": "AMER_Enterprise_All_Consumer_X_All_05"
+          },
+          {
+            "account": "Ruggable - Ruggable",
+            "full_name": "Cam McNeill",
+            "title": "Managing Director",
+            "category": "Member of Audience",
+            "details": "Added as a Member to the Audience SUPPRESSION: Existing Director+ Contacts associated to BoB Accounts (Global)",
+            "territory": "AMER_Enterprise_All_Consumer_X_All_05"
+          },
+          {
+            "account": "Fashionphile, LLC",
+            "full_name": "Jeff Shim",
+            "title": "Head of Digital",
+            "category": "Events - Partner",
+            "details": "Q1-2025-ISV-EtailWest-Bloomreach-Enterprise-AMER-EN-25Q1_IPMEWEDGPM",
+            "territory": "AMER_Enterprise_All_Lifestyle_X_All_01"
+          },
+          {
+            "account": "Fashionphile, LLC",
+            "full_name": "Jeff Shim",
+            "title": "Head of Digital",
+            "category": "Change Person Data",
+            "details": "status changed from Marketing Nurture to Expired",
+            "territory": "AMER_Enterprise_All_Lifestyle_X_All_01"
+          },
+          {
+            "account": "Fashionphile, LLC",
+            "full_name": "Jeff Shim",
+            "title": "Head of Digital",
+            "category": "Change Person Data",
+            "details": "status changed from Expired to Marketing Nurture",
+            "territory": "AMER_Enterprise_All_Lifestyle_X_All_01"
+          },
+          {
+            "account": "Ruggable - Ruggable",
+            "full_name": "Cam McNeill",
+            "title": "Managing Director",
+            "category": "Events - Partner",
+            "details": "Q1-2026_NRF BIH Webinar TWP_PM-APAC-ANZ_Q126NUDNQN",
+            "territory": "AMER_Enterprise_All_Consumer_X_All_05"
+          }
+        ]
+      }
+    },
+    "melanie_wollnitza": {
+      "name": "Melanie Wollnitza",
+      "email": "melanie.wollnitza@shopify.com",
+      "team": "Unassigned",
+      "segment": "Enterprise",
+      "summary": {
+        "mqa": 0,
+        "hvp": 0,
+        "new_people": 2,
+        "activity": 27,
+        "total": 29
+      },
+      "signals": {
+        "mqa": [],
+        "hvp": [],
+        "new_people": [
+          {
+            "account": "Logitech",
+            "full_name": "Kevin Yip",
+            "title": "Head of Platform Strategy & Business Development",
+            "email": "kyip2@logitech.com",
+            "engagement_7d": "0.225",
+            "first_engagement_date": "2026-02-19T00:00:00Z",
+            "account_tier": "Tier 2",
+            "categories": "",
+            "territory": ""
+          },
+          {
+            "account": "fischer Deutschland Vertriebs GmbH",
+            "full_name": "Jan Grosser",
+            "title": "Head of E-Commerce",
+            "email": "jan.grosser@fischer.de",
+            "engagement_7d": "4.5",
+            "first_engagement_date": "2026-02-17T00:00:00Z",
+            "account_tier": "Tier 5",
+            "categories": "",
+            "territory": ""
+          }
+        ],
+        "activity": [
+          {
+            "account": "fischer Deutschland Vertriebs GmbH",
+            "full_name": "Jan Grosser",
+            "title": "Head of E-Commerce",
+            "category": "All Others",
+            "details": "Meeting",
+            "territory": "EMEA_Enterprise_DACH_All_A_All_02"
+          },
+          {
+            "account": "fischer Deutschland Vertriebs GmbH",
+            "full_name": "Jan Grosser",
+            "title": "Head of E-Commerce",
+            "category": "All Others",
+            "details": "Email: Re: Shopify Plus - fischer Deutschland Vertriebs GmbH",
+            "territory": "EMEA_Enterprise_DACH_All_A_All_02"
+          },
+          {
+            "account": "fischer Deutschland Vertriebs GmbH",
+            "full_name": "Jan Grosser",
+            "title": "Head of E-Commerce",
+            "category": "All Others",
+            "details": "Hot Lead: Jan Grosser became a Hot Lead",
+            "territory": "EMEA_Enterprise_DACH_All_A_All_02"
+          },
+          {
+            "account": "fischer Deutschland Vertriebs GmbH",
+            "full_name": "Jan Grosser",
+            "title": "Head of E-Commerce",
+            "category": "All Others",
+            "details": "Email: Einladung: Fischer & Shopify - Do 19. Feb. 2026 9:30AM - 10AM (MEZ) (jan.grosser@fischer.de)",
+            "territory": "EMEA_Enterprise_DACH_All_A_All_02"
+          },
+          {
+            "account": "fischer Deutschland Vertriebs GmbH",
+            "full_name": "Jan Grosser",
+            "title": "Head of E-Commerce",
+            "category": "All Others",
+            "details": "Meeting Booked: Jan and Susann: 15-minute Meeting",
+            "territory": "EMEA_Enterprise_DACH_All_A_All_02"
+          },
+          {
+            "account": "fischer Deutschland Vertriebs GmbH",
+            "full_name": "Jan Grosser",
+            "title": "Head of E-Commerce",
+            "category": "All Others",
+            "details": "Email: Dein Gespräch mit Shopify",
+            "territory": "EMEA_Enterprise_DACH_All_A_All_02"
+          },
+          {
+            "account": "fischer Deutschland Vertriebs GmbH",
+            "full_name": "Jan Grosser",
+            "title": "Head of E-Commerce",
+            "category": "All Others",
+            "details": "Email: Re: Shopify Plus - fischer Deutschland Vertriebs GmbH",
+            "territory": "EMEA_Enterprise_DACH_All_A_All_02"
+          },
+          {
+            "account": "fischer Deutschland Vertriebs GmbH",
+            "full_name": "Jan Grosser",
+            "title": "Head of E-Commerce",
+            "category": "All Others",
+            "details": "Email: Aktualisierte Einladung: Fischer & Shopify - Do 19. Feb. 2026 9:30AM - 10AM (MEZ) (jan.grosser@fischer.de)",
+            "territory": "EMEA_Enterprise_DACH_All_A_All_02"
+          },
+          {
+            "account": "fischer Deutschland Vertriebs GmbH",
+            "full_name": "Jan Grosser",
+            "title": "Head of E-Commerce",
+            "category": "All Others",
+            "details": "Email: Updated invitation: Jan and Susann: 15-minute Meeting @ Mi 18. Feb. 2026 2:30PM - 2:45PM (MEZ) (jan.grosser@fischer.de)",
+            "territory": "EMEA_Enterprise_DACH_All_A_All_02"
+          },
+          {
+            "account": "fischer Deutschland Vertriebs GmbH",
+            "full_name": "Jan Grosser",
+            "title": "Head of E-Commerce",
+            "category": "All Others",
+            "details": "Sent Email: Zugesagt: Jan and Susann: 15-minute Meeting",
+            "territory": "EMEA_Enterprise_DACH_All_A_All_02"
+          },
+          {
+            "account": "fischer Deutschland Vertriebs GmbH",
+            "full_name": "Jan Grosser",
+            "title": "Head of E-Commerce",
+            "category": "All Others",
+            "details": "Recording: Fischer & Shopify",
+            "territory": "EMEA_Enterprise_DACH_All_A_All_02"
+          },
+          {
+            "account": "fischer Deutschland Vertriebs GmbH",
+            "full_name": "Jan Grosser",
+            "title": "Head of E-Commerce",
+            "category": "All Others",
+            "details": "Email: Re: Shopify Plus - fischer Deutschland Vertriebs GmbH",
+            "territory": "EMEA_Enterprise_DACH_All_A_All_02"
+          },
+          {
+            "account": "Logitech",
+            "full_name": "Kevin Yip",
+            "title": "Head of Platform Strategy & Business Development",
+            "category": "All Others",
+            "details": "Connection Request sent from Sales Navigator",
+            "territory": "EMEA_Enterprise_DACH_All_A_All_02"
+          },
+          {
+            "account": "fischer Deutschland Vertriebs GmbH",
+            "full_name": "Jan Grosser",
+            "title": "Head of E-Commerce",
+            "category": "All Others",
+            "details": "Reply: Re: Shopify Plus - fischer Deutschland Vertriebs GmbH",
+            "territory": "EMEA_Enterprise_DACH_All_A_All_02"
+          },
+          {
+            "account": "fischer Deutschland Vertriebs GmbH",
+            "full_name": "Jan Grosser",
+            "title": "Head of E-Commerce",
+            "category": "All Others",
+            "details": "Reply: Shopify Plus - fischer Deutschland Vertriebs GmbH",
+            "territory": "EMEA_Enterprise_DACH_All_A_All_02"
+          },
+          {
+            "account": "fischer Deutschland Vertriebs GmbH",
+            "full_name": "Jan Grosser",
+            "title": "Head of E-Commerce",
+            "category": "All Others",
+            "details": "Email: Updated invitation: Jan and Susann: 15-minute Meeting @ Mi 18. Feb. 2026 2:30PM - 2:45PM (MEZ) (jan.grosser@fischer.de)",
+            "territory": "EMEA_Enterprise_DACH_All_A_All_02"
+          },
+          {
+            "account": "fischer Deutschland Vertriebs GmbH",
+            "full_name": "Jan Grosser",
+            "title": "Head of E-Commerce",
+            "category": "All Others",
+            "details": "Meeting",
+            "territory": "EMEA_Enterprise_DACH_All_A_All_02"
+          },
+          {
+            "account": "fischer Deutschland Vertriebs GmbH",
+            "full_name": "Jan Grosser",
+            "title": "Head of E-Commerce",
+            "category": "All Others",
+            "details": "Email: Shopify Plus - fischer Deutschland Vertriebs GmbH",
+            "territory": "EMEA_Enterprise_DACH_All_A_All_02"
+          },
+          {
+            "account": "fischer Deutschland Vertriebs GmbH",
+            "full_name": "Jan Grosser",
+            "title": "Head of E-Commerce",
+            "category": "All Others",
+            "details": "Email: Aktualisierte Einladung: Fischer & Shopify - Do 19. Feb. 2026 9:30AM - 10AM (MEZ) (jan.grosser@fischer.de)",
+            "territory": "EMEA_Enterprise_DACH_All_A_All_02"
+          },
+          {
+            "account": "fischer Deutschland Vertriebs GmbH",
+            "full_name": "Jan Grosser",
+            "title": "Head of E-Commerce",
+            "category": "All Others",
+            "details": "Email: Invitation: Jan and Susann: 15-minute Meeting @ Mi 18. Feb. 2026 2:30PM - 2:45PM (MEZ) (jan.grosser@fischer.de)",
+            "territory": "EMEA_Enterprise_DACH_All_A_All_02"
+          },
+          {
+            "account": "fischer Deutschland Vertriebs GmbH",
+            "full_name": "Jan Grosser",
+            "title": "Head of E-Commerce",
+            "category": "All Others",
+            "details": "Call: Left Voicemail | No Answer",
+            "territory": "EMEA_Enterprise_DACH_All_A_All_02"
+          },
+          {
+            "account": "fischer Deutschland Vertriebs GmbH",
+            "full_name": "Jan Grosser",
+            "title": "Head of E-Commerce",
+            "category": "All Others",
+            "details": "Sent Email: Zugesagt: Fischer & Shopify",
+            "territory": "EMEA_Enterprise_DACH_All_A_All_02"
+          },
+          {
+            "account": "Logitech",
+            "full_name": "Kevin Yip",
+            "title": "Head of Platform Strategy & Business Development",
+            "category": "Change Person Data",
+            "details": "status changed from Marketing Nurture to Expired",
+            "territory": "EMEA_Enterprise_DACH_All_A_All_02"
+          },
+          {
+            "account": "Logitech",
+            "full_name": "Kevin Yip",
+            "title": "Head of Platform Strategy & Business Development",
+            "category": "Change Person Data",
+            "details": "status changed from Expired to Marketing Nurture",
+            "territory": "EMEA_Enterprise_DACH_All_A_All_02"
+          },
+          {
+            "account": "Logitech",
+            "full_name": "Kevin Yip",
+            "title": "Head of Platform Strategy & Business Development",
+            "category": "Member of Audience",
+            "details": "Added as a Member to the Audience SUPPRESSION: Existing Director+ Contacts associated to BoB Accounts (Global)",
+            "territory": "EMEA_Enterprise_DACH_All_A_All_02"
+          },
+          {
+            "account": "fischer Deutschland Vertriebs GmbH",
+            "full_name": "Jan Grosser",
+            "title": "Head of E-Commerce",
+            "category": "Member of Audience",
+            "details": "Added as a Member to the Audience SUPPRESSION: Existing Director+ Contacts associated to BoB Accounts (Global)",
+            "territory": "EMEA_Enterprise_DACH_All_A_All_02"
+          },
+          {
+            "account": "Logitech",
+            "full_name": "Kevin Yip",
+            "title": "Head of Platform Strategy & Business Development",
+            "category": "Events - Partner",
+            "details": "Q1-ISV-Shoptalk-Bloomreach ExecHH-Enterprise-AMER-EN-25Q1_ISPMEDGPM",
+            "territory": "EMEA_Enterprise_DACH_All_A_All_02"
+          }
+        ]
+      }
+    },
+    "morgan_moran_de_sanchez": {
+      "name": "Morgan Moran de Sanchez",
+      "email": "morgan.sanchez@shopify.com",
+      "team": "Unassigned",
+      "segment": "Enterprise",
+      "summary": {
+        "mqa": 2,
+        "hvp": 0,
+        "new_people": 0,
+        "activity": 0,
+        "total": 2
+      },
+      "signals": {
+        "mqa": [
+          {
+            "account": "Dell Technologies",
+            "website": "dell.com",
+            "grade": "A",
+            "journey_stage": "MQA",
+            "engagement_3mo": "47.26563",
+            "keywords": "",
+            "categories": "",
+            "priority": "B2B - Low;D2C - Medium;Retail - Low",
+            "territory": "AMER_Enterprise_All_Consumer_A_All_04"
+          },
+          {
+            "account": "Nite Ize, Inc.",
+            "website": "niteize.com",
+            "grade": "A",
+            "journey_stage": "MQA",
+            "engagement_3mo": "58.405",
+            "keywords": "retail",
+            "categories": "",
+            "priority": "B2B - Medium;D2C - Low;Retail - Low",
+            "territory": "AMER_Enterprise_All_Consumer_A_All_04"
+          }
+        ],
+        "hvp": [],
+        "new_people": [],
+        "activity": []
+      }
+    },
+    "nick_essling": {
+      "name": "Nick Essling",
+      "email": "nick.essling@shopify.com",
+      "team": "Unassigned",
+      "segment": "Enterprise",
+      "summary": {
+        "mqa": 2,
+        "hvp": 1,
+        "new_people": 4,
+        "activity": 5,
+        "total": 12
+      },
+      "signals": {
+        "mqa": [
+          {
+            "account": "Taylor Communications",
+            "website": "taylorcommunications.com",
+            "grade": "D",
+            "journey_stage": "MQA",
+            "engagement_3mo": "74.6375",
+            "keywords": "retail",
+            "categories": "",
+            "priority": "",
+            "territory": "AMER_Enterprise_All_Emerging_A_All_03"
+          },
+          {
+            "account": "YMCA of the USA",
+            "website": "ymcaalaska.org",
+            "grade": "B",
+            "journey_stage": "MQA",
+            "engagement_3mo": "53.84",
+            "keywords": "retail",
+            "categories": "",
+            "priority": "",
+            "territory": "AMER_Enterprise_All_Emerging_A_All_03"
+          }
+        ],
+        "hvp": [
+          {
+            "account": "University of Houston",
+            "website": "uh.edu",
+            "grade": "C",
+            "journey_stage": "MQA",
+            "engagement_7d": "599.6564",
+            "keywords": "data security, e commerce, customer engagement",
+            "categories": "",
+            "priority": "",
+            "territory": "AMER_Enterprise_All_Emerging_A_All_03"
+          }
+        ],
+        "new_people": [
+          {
+            "account": "University of Michigan",
+            "full_name": "Earl Bell",
+            "title": "Chief Financial Officer",
+            "email": "earl.bell@umich.edu",
+            "engagement_7d": "0.15",
+            "first_engagement_date": "2026-02-17T00:00:00Z",
+            "account_tier": "",
+            "categories": "",
+            "territory": ""
+          },
+          {
+            "account": "University of Michigan",
+            "full_name": "Caitlin Walton",
+            "title": "Chief Financial Officer",
+            "email": "caitlin.walton@umich.edu",
+            "engagement_7d": "0.15",
+            "first_engagement_date": "2026-02-17T00:00:00Z",
+            "account_tier": "",
+            "categories": "",
+            "territory": ""
+          },
+          {
+            "account": "General Communication Inc. - ShellyAK",
+            "full_name": "Crystal Jackson",
+            "title": "Senior Manager, Customer Experience Diversity, Equity & Inclusion",
+            "email": "cjackson@gci.com",
+            "engagement_7d": "0.125",
+            "first_engagement_date": "2026-02-18T16:23:46Z",
+            "account_tier": "",
+            "categories": "",
+            "territory": ""
+          },
+          {
+            "account": "Pacific Northern Inc",
+            "full_name": "Richard Moran",
+            "title": "Chief Operations Officer",
+            "email": "moranr@pacificnorthern.com",
+            "engagement_7d": "7.5",
+            "first_engagement_date": "2026-02-17T00:00:00Z",
+            "account_tier": "",
+            "categories": "",
+            "territory": ""
+          }
+        ],
+        "activity": [
+          {
+            "account": "Pacific Northern Inc",
+            "full_name": "Richard Moran",
+            "title": "Chief Operations Officer",
+            "category": "Events - Partner",
+            "details": "Q1-2026 Acumatica Summit-Acumatica--Plus-AMER_Q126UKOGYK",
+            "territory": "AMER_Enterprise_All_Emerging_A_All_03"
+          },
+          {
+            "account": "University of Michigan",
+            "full_name": "Earl Bell",
+            "title": "Chief Financial Officer",
+            "category": "All Others",
+            "details": "Email: Earl | Revisit Shopify?",
+            "territory": "AMER_Enterprise_All_Emerging_A_All_03"
+          },
+          {
+            "account": "University of Michigan",
+            "full_name": "Caitlin Walton",
+            "title": "Chief Financial Officer",
+            "category": "All Others",
+            "details": "Email: Caitlin | Revisit Shopify?",
+            "territory": "AMER_Enterprise_All_Emerging_A_All_03"
+          },
+          {
+            "account": "General Communication Inc. - ShellyAK",
+            "full_name": "Crystal Jackson",
+            "title": "Senior Manager, Customer Experience Diversity, Equity & Inclusion",
+            "category": "All Others",
+            "details": "[Mozart] [Last chance] Exclusive AI demos: How lean commerce teams scale faster",
+            "territory": "AMER_Enterprise_All_Emerging_A_All_03"
+          },
+          {
+            "account": "Pacific Northern Inc",
+            "full_name": "Richard Moran",
+            "title": "Chief Operations Officer",
+            "category": "Member of Audience",
+            "details": "Added as a Member to the Audience SUPPRESSION: Existing Director+ Contacts associated to BoB Accounts (Global)",
+            "territory": "AMER_Enterprise_All_Emerging_A_All_03"
+          }
+        ]
+      }
+    },
+    "nick_herrera": {
+      "name": "Nick Herrera",
+      "email": "nick.herrera@shopify.com",
+      "team": "Unassigned",
+      "segment": "Enterprise",
+      "summary": {
+        "mqa": 1,
+        "hvp": 0,
+        "new_people": 2,
+        "activity": 4,
+        "total": 7
+      },
+      "signals": {
+        "mqa": [
+          {
+            "account": "Remington Arms Company, LLC",
+            "website": "remington.com",
+            "grade": "A",
+            "journey_stage": "MQA",
+            "engagement_3mo": "46.8075",
+            "keywords": "retail",
+            "categories": "",
+            "priority": "Ads - Low;B2B - Low;CSM - Low;D2C - Low;Lending - Low;Retail - Low",
+            "territory": "AMER_Enterprise_All_Lifestyle_A_All_05"
+          }
+        ],
+        "hvp": [],
+        "new_people": [
+          {
+            "account": "Brooklyn Nets",
+            "full_name": "Matthew Bishop",
+            "title": "Digital Operations & Content Producer",
+            "email": "mbishop@okcthunder.com",
+            "engagement_7d": "0.2",
+            "first_engagement_date": "2026-02-17T03:41:42Z",
+            "account_tier": "",
+            "categories": "",
+            "territory": ""
+          },
+          {
+            "account": "Ulta Beauty",
+            "full_name": "Chloe Meyer",
+            "title": "Analyst Strategic Analytics",
+            "email": "cmeyer2@ulta.com",
+            "engagement_7d": "10.1",
+            "first_engagement_date": "2026-02-18T00:00:00Z",
+            "account_tier": "Tier 1",
+            "categories": "Segment Top Account",
+            "territory": ""
+          }
+        ],
+        "activity": [
+          {
+            "account": "Ulta Beauty",
+            "full_name": "Chloe Meyer",
+            "title": "Analyst Strategic Analytics",
+            "category": "Webinar",
+            "details": "Forrester Personalization Webinar-Retail-Global_Q425ORVGWZ",
+            "territory": "AMER_Enterprise_All_Lifestyle_A_All_05"
+          },
+          {
+            "account": "Brooklyn Nets",
+            "full_name": "Matthew Bishop",
+            "title": "Digital Operations & Content Producer",
+            "category": "All Others",
+            "details": "[Mozart] Security comparison guide: Adobe and Shopify",
+            "territory": "AMER_Enterprise_All_Lifestyle_A_All_05"
+          },
+          {
+            "account": "Brooklyn Nets",
+            "full_name": "Matthew Bishop",
+            "title": "Digital Operations & Content Producer",
+            "category": "All Others",
+            "details": "[Mozart] Watch now: Migrating from Adobe to Shopify",
+            "territory": "AMER_Enterprise_All_Lifestyle_A_All_05"
+          },
+          {
+            "account": "Ulta Beauty",
+            "full_name": "Chloe Meyer",
+            "title": "Analyst Strategic Analytics",
+            "category": "All Others",
+            "details": "[Mozart] Your retail webinar is here",
+            "territory": "AMER_Enterprise_All_Lifestyle_A_All_05"
+          }
+        ]
+      }
+    },
+    "nicolas_berg": {
+      "name": "Nicolas Berg",
+      "email": "nicolas.berg@shopify.com",
+      "team": "Unassigned",
+      "segment": "Enterprise",
+      "summary": {
+        "mqa": 1,
+        "hvp": 0,
+        "new_people": 0,
+        "activity": 0,
+        "total": 1
+      },
+      "signals": {
+        "mqa": [
+          {
+            "account": "ALDI SÜD Dienstleistungs-SE & Co. oHG",
+            "website": "aldi-sued.de",
+            "grade": "A",
+            "journey_stage": "MQA",
+            "engagement_3mo": "182.55875",
+            "keywords": "",
+            "categories": "",
+            "priority": "D2C - Low",
+            "territory": "EMEA_Enterprise_DACH_All_A_All_01"
+          }
+        ],
+        "hvp": [],
+        "new_people": [],
+        "activity": []
+      }
+    },
+    "nicole_smelzer": {
+      "name": "Nicole Smelzer",
+      "email": "nicole.smelzer@shopify.com",
+      "team": "Unassigned",
+      "segment": "Enterprise",
+      "summary": {
+        "mqa": 0,
+        "hvp": 0,
+        "new_people": 2,
+        "activity": 14,
+        "total": 16
+      },
+      "signals": {
+        "mqa": [],
+        "hvp": [],
+        "new_people": [
+          {
+            "account": "Apple Inc.",
+            "full_name": "Annika Heiker Ivdal",
+            "title": "Digital CX",
+            "email": "a_heikerivdal@apple.com",
+            "engagement_7d": "5.0",
+            "first_engagement_date": "2026-02-19T00:00:00Z",
+            "account_tier": "Tier 3",
+            "categories": "",
+            "territory": ""
+          },
+          {
+            "account": "Apple Inc.",
+            "full_name": "Ahmad Seyar",
+            "title": "Owner",
+            "email": "seyarahmad076@gmail.com",
+            "engagement_7d": "1.05",
+            "first_engagement_date": "2026-02-19T11:05:49Z",
+            "account_tier": "Tier 3",
+            "categories": "",
+            "territory": ""
+          }
+        ],
+        "activity": [
+          {
+            "account": "Apple Inc.",
+            "full_name": "Annika Heiker Ivdal",
+            "title": "Digital CX",
+            "category": "Events - Partner",
+            "details": "SthlmDinner-Woolman-PM-Plus-EMEA-Sweden_Q126NBSGWH",
+            "territory": "EMEA_GA_All_All_X_All_04"
+          },
+          {
+            "account": "Apple Inc.",
+            "full_name": "Ahmad Seyar",
+            "title": "Owner",
+            "category": "All Others",
+            "details": "[Mozart] Let’s set up your new store",
+            "territory": "EMEA_GA_All_All_X_All_04"
+          },
+          {
+            "account": "Apple Inc.",
+            "full_name": "Ahmad Seyar",
+            "title": "Owner",
+            "category": "All Others",
+            "details": "[Mozart] Your free trial ends tomorrow",
+            "territory": "EMEA_GA_All_All_X_All_04"
+          },
+          {
+            "account": "Apple Inc.",
+            "full_name": "Ahmad Seyar",
+            "title": "Owner",
+            "category": "All Others",
+            "details": "[Mozart] Let’s set up your new store",
+            "territory": "EMEA_GA_All_All_X_All_04"
+          },
+          {
+            "account": "Apple Inc.",
+            "full_name": "Ahmad Seyar",
+            "title": "Owner",
+            "category": "All Others",
+            "details": "[Mozart] Let’s set up your new store",
+            "territory": "EMEA_GA_All_All_X_All_04"
+          },
+          {
+            "account": "Apple Inc.",
+            "full_name": "Ahmad Seyar",
+            "title": "Owner",
+            "category": "All Others",
+            "details": "[Mozart] Let’s set up your new store",
+            "territory": "EMEA_GA_All_All_X_All_04"
+          },
+          {
+            "account": "Apple Inc.",
+            "full_name": "Ahmad Seyar",
+            "title": "Owner",
+            "category": "All Others",
+            "details": "[Mozart] Thanks for contacting Shopify",
+            "territory": "EMEA_GA_All_All_X_All_04"
+          },
+          {
+            "account": "Apple Inc.",
+            "full_name": "Ahmad Seyar",
+            "title": "Owner",
+            "category": "All Others",
+            "details": "[Mozart] Let’s set up your new store",
+            "territory": "EMEA_GA_All_All_X_All_04"
+          },
+          {
+            "account": "Apple Inc.",
+            "full_name": "Ahmad Seyar",
+            "title": "Owner",
+            "category": "Change Person Data",
+            "details": "sfdcOwnerId changed from 0058V00000E5YVqQAN to 005OG0000064raAYAQ",
+            "territory": "EMEA_GA_All_All_X_All_04"
+          },
+          {
+            "account": "Apple Inc.",
+            "full_name": "Annika Heiker Ivdal",
+            "title": "Digital CX",
+            "category": "Change Person Data",
+            "details": "status changed from New to Marketing Nurture",
+            "territory": "EMEA_GA_All_All_X_All_04"
+          },
+          {
+            "account": "Apple Inc.",
+            "full_name": "Ahmad Seyar",
+            "title": "Owner",
+            "category": "High Intent Lead Capture",
+            "details": "24Q3_AUPPAAAGRO-Plus Auto Upgrades-Global-ACQ-ACCEL",
+            "territory": "EMEA_GA_All_All_X_All_04"
+          },
+          {
+            "account": "Apple Inc.",
+            "full_name": "Ahmad Seyar",
+            "title": "Owner",
+            "category": "Change Person Data",
+            "details": "status changed from New to New Sales Ready",
+            "territory": "EMEA_GA_All_All_X_All_04"
+          },
+          {
+            "account": "Apple Inc.",
+            "full_name": "Ahmad Seyar",
+            "title": "Owner",
+            "category": "Member of Audience",
+            "details": "Added as a Member to the Audience SUPPRESSION: Existing Director+ Contacts associated to BoB Accounts (Global)",
+            "territory": "EMEA_GA_All_All_X_All_04"
+          },
+          {
+            "account": "Apple Inc.",
+            "full_name": "Ahmad Seyar",
+            "title": "Owner",
+            "category": "Change Person Data",
+            "details": "sfdcOwnerId changed from 0058V00000COSrPQAX to 0058V00000E5YVqQAN",
+            "territory": "EMEA_GA_All_All_X_All_04"
+          }
+        ]
+      }
+    },
+    "rebecca_pallister": {
+      "name": "Rebecca Pallister",
+      "email": "rebecca.pallister@shopify.com",
+      "team": "Unassigned",
+      "segment": "Enterprise",
+      "summary": {
+        "mqa": 6,
+        "hvp": 0,
+        "new_people": 0,
+        "activity": 0,
+        "total": 6
+      },
+      "signals": {
+        "mqa": [
+          {
+            "account": "Medical Pharmacies Group",
+            "website": "medicalpharmacies.com",
+            "grade": "",
+            "journey_stage": "MQA",
+            "engagement_3mo": "50.225",
+            "keywords": "",
+            "categories": "",
+            "priority": "",
+            "territory": "AMER_Enterprise_All_Emerging_A_All_01"
+          },
+          {
+            "account": "Pacific Southwest Container",
+            "website": "teampsc.com",
+            "grade": "",
+            "journey_stage": "Engaged",
+            "engagement_3mo": "29.5675",
+            "keywords": "",
+            "categories": "",
+            "priority": "",
+            "territory": "AMER_Enterprise_All_Emerging_A_All_01"
+          },
+          {
+            "account": "Dick Hannah Dealerships",
+            "website": "dickhannah.com",
+            "grade": "A",
+            "journey_stage": "MQA",
+            "engagement_3mo": "117.2079",
+            "keywords": "retail, ai models, revenue growth",
+            "categories": "",
+            "priority": "",
+            "territory": "AMER_Enterprise_All_Emerging_A_All_01"
+          },
+          {
+            "account": "Ranpak",
+            "website": "ranpak.com",
+            "grade": "",
+            "journey_stage": "MQA",
+            "engagement_3mo": "58.105",
+            "keywords": "retail",
+            "categories": "",
+            "priority": "",
+            "territory": "AMER_Enterprise_All_Emerging_A_All_01"
+          },
+          {
+            "account": "Phoenix Metals",
+            "website": "http://phoenixmetals.com",
+            "grade": "",
+            "journey_stage": "Engaged",
+            "engagement_3mo": "135.1824",
+            "keywords": "retail, customer relationship management crm, data security",
+            "categories": "",
+            "priority": "",
+            "territory": "AMER_Enterprise_All_Emerging_A_All_01"
+          },
+          {
+            "account": "MCS Industries, Inc.",
+            "website": "mcsframe.com",
+            "grade": "",
+            "journey_stage": "MQA",
+            "engagement_3mo": "69.96",
+            "keywords": "retail",
+            "categories": "",
+            "priority": "",
+            "territory": "AMER_Enterprise_All_Emerging_A_All_01"
+          }
+        ],
+        "hvp": [],
+        "new_people": [],
+        "activity": []
+      }
+    },
+    "ryan_kernus": {
+      "name": "Ryan Kernus",
+      "email": "ryan.kernus@shopify.com",
+      "team": "Unassigned",
+      "segment": "Enterprise",
+      "summary": {
+        "mqa": 2,
+        "hvp": 0,
+        "new_people": 2,
+        "activity": 10,
+        "total": 14
+      },
+      "signals": {
+        "mqa": [
+          {
+            "account": "Green Chef Corp.",
+            "website": "greenchef.com",
+            "grade": "C",
+            "journey_stage": "MQA",
+            "engagement_3mo": "52.93",
+            "keywords": "retail",
+            "categories": "",
+            "priority": "",
+            "territory": "AMER_Enterprise_All_Consumer_A_All_06"
+          },
+          {
+            "account": "Land O'Frost",
+            "website": "landofrost.com",
+            "grade": "B",
+            "journey_stage": "Engaged",
+            "engagement_3mo": "48.685",
+            "keywords": "",
+            "categories": "",
+            "priority": "",
+            "territory": "AMER_Enterprise_All_Consumer_A_All_06"
+          }
+        ],
+        "hvp": [],
+        "new_people": [
+          {
+            "account": "Danone SA",
+            "full_name": "Etienne Bitteau",
+            "title": "e-Commerce Channel Lead",
+            "email": "etienne.bitteau@danone.com",
+            "engagement_7d": "0.2",
+            "first_engagement_date": "2026-02-19T11:41:42Z",
+            "account_tier": "Tier 3",
+            "categories": "",
+            "territory": ""
+          },
+          {
+            "account": "HelloFresh Group USA",
+            "full_name": "Kyle Cosman",
+            "title": "Procurement",
+            "email": "kyle.cosman@hellofresh.com",
+            "engagement_7d": "0.6",
+            "first_engagement_date": "2026-02-20T00:00:00Z",
+            "account_tier": "Tier 1",
+            "categories": "",
+            "territory": ""
+          }
+        ],
+        "activity": [
+          {
+            "account": "HelloFresh Group USA",
+            "full_name": "Kyle Cosman",
+            "title": "Procurement",
+            "category": "All Others",
+            "details": "Reply: Re: Shopify/Good Chop: Ryan <> Kyle Intro",
+            "territory": "AMER_Enterprise_All_Consumer_A_All_06"
+          },
+          {
+            "account": "Danone SA",
+            "full_name": "Etienne Bitteau",
+            "title": "e-Commerce Channel Lead",
+            "category": "All Others",
+            "details": "[Mozart] Here's how you can grow your business at scale with Shopify Plus",
+            "territory": "AMER_Enterprise_All_Consumer_A_All_06"
+          },
+          {
+            "account": "HelloFresh Group USA",
+            "full_name": "Kyle Cosman",
+            "title": "Procurement",
+            "category": "All Others",
+            "details": "Email: Re: Shopify/Good Chop: Ryan <> Kyle Intro",
+            "territory": "AMER_Enterprise_All_Consumer_A_All_06"
+          },
+          {
+            "account": "HelloFresh Group USA",
+            "full_name": "Kyle Cosman",
+            "title": "Procurement",
+            "category": "All Others",
+            "details": "Reply: Re: Shopify/Good Chop: Ryan <> Kyle Intro",
+            "territory": "AMER_Enterprise_All_Consumer_A_All_06"
+          },
+          {
+            "account": "HelloFresh Group USA",
+            "full_name": "Kyle Cosman",
+            "title": "Procurement",
+            "category": "All Others",
+            "details": "Email: Re: Shopify/Good Chop: Ryan <> Kyle Intro",
+            "territory": "AMER_Enterprise_All_Consumer_A_All_06"
+          },
+          {
+            "account": "HelloFresh Group USA",
+            "full_name": "Kyle Cosman",
+            "title": "Procurement",
+            "category": "All Others",
+            "details": "Reply: Re: Shopify/Good Chop: Ryan <> Kyle Intro",
+            "territory": "AMER_Enterprise_All_Consumer_A_All_06"
+          },
+          {
+            "account": "Danone SA",
+            "full_name": "Etienne Bitteau",
+            "title": "e-Commerce Channel Lead",
+            "category": "All Others",
+            "details": "[Mozart] Here's how you can grow your business at scale with Shopify Plus",
+            "territory": "AMER_Enterprise_All_Consumer_A_All_06"
+          },
+          {
+            "account": "HelloFresh Group USA",
+            "full_name": "Kyle Cosman",
+            "title": "Procurement",
+            "category": "All Others",
+            "details": "Email: Re: Shopify/Good Chop: Ryan <> Kyle Intro",
+            "territory": "AMER_Enterprise_All_Consumer_A_All_06"
+          },
+          {
+            "account": "HelloFresh Group USA",
+            "full_name": "Kyle Cosman",
+            "title": "Procurement",
+            "category": "All Others",
+            "details": "Hot Lead: Kyle Cosman became a Hot Lead",
+            "territory": "AMER_Enterprise_All_Consumer_A_All_06"
+          },
+          {
+            "account": "Danone SA",
+            "full_name": "Etienne Bitteau",
+            "title": "e-Commerce Channel Lead",
+            "category": "Events - Partner",
+            "details": "Q1-2026_NRF BIH Webinar TWP_PM-APAC-ANZ_Q126NUDNQN",
+            "territory": "AMER_Enterprise_All_Consumer_A_All_06"
+          }
+        ]
+      }
+    },
+    "samantha_schultz": {
+      "name": "Samantha Schultz",
+      "email": "samantha.schultz@shopify.com",
+      "team": "Unassigned",
+      "segment": "Enterprise",
+      "summary": {
+        "mqa": 0,
+        "hvp": 0,
+        "new_people": 1,
+        "activity": 1,
+        "total": 2
+      },
+      "signals": {
+        "mqa": [],
+        "hvp": [],
+        "new_people": [
+          {
+            "account": "Foot Locker Inc.",
+            "full_name": "Erika Emeruwa",
+            "title": "Head of Marketing Operations (North America)",
+            "email": "erika.emeruwa@footlocker.com",
+            "engagement_7d": "0.225",
+            "first_engagement_date": "2026-02-18T16:23:29Z",
+            "account_tier": "Tier 1",
+            "categories": "",
+            "territory": ""
+          }
+        ],
+        "activity": [
+          {
+            "account": "Foot Locker Inc.",
+            "full_name": "Erika Emeruwa",
+            "title": "Head of Marketing Operations (North America)",
+            "category": "All Others",
+            "details": "[Mozart] [Last chance] Exclusive AI demos: How lean commerce teams scale faster",
+            "territory": "AMER_Enterprise_All_Lifestyle_A_All_07"
+          }
+        ]
+      }
+    },
+    "scott_cohen": {
+      "name": "Scott Cohen",
+      "email": "scott.cohen@shopify.com",
+      "team": "Unassigned",
+      "segment": "Enterprise",
+      "summary": {
+        "mqa": 0,
+        "hvp": 0,
+        "new_people": 1,
+        "activity": 7,
+        "total": 8
+      },
+      "signals": {
+        "mqa": [],
+        "hvp": [],
+        "new_people": [
+          {
+            "account": "Alice + Olivia",
+            "full_name": "Aliaa Zulkifli",
+            "title": "Senior Director, Performance Marketing",
+            "email": "aliaa.zulkifli@aliceandolivia.com",
+            "engagement_7d": "9.375",
+            "first_engagement_date": "2026-02-20T00:00:00Z",
+            "account_tier": "Tier 1",
+            "categories": "",
+            "territory": ""
+          }
+        ],
+        "activity": [
+          {
+            "account": "Alice + Olivia",
+            "full_name": "Aliaa Zulkifli",
+            "title": "Senior Director, Performance Marketing",
+            "category": "Events - Partner",
+            "details": "LuxeAncillary-EPAM-PM-Plus-EMEA-United Arab Emirates_Q126MQZOMX",
+            "territory": "AMER_Enterprise_All_Lifestyle_A_All_12"
+          },
+          {
+            "account": "Alice + Olivia",
+            "full_name": "Aliaa Zulkifli",
+            "title": "Senior Director, Performance Marketing",
+            "category": "Change Person Data",
+            "details": "status changed from New Sales Ready to Disqualified",
+            "territory": "AMER_Enterprise_All_Lifestyle_A_All_12"
+          },
+          {
+            "account": "Alice + Olivia",
+            "full_name": "Aliaa Zulkifli",
+            "title": "Senior Director, Performance Marketing",
+            "category": "Change Person Data",
+            "details": "status changed from Disqualified to Expired",
+            "territory": "AMER_Enterprise_All_Lifestyle_A_All_12"
+          },
+          {
+            "account": "Alice + Olivia",
+            "full_name": "Aliaa Zulkifli",
+            "title": "Senior Director, Performance Marketing",
+            "category": "Change Person Data",
+            "details": "status changed from Expired to Marketing Nurture",
+            "territory": "AMER_Enterprise_All_Lifestyle_A_All_12"
+          },
+          {
+            "account": "Alice + Olivia",
+            "full_name": "Aliaa Zulkifli",
+            "title": "Senior Director, Performance Marketing",
+            "category": "Events - Tradeshow",
+            "details": "Q1-2026-Shoptalk Luxe-Booth Scans-Multiple-EMEA-United Arab Emirates_Q126ITYSRK",
+            "territory": "AMER_Enterprise_All_Lifestyle_A_All_12"
+          },
+          {
+            "account": "Alice + Olivia",
+            "full_name": "Aliaa Zulkifli",
+            "title": "Senior Director, Performance Marketing",
+            "category": "Change Person Data",
+            "details": "website changed from aliceandolivia.com to www.aliceandolivia.com",
+            "territory": "AMER_Enterprise_All_Lifestyle_A_All_12"
+          },
+          {
+            "account": "Alice + Olivia",
+            "full_name": "Aliaa Zulkifli",
+            "title": "Senior Director, Performance Marketing",
+            "category": "Events - Partner",
+            "details": "Q2-2025-ISV-Attentive-Thread World Tour- NYC",
+            "territory": "AMER_Enterprise_All_Lifestyle_A_All_12"
+          }
+        ]
+      }
+    },
+    "simon_bennett": {
+      "name": "Simon Bennett",
+      "email": "simon.bennett@shopify.com",
+      "team": "Unassigned",
+      "segment": "Enterprise",
+      "summary": {
+        "mqa": 0,
+        "hvp": 0,
+        "new_people": 3,
+        "activity": 6,
+        "total": 9
+      },
+      "signals": {
+        "mqa": [],
+        "hvp": [],
+        "new_people": [
+          {
+            "account": "Makita",
+            "full_name": "Chris Lawford",
+            "title": "Vice President, Retail & E-Commerce, Sales",
+            "email": "clawford@makitausa.com",
+            "engagement_7d": "0.45",
+            "first_engagement_date": "2026-02-19T00:00:00Z",
+            "account_tier": "",
+            "categories": "",
+            "territory": ""
+          },
+          {
+            "account": "Makita",
+            "full_name": "Cheryl Kramp",
+            "title": "Retail, E-Com, Industrial & Construction Supply Senior Manager, Channel Marketing",
+            "email": "cheryl.kramp@makitausa.com",
+            "engagement_7d": "0.125",
+            "first_engagement_date": "2026-02-19T00:00:00Z",
+            "account_tier": "",
+            "categories": "",
+            "territory": ""
+          },
+          {
+            "account": "sharp.eu",
+            "full_name": "Guillaume RUZZU",
+            "title": "Marketing & Sales Director",
+            "email": "guillaume.ruzzu@sharp.eu",
+            "engagement_7d": "9.375",
+            "first_engagement_date": "2026-02-17T00:00:00Z",
+            "account_tier": "Tier 3",
+            "categories": "",
+            "territory": ""
+          }
+        ],
+        "activity": [
+          {
+            "account": "sharp.eu",
+            "full_name": "Guillaume RUZZU",
+            "title": "Marketing & Sales Director",
+            "category": "Events - Partner",
+            "details": "Q1-2026 Acumatica Summit-Acumatica--Plus-AMER_Q126UKOGYK",
+            "territory": "EMEA_Enterprise_North_All_A_All_01"
+          },
+          {
+            "account": "Makita",
+            "full_name": "Chris Lawford",
+            "title": "Vice President, Retail & E-Commerce, Sales",
+            "category": "All Others",
+            "details": "Email: Dinner at AnQi: AI and Shopify",
+            "territory": "EMEA_Enterprise_North_All_A_All_01"
+          },
+          {
+            "account": "Makita",
+            "full_name": "Chris Lawford",
+            "title": "Vice President, Retail & E-Commerce, Sales",
+            "category": "All Others",
+            "details": "Email: Re: Private invite- Lakers suite, March 12th",
+            "territory": "EMEA_Enterprise_North_All_A_All_01"
+          },
+          {
+            "account": "Makita",
+            "full_name": "Chris Lawford",
+            "title": "Vice President, Retail & E-Commerce, Sales",
+            "category": "All Others",
+            "details": "Email: Private invite- Lakers suite, March 12th",
+            "territory": "EMEA_Enterprise_North_All_A_All_01"
+          },
+          {
+            "account": "Makita",
+            "full_name": "Cheryl Kramp",
+            "title": "Retail, E-Com, Industrial & Construction Supply Senior Manager, Channel Marketing",
+            "category": "All Others",
+            "details": "Email: Private invite- Lakers suite, March 12th",
+            "territory": "EMEA_Enterprise_North_All_A_All_01"
+          },
+          {
+            "account": "sharp.eu",
+            "full_name": "Guillaume RUZZU",
+            "title": "Marketing & Sales Director",
+            "category": "Member of Audience",
+            "details": "Added as a Member to the Audience SUPPRESSION: Existing Director+ Contacts associated to BoB Accounts (Global)",
+            "territory": "EMEA_Enterprise_North_All_A_All_01"
+          }
+        ]
+      }
+    },
+    "tanner_andresen": {
+      "name": "Tanner Andresen",
+      "email": "tanner.andresen@shopify.com",
+      "team": "Unassigned",
+      "segment": "Enterprise",
+      "summary": {
+        "mqa": 4,
+        "hvp": 0,
+        "new_people": 1,
+        "activity": 2,
+        "total": 7
+      },
+      "signals": {
+        "mqa": [
+          {
+            "account": "ABB OPTICAL GROUP",
+            "website": "abboptical.com",
+            "grade": "B",
+            "journey_stage": "MQA",
+            "engagement_3mo": "47.51",
+            "keywords": "retail",
+            "categories": "",
+            "priority": "",
+            "territory": "AMER_Enterprise_All_Emerging_A_All_06"
+          },
+          {
+            "account": "ALBI le Géant",
+            "website": "http://albilegeant.com",
+            "grade": "",
+            "journey_stage": "MQA",
+            "engagement_3mo": "38.0875",
+            "keywords": "",
+            "categories": "",
+            "priority": "",
+            "territory": "AMER_Enterprise_All_Emerging_A_All_06"
+          },
+          {
+            "account": "Nova Farms",
+            "website": "novafarms.com",
+            "grade": "",
+            "journey_stage": "MQA",
+            "engagement_3mo": "61.18",
+            "keywords": "retail, data security, reduce costs",
+            "categories": "",
+            "priority": "",
+            "territory": "AMER_Enterprise_All_Emerging_A_All_06"
+          },
+          {
+            "account": "KTM Sportmotorcycle",
+            "website": "ktm.com",
+            "grade": "C",
+            "journey_stage": "MQA",
+            "engagement_3mo": "49.43",
+            "keywords": "retail",
+            "categories": "",
+            "priority": "",
+            "territory": "AMER_Enterprise_All_Emerging_A_All_06"
+          }
+        ],
+        "hvp": [],
+        "new_people": [
+          {
+            "account": "SESCO Lighting , Inc.",
+            "full_name": "Netesh Gohil",
+            "title": "COO",
+            "email": "ngohil@sescolighting.com",
+            "engagement_7d": "7.5",
+            "first_engagement_date": "2026-02-17T00:00:00Z",
+            "account_tier": "Tier 5",
+            "categories": "",
+            "territory": ""
+          }
+        ],
+        "activity": [
+          {
+            "account": "SESCO Lighting , Inc.",
+            "full_name": "Netesh Gohil",
+            "title": "COO",
+            "category": "Events - Partner",
+            "details": "Q1-2026 Acumatica Summit-Acumatica--Plus-AMER_Q126UKOGYK",
+            "territory": "AMER_Enterprise_All_Emerging_A_All_06"
+          },
+          {
+            "account": "SESCO Lighting , Inc.",
+            "full_name": "Netesh Gohil",
+            "title": "COO",
+            "category": "Member of Audience",
+            "details": "Added as a Member to the Audience SUPPRESSION: Existing Director+ Contacts associated to BoB Accounts (Global)",
+            "territory": "AMER_Enterprise_All_Emerging_A_All_06"
+          }
+        ]
+      }
+    }
+  },
+  "highlights": [
+    {
+      "type": "hvp",
+      "score": 599.6564,
+      "title": "University of Houston",
+      "subtitle": "600 engagement pts this week",
+      "detail": "data security, e commerce, customer engagement",
+      "seller_id": "nick_essling",
+      "seller_name": "Nick Essling"
+    },
+    {
+      "type": "hvp",
+      "score": 82.4375,
+      "title": "Crystal Clean",
+      "subtitle": "82 engagement pts this week",
+      "detail": "retail, data security, data security concerns",
+      "seller_id": "kristy_shimkus",
+      "seller_name": "Kristy Shimkus"
+    },
+    {
+      "type": "hvp",
+      "score": 81.4125,
+      "title": "ARC Document Solutions",
+      "subtitle": "81 engagement pts this week",
+      "detail": "retail, e commerce, cross border",
+      "seller_id": "anthony_anastasi",
+      "seller_name": "Anthony Anastasi"
+    },
+    {
+      "type": "hvp",
+      "score": 69.255,
+      "title": "Hitachi High-Tech Analytical Science Ltd.",
+      "subtitle": "69 engagement pts this week",
+      "detail": "retail",
+      "seller_id": "alexandre_saroian",
+      "seller_name": "Alexandre Saroian"
+    },
+    {
+      "type": "mqa",
+      "score": 188.22079,
+      "title": "Curves",
+      "subtitle": "188 engagement pts (3 mo.)",
+      "detail": "e commerce, point of sale, e commerce platform",
+      "seller_id": "anthony_anastasi",
+      "seller_name": "Anthony Anastasi"
+    }
+  ],
+  "teams": {
+    "Unassigned": {
+      "sellers": [
+        "rebecca_pallister",
+        "john_beringer",
+        "erin_choi",
+        "ivka_shepard",
+        "colin_behenna",
+        "alden_morse",
+        "danielle_salvatore",
+        "tanner_andresen",
+        "ryan_kernus",
+        "anthony_anastasi",
+        "daisy_wright",
+        "dev_admin",
+        "nick_herrera",
+        "nick_essling",
+        "kristy_shimkus",
+        "fiona_taurel",
+        "alexandre_saroian",
+        "anastasia_sfregola",
+        "morgan_moran_de_sanchez",
+        "nicolas_berg",
+        "aaron_holl",
+        "capucine_delval",
+        "madeline_michelson",
+        "melanie_wollnitza",
+        "alexandra_seigenberg",
+        "scott_cohen",
+        "simon_bennett",
+        "samantha_schultz",
+        "anakaren_olivo",
+        "cassie_steinberg",
+        "gavin_spencer",
+        "colton_powell",
+        "nicole_smelzer",
+        "kristin_sutton",
+        "chris_andreoli"
+      ],
+      "summary": {
+        "mqa": 53,
+        "hvp": 7,
+        "new_people": 49,
+        "activity": 162
+      }
+    }
+  }
+}

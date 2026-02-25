@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>V2 — Bold &amp; Energetic | Weekly Sales Insights</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #ffffff;
+  --bg-card: #ffffff;
+  --accent: #008060;
+  --accent-light: #e6f5ef;
+  --accent-bold: #00704f;
+  --accent2: #5c6ac4;
+  --accent2-light: #eef0fb;
+  --warm: #d97706;
+  --warm-light: #fef3c7;
+  --rose: #be185d;
+  --rose-light: #fce7f3;
+  --text-1: #0d0d1a;
+  --text-2: #4a4a68;
+  --text-3: #8a8aa3;
+  --border: #e5e5e0;
+  --shadow: 0 2px 12px rgba(0,0,0,.06);
+  --shadow-lg: 0 12px 32px rgba(0,0,0,.1);
+  --font: 'Inter', -apple-system, sans-serif;
+  --font-serif: 'Instrument Serif', Georgia, serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --max-w: 1060px;
+  --radius: 16px;
+  --radius-sm: 10px;
+  --gradient-hero: linear-gradient(135deg, #008060 0%, #5c6ac4 50%, #be185d 100%);
+  --gradient-mqa: linear-gradient(135deg, #e6f5ef, #b8e6d0);
+  --gradient-hvp: linear-gradient(135deg, #fce7f3, #f5b8d4);
+  --gradient-people: linear-gradient(135deg, #eef0fb, #c8ccf0);
+  --gradient-activity: linear-gradient(135deg, #fef3c7, #fcd980);
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text-1);
+  font-size: 16px;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* Progress bar — top horizontal */
+.progress-track {
+  position: fixed; top: 0; left: 0; right: 0; height: 4px;
+  background: rgba(0,0,0,.06); z-index: 300;
+}
+.progress-fill { height: 100%; width: 0%; background: var(--gradient-hero); transition: width 80ms linear; }
+
+/* Toggle */
+.view-toggle {
+  position: fixed; top: 16px; right: 24px; z-index: 200;
+  display: flex; gap: 0; background: rgba(255,255,255,.95); backdrop-filter: blur(12px);
+  border: 1px solid var(--border); border-radius: 30px; padding: 4px;
+  box-shadow: var(--shadow);
+}
+.toggle-btn {
+  font-family: var(--font); font-size: 13px; font-weight: 700;
+  padding: 8px 20px; border: none; border-radius: 26px;
+  background: transparent; color: var(--text-3); cursor: pointer;
+  transition: all .25s ease; letter-spacing: .02em;
+}
+.toggle-btn.active {
+  background: var(--gradient-hero); color: #fff;
+}
+
+.wrap { max-width: var(--max-w); margin: 0 auto; padding: 0 28px; }
+
+/* ── HERO ── */
+.hero-bold {
+  background: var(--gradient-hero);
+  padding: 100px 28px 72px; text-align: center; position: relative;
+  overflow: hidden;
+}
+.hero-bold::before {
+  content: '35'; position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font); font-size: 30vw; font-weight: 900;
+  color: rgba(255,255,255,.06); line-height: 1; pointer-events: none;
+}
+.hero-kicker {
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: 4px;
+  text-transform: uppercase; color: rgba(255,255,255,.7); margin-bottom: 20px;
+}
+.hero-bold h1 {
+  font-family: var(--font-serif); font-weight: 400;
+  font-size: clamp(3rem, 8vw, 5.5rem); line-height: 1.0;
+  color: #fff; letter-spacing: -.03em;
+}
+.hero-bold .sub {
+  font-size: 18px; color: rgba(255,255,255,.8); margin-top: 16px; font-weight: 400;
+}
+.hero-bold .sub strong { color: #fff; }
+.hero-bold .week-badge {
+  display: inline-block; margin-top: 20px; padding: 8px 24px;
+  background: rgba(255,255,255,.15); backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 30px; font-family: var(--font-mono); font-size: 13px;
+  color: #fff; letter-spacing: 1px;
+}
+
+/* Personal hero */
+.hero-personal {
+  background: var(--gradient-hero);
+  padding: 80px 28px 60px; text-align: center; position: relative; overflow: hidden;
+}
+.hero-personal::before {
+  content: '14'; position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font); font-size: 40vw; font-weight: 900;
+  color: rgba(255,255,255,.05); line-height: 1; pointer-events: none;
+}
+.hero-personal .back-link {
+  display: inline-block; font-size: 14px; color: rgba(255,255,255,.7);
+  margin-bottom: 20px; transition: color .2s;
+}
+.hero-personal .back-link:hover { color: #fff; }
+.hero-personal h1 {
+  font-family: var(--font-serif); font-weight: 400;
+  font-size: clamp(2.5rem, 7vw, 4.5rem); color: #fff;
+  letter-spacing: -.02em;
+}
+.hero-personal .sub { font-size: 17px; color: rgba(255,255,255,.7); margin-top: 12px; }
+.hero-personal .sub strong { color: #fff; }
+
+/* ── YOUR WEEK IN NUMBERS ── */
+.numbers-section {
+  padding: 48px 0 32px;
+}
+.numbers-title {
+  font-family: var(--font); font-size: 13px; font-weight: 800;
+  letter-spacing: 3px; text-transform: uppercase; color: var(--text-3);
+  text-align: center; margin-bottom: 28px;
+}
+.numbers-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+}
+.num-card {
+  border-radius: var(--radius); padding: 32px 20px; text-align: center;
+  position: relative; overflow: hidden;
+  transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+}
+.num-card:hover { transform: scale(1.05); }
+.num-card-mqa { background: var(--gradient-mqa); }
+.num-card-hvp { background: var(--gradient-hvp); }
+.num-card-people { background: var(--gradient-people); }
+.num-card-activity { background: var(--gradient-activity); }
+.num-big {
+  font-family: var(--font); font-size: 56px; font-weight: 900;
+  line-height: 1; letter-spacing: -2px;
+}
+.num-big-mqa { color: var(--accent-bold); }
+.num-big-hvp { color: var(--rose); }
+.num-big-people { color: var(--accent2); }
+.num-big-activity { color: var(--warm); }
+.num-label {
+  font-family: var(--font); font-size: 13px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1px; margin-top: 8px;
+  color: var(--text-2);
+}
+
+/* ── SECTION HEADERS ── */
+.section-block { padding: 48px 0 24px; }
+.section-tag {
+  display: inline-block; font-family: var(--font-mono); font-size: 11px;
+  font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
+  padding: 5px 14px; border-radius: 6px; margin-bottom: 12px;
+}
+.tag-green { background: var(--accent-light); color: var(--accent); }
+.tag-rose { background: var(--rose-light); color: var(--rose); }
+.tag-indigo { background: var(--accent2-light); color: var(--accent2); }
+.tag-amber { background: var(--warm-light); color: var(--warm); }
+.section-head {
+  font-family: var(--font-serif); font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 400; color: var(--text-1); letter-spacing: -.02em;
+  margin-bottom: 8px;
+}
+.section-deck {
+  font-size: 15px; color: var(--text-2); line-height: 1.7;
+  max-width: 600px; margin-bottom: 32px;
+}
+
+/* ── FILTER BAR ── */
+.filter-bar {
+  display: flex; flex-wrap: wrap; gap: 8px; padding: 20px 0;
+}
+.filter-tag {
+  font-family: var(--font); font-size: 13px; font-weight: 700;
+  padding: 8px 20px; border: 2px solid var(--border);
+  border-radius: 30px; background: transparent;
+  color: var(--text-2); cursor: pointer; transition: all .2s;
+}
+.filter-tag:hover { border-color: var(--accent); color: var(--accent); }
+.filter-tag.active {
+  background: var(--text-1); color: #fff; border-color: var(--text-1);
+}
+
+/* ── TOP SIGNALS ── */
+.top-cards {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px;
+}
+.top-card {
+  border-radius: var(--radius); padding: 24px 18px;
+  border: 2px solid transparent; position: relative;
+  transition: transform .35s cubic-bezier(.34,1.56,.64,1), box-shadow .3s;
+  cursor: default;
+}
+.top-card:hover { transform: translateY(-6px) scale(1.02); box-shadow: var(--shadow-lg); }
+.top-card-hvp { background: var(--rose-light); border-color: rgba(190,24,93,.15); }
+.top-card-mqa { background: var(--accent-light); border-color: rgba(0,128,96,.15); }
+.top-rank {
+  display: inline-block; width: 28px; height: 28px; line-height: 28px;
+  text-align: center; border-radius: 50%; font-size: 13px; font-weight: 800;
+  color: #fff; margin-bottom: 12px;
+}
+.rank-1 { background: var(--accent); }
+.rank-2 { background: var(--rose); }
+.rank-3 { background: var(--accent2); }
+.rank-4 { background: var(--warm); }
+.rank-5 { background: var(--accent); }
+.top-title {
+  font-family: var(--font-serif); font-size: 18px; font-weight: 400;
+  color: var(--text-1); margin-bottom: 6px; line-height: 1.3;
+}
+.top-meta { font-size: 13px; color: var(--text-2); margin-bottom: 4px; font-weight: 500; }
+.top-kw { font-size: 12px; color: var(--warm); margin-bottom: 8px; }
+.top-owner { font-size: 12px; color: var(--accent2); font-weight: 700; cursor: pointer; }
+.top-owner:hover { text-decoration: underline; }
+
+/* ── DEFINITIONS ── */
+.defs-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+}
+.def-card {
+  border-radius: var(--radius); padding: 28px; position: relative; overflow: hidden;
+  transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+}
+.def-card:hover { transform: translateY(-4px); }
+.def-card-mqa { background: var(--gradient-mqa); }
+.def-card-hvp { background: var(--gradient-hvp); }
+.def-card-people { background: var(--gradient-people); }
+.def-card-activity { background: var(--gradient-activity); }
+.def-title {
+  font-family: var(--font-serif); font-size: 20px; font-weight: 400;
+  margin-bottom: 10px; color: var(--text-1);
+}
+.def-body { font-size: 14px; color: var(--text-2); line-height: 1.7; }
+
+/* ── SELLER GRID ── */
+.sellers-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px;
+}
+.seller-card {
+  background: var(--bg-card); border: 2px solid var(--border);
+  border-radius: var(--radius); padding: 24px; cursor: pointer;
+  transition: all .3s cubic-bezier(.34,1.56,.64,1);
+}
+.seller-card:hover {
+  transform: translateY(-6px) scale(1.02); box-shadow: var(--shadow-lg);
+  border-color: var(--accent);
+}
+.seller-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
+.seller-name {
+  font-family: var(--font-serif); font-size: 20px; font-weight: 400;
+}
+.seller-total {
+  font-family: var(--font); font-size: 28px; font-weight: 900;
+  color: var(--accent); letter-spacing: -1px;
+}
+.seller-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+.pill {
+  display: inline-block; padding: 3px 10px; border-radius: 20px;
+  font-size: 11px; font-weight: 700;
+}
+.pill-mqa { background: var(--accent-light); color: var(--accent); }
+.pill-hvp { background: var(--rose-light); color: var(--rose); }
+.pill-people { background: var(--accent2-light); color: var(--accent2); }
+.pill-activity { background: var(--warm-light); color: var(--warm); }
+
+/* ── DATA TABLES ── */
+.signal-section { margin-bottom: 40px; }
+.signal-heading {
+  font-family: var(--font-serif); font-size: 24px; font-weight: 400;
+  display: flex; align-items: center; gap: 10px; margin-bottom: 6px;
+}
+.signal-desc { font-size: 14px; color: var(--text-3); margin-bottom: 16px; line-height: 1.7; }
+.badge {
+  display: inline-block; padding: 3px 10px; border-radius: 20px;
+  font-size: 11px; font-weight: 700;
+}
+.badge-mqa { background: var(--accent-light); color: var(--accent); }
+.badge-hvp { background: var(--rose-light); color: var(--rose); }
+.badge-people { background: var(--accent2-light); color: var(--accent2); }
+.badge-activity { background: var(--warm-light); color: var(--warm); }
+
+.data-table {
+  width: 100%; border-collapse: collapse; font-size: 14px;
+  background: var(--bg-card); border-radius: var(--radius-sm);
+  overflow: hidden; box-shadow: var(--shadow);
+}
+.data-table th {
+  background: #f5f5f3; text-align: left; padding: 12px 16px;
+  border-bottom: 2px solid var(--border);
+  font-weight: 700; font-size: 11px; text-transform: uppercase;
+  letter-spacing: .06em; color: var(--text-2);
+}
+.data-table td {
+  padding: 12px 16px; border-bottom: 1px solid var(--border);
+  vertical-align: top; line-height: 1.6;
+}
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: rgba(0,128,96,.03); }
+
+/* ── ARCHIVE ── */
+.archive-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; }
+.archive-link {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 16px 20px; background: var(--bg-card); border: 2px solid var(--border);
+  border-radius: var(--radius-sm); font-size: 15px; font-weight: 600;
+  cursor: pointer; transition: all .2s;
+}
+.archive-link:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+
+/* ── IDENTITY NOTICE ── */
+.identity-notice {
+  background: var(--accent-light); border-left: 4px solid var(--accent);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 12px 16px; font-size: 14px; color: var(--text-2);
+  margin-bottom: 28px;
+}
+.identity-notice a { color: var(--accent); font-weight: 700; }
+
+/* ── FOOTER ── */
+.footer {
+  text-align: center; font-size: 12px; color: var(--text-3);
+  padding: 40px 0 56px; border-top: 1px solid var(--border); margin-top: 32px;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(.9) translateY(20px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-in { animation: fadeUp .6s cubic-bezier(.16,1,.3,1) both; }
+.scale-in { animation: scaleIn .5s cubic-bezier(.34,1.56,.64,1) both; }
+.fd2 { animation-delay: .1s; }
+.fd3 { animation-delay: .2s; }
+.fd4 { animation-delay: .3s; }
+.reveal {
+  opacity: 0; transform: translateY(30px) scale(.98);
+  transition: opacity .5s ease, transform .5s cubic-bezier(.34,1.56,.64,1);
+}
+.reveal.visible { opacity: 1; transform: translateY(0) scale(1); }
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-in, .scale-in, .reveal { animation: none !important; transition: none !important; opacity: 1 !important; transform: none !important; }
+}
+
+@media (max-width: 900px) { .top-cards { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 700px) {
+  .top-cards { grid-template-columns: 1fr 1fr; }
+  .numbers-grid { grid-template-columns: repeat(2, 1fr); }
+  .defs-grid { grid-template-columns: 1fr; }
+  .sellers-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) { .top-cards { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+
+<div class="view-toggle">
+  <button class="toggle-btn active" id="togMaster">Dashboard</button>
+  <button class="toggle-btn" id="togSeller">Seller View</button>
+</div>
+
+<div id="masterView"></div>
+<div id="personalView" style="display:none"></div>
+
+<script>
+(function() {
+'use strict';
+
+var SELLERS = [
+  { id:'alexandre_saroian', name:'Alexandre Saroian', mqa:3, hvp:1, people:2, activity:8, total:14 },
+  { id:'anthony_anastasi', name:'Anthony Anastasi', mqa:4, hvp:1, people:3, activity:4, total:12 },
+  { id:'nick_essling', name:'Nick Essling', mqa:3, hvp:0, people:3, activity:10, total:16 },
+  { id:'kristy_shimkus', name:'Kristy Shimkus', mqa:0, hvp:0, people:1, activity:13, total:14 },
+  { id:'nicole_smelzer', name:'Nicole Smelzer', mqa:0, hvp:0, people:2, activity:27, total:29 },
+  { id:'cassie_steinberg', name:'Cassie Steinberg', mqa:1, hvp:0, people:4, activity:5, total:10 },
+  { id:'aaron_holl', name:'Aaron Holl', mqa:1, hvp:0, people:0, activity:0, total:1 },
+  { id:'morgan_sanchez', name:'Morgan Moran de Sanchez', mqa:0, hvp:0, people:2, activity:10, total:12 }
+];
+
+var HIGHLIGHTS = [
+  { type:'hvp', title:'University of Houston', sub:'600 engagement pts this week', kw:'data security, e-commerce', owner:'Nick Essling' },
+  { type:'hvp', title:'Crystal Clean', sub:'82 engagement pts this week', kw:'retail, data security', owner:'Kristy Shimkus' },
+  { type:'hvp', title:'ARC Document Solutions', sub:'81 engagement pts this week', kw:'retail, e-commerce, cross border', owner:'Anthony Anastasi' },
+  { type:'mqa', title:'Hitachi High-Tech', sub:'69 engagement pts this week', kw:'retail', owner:'Alexandre Saroian' },
+  { type:'mqa', title:'Curves', sub:'188 engagement pts (3 mo.)', kw:'e-commerce, point of sale', owner:'Anthony Anastasi' }
+];
+
+var SIGNAL_TYPES = {
+  mqa: { label:'Accounts Moved to MQA', short:'MQA', desc:'A Marketing Qualified Account (MQA) crossed a significant engagement threshold through marketing activity. These accounts have had zero sales engagement in the last 30 days.' },
+  hvp: { label:'High-Value Page Visits', short:'HVP', desc:'Accounts that had a Closed Lost opp in the last 12 months but are back visiting Shopify Plus pages this week. Re-engagement opportunities.' },
+  new_people: { label:'Newly Engaged People', short:'People', desc:'Brand-new contacts from target titles who engaged with Shopify for the first time ever this week.' },
+  activity: { label:'Activity Details', short:'Activity', desc:'The specific activities that drove engagement from newly engaged people. Use this to personalize outreach.' }
+};
+
+var SAMPLE_SIGNALS = {
+  mqa: [
+    { account:'Dormer Pramet', grade:'D', stage:'MQA', engagement:'39', keywords:'', priority:'D2C - Medium' },
+    { account:'William Grant & Sons', grade:'C', stage:'MQA', engagement:'105', keywords:'retail', priority:'D2C - Low' },
+    { account:'Hilton Foods', grade:'C', stage:'MQA', engagement:'40', keywords:'retail', priority:'D2C - Low' }
+  ],
+  hvp: [
+    { account:'Hitachi High-Tech', grade:'A', stage:'MQA', engagement:'69', keywords:'retail', priority:'D2C - Low' }
+  ],
+  new_people: [
+    { account:'Lyreco UK', name:'Thomas Hodgetts', title:'Manager, Digital Marketing', email:'thomas.hodgetts@lyreco.com', engagement:'0.1' },
+    { account:'UK Greetings', name:'Suki Nandhra', title:'Manager, eCommerce Trading', email:'suki.nandhra@ukgreetings.co.uk', engagement:'16.6' }
+  ],
+  activity: [
+    { account:'UK Greetings', name:'Suki Nandhra', title:'Manager, eCommerce Trading', category:'High Intent Lead Capture', details:'2023-Retail-ContactUs' },
+    { account:'UK Greetings', name:'Suki Nandhra', title:'Manager, eCommerce Trading', category:'All Others', details:'The easiest way to get started with Shopify POS' },
+    { account:'UK Greetings', name:'Suki Nandhra', title:'Manager, eCommerce Trading', category:'All Others', details:'Start setting up your store' },
+    { account:'Lyreco UK', name:'Thomas Hodgetts', title:'Manager, Digital Marketing', category:'All Others', details:'Quick question' }
+  ]
+};
+
+function esc(s) { return s == null ? '' : String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+var $ = function(s) { return document.querySelector(s); };
+var $$ = function(s) { return document.querySelectorAll(s); };
+
+var rankClasses = ['rank-1','rank-2','rank-3','rank-4','rank-5'];
+
+function animateCounters() {
+  document.querySelectorAll('.counter').forEach(function(el) {
+    var target = parseInt(el.dataset.target, 10);
+    var duration = 1200;
+    var start = performance.now();
+    function tick(now) {
+      var t = Math.min((now - start) / duration, 1);
+      t = 1 - Math.pow(1 - t, 3);
+      el.textContent = Math.round(t * target);
+      if (t < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  });
+}
+
+function renderMaster() {
+  var html = '';
+
+  // Hero
+  html += '<div class="hero-bold">';
+  html += '<div class="hero-kicker fade-in">Enterprise Sales</div>';
+  html += '<h1 class="fade-in fd2">Weekly Sales<br>Insights</h1>';
+  html += '<div class="sub fade-in fd3">Engagement signals from the past <strong>7 days</strong></div>';
+  html += '<div class="week-badge fade-in fd4">WEEK OF FEB 23, 2026 &middot; 35 SELLERS</div>';
+  html += '</div>';
+
+  // Numbers
+  html += '<div class="wrap numbers-section">';
+  html += '<div class="numbers-title reveal">Your Week in Numbers</div>';
+  html += '<div class="numbers-grid">';
+  var nums = [
+    { val: 27, label: 'MQA Accounts', cls: 'mqa' },
+    { val: 8, label: 'Lost Opps Returning', cls: 'hvp' },
+    { val: 34, label: 'New People', cls: 'people' },
+    { val: 112, label: 'Activities Tracked', cls: 'activity' }
+  ];
+  nums.forEach(function(n) {
+    html += '<div class="num-card num-card-' + n.cls + ' reveal">';
+    html += '<div class="num-big num-big-' + n.cls + ' counter" data-target="' + n.val + '">0</div>';
+    html += '<div class="num-label">' + n.label + '</div>';
+    html += '</div>';
+  });
+  html += '</div></div>';
+
+  // Filters
+  html += '<div class="wrap"><div class="filter-bar reveal">';
+  html += '<button class="filter-tag active">All</button>';
+  html += '<button class="filter-tag">MQA (27)</button>';
+  html += '<button class="filter-tag">HVP (8)</button>';
+  html += '<button class="filter-tag">People (34)</button>';
+  html += '<button class="filter-tag">Activity (112)</button>';
+  html += '</div></div>';
+
+  // Top Signals
+  html += '<div class="wrap section-block">';
+  html += '<div class="section-tag tag-green reveal">Hottest This Week</div>';
+  html += '<div class="section-head reveal">Top Signals</div>';
+  html += '<div class="section-deck reveal">Accounts and people with the strongest engagement this week.</div>';
+  html += '<div class="top-cards">';
+  HIGHLIGHTS.forEach(function(h, i) {
+    var cardCls = h.type === 'hvp' ? 'top-card-hvp' : 'top-card-mqa';
+    html += '<div class="top-card ' + cardCls + ' reveal">';
+    html += '<div class="top-rank ' + rankClasses[i] + '">' + (i+1) + '</div>';
+    html += '<div class="top-title">' + esc(h.title) + '</div>';
+    html += '<div class="top-meta">' + esc(h.sub) + '</div>';
+    html += '<div class="top-kw">' + esc(h.kw) + '</div>';
+    html += '<div class="top-owner">@ ' + esc(h.owner) + '</div>';
+    html += '</div>';
+  });
+  html += '</div></div>';
+
+  // Definitions
+  html += '<div class="wrap section-block">';
+  html += '<div class="section-tag tag-indigo reveal">Reference</div>';
+  html += '<div class="section-head reveal">What Each Report Tracks</div>';
+  html += '<div class="defs-grid">';
+  var defTypes = ['mqa','hvp','new_people','activity'];
+  defTypes.forEach(function(t) {
+    var st = SIGNAL_TYPES[t];
+    html += '<div class="def-card def-card-' + (t === 'new_people' ? 'people' : t) + ' reveal">';
+    html += '<div class="def-title">' + esc(st.short) + ' \u2014 ' + esc(st.label) + '</div>';
+    html += '<div class="def-body">' + esc(st.desc) + '</div>';
+    html += '</div>';
+  });
+  html += '</div></div>';
+
+  // Seller Grid
+  html += '<div class="wrap section-block">';
+  html += '<div class="section-tag tag-amber reveal">Your Team</div>';
+  html += '<div class="section-head reveal">Breakdown by Seller</div>';
+  html += '<div class="section-deck reveal">Click any name to open their full report.</div>';
+  html += '<div class="sellers-grid">';
+  SELLERS.forEach(function(s) {
+    html += '<div class="seller-card reveal" data-seller="' + s.id + '">';
+    html += '<div class="seller-head"><span class="seller-name">' + esc(s.name) + '</span><span class="seller-total">' + s.total + '</span></div>';
+    html += '<div class="seller-pills">';
+    if (s.mqa > 0) html += '<span class="pill pill-mqa">' + s.mqa + ' MQA</span>';
+    if (s.hvp > 0) html += '<span class="pill pill-hvp">' + s.hvp + ' HVP</span>';
+    if (s.people > 0) html += '<span class="pill pill-people">' + s.people + ' People</span>';
+    if (s.activity > 0) html += '<span class="pill pill-activity">' + s.activity + ' Activity</span>';
+    html += '</div></div>';
+  });
+  html += '</div></div>';
+
+  // Archive
+  html += '<div class="wrap section-block">';
+  html += '<div class="section-tag tag-green reveal">Previous Weeks</div>';
+  html += '<div class="section-head reveal">Archive</div>';
+  html += '<div class="archive-grid reveal">';
+  html += '<div class="archive-link"><span>Week of 2026-02-16</span><span>&rarr;</span></div>';
+  html += '</div></div>';
+
+  html += '<div class="wrap"><div class="footer">CONFIDENTIAL \u2014 SHOPIFY INTERNAL USE ONLY \u00B7 Week of 2026-02-23</div></div>';
+
+  $('#masterView').innerHTML = html;
+  bindMasterEvents();
+  initReveal();
+  setTimeout(animateCounters, 400);
+}
+
+function renderPersonal() {
+  var html = '';
+  html += '<div class="hero-personal">';
+  html += '<a href="#" class="back-link fade-in" id="backBtn">&larr; All Sellers</a>';
+  html += '<h1 class="fade-in fd2">Alexandre Saroian</h1>';
+  html += '<div class="sub fade-in fd3">Your engagement signals \u2014 Week of <strong>February 23, 2026</strong></div>';
+  html += '</div>';
+
+  html += '<div class="wrap" style="padding-top:40px;padding-bottom:48px;">';
+  html += '<div class="identity-notice fade-in fd4">Viewing as <strong>Alexandre Saroian</strong>. Not you? <a href="#" id="clearId">View all sellers</a></div>';
+
+  // Numbers
+  html += '<div class="numbers-grid" style="margin-bottom:40px;">';
+  var stats = [
+    { val:3, label:'MQA Accounts', cls:'mqa' },
+    { val:1, label:'Lost Opp Returning', cls:'hvp' },
+    { val:2, label:'New People', cls:'people' },
+    { val:8, label:'Activities', cls:'activity' }
+  ];
+  stats.forEach(function(n) {
+    html += '<div class="num-card num-card-' + n.cls + ' reveal">';
+    html += '<div class="num-big num-big-' + n.cls + ' counter" data-target="' + n.val + '">0</div>';
+    html += '<div class="num-label">' + n.label + '</div>';
+    html += '</div>';
+  });
+  html += '</div>';
+
+  // Signal sections
+  function renderTable(type, headers, rows) {
+    var st = SIGNAL_TYPES[type];
+    var cls = type === 'new_people' ? 'people' : type;
+    html += '<div class="signal-section reveal">';
+    html += '<div class="signal-heading"><span class="badge badge-' + cls + '">' + esc(st.short) + '</span> ' + esc(st.label) + '</div>';
+    html += '<div class="signal-desc">' + esc(st.desc) + '</div>';
+    html += '<table class="data-table"><thead><tr>';
+    headers.forEach(function(h) { html += '<th>' + esc(h) + '</th>'; });
+    html += '</tr></thead><tbody>';
+    rows.forEach(function(r) {
+      html += '<tr>';
+      r.forEach(function(c) { html += '<td>' + esc(c) + '</td>'; });
+      html += '</tr>';
+    });
+    html += '</tbody></table></div>';
+  }
+
+  renderTable('mqa', ['Account','Grade','Stage','Engagement (3 mo.)','Keywords','Priority'],
+    SAMPLE_SIGNALS.mqa.map(function(r) { return [r.account, r.grade, r.stage, r.engagement, r.keywords, r.priority]; }));
+  renderTable('hvp', ['Account','Grade','Stage','Engagement (7d)','Keywords','Priority'],
+    SAMPLE_SIGNALS.hvp.map(function(r) { return [r.account, r.grade, r.stage, r.engagement, r.keywords, r.priority]; }));
+  renderTable('new_people', ['Account','Name','Title','Email','Engagement (7d)'],
+    SAMPLE_SIGNALS.new_people.map(function(r) { return [r.account, r.name, r.title, r.email, r.engagement]; }));
+  renderTable('activity', ['Account','Name','Title','Category','Details'],
+    SAMPLE_SIGNALS.activity.map(function(r) { return [r.account, r.name, r.title, r.category, r.details]; }));
+
+  html += '<div class="footer">CONFIDENTIAL \u2014 SHOPIFY INTERNAL USE ONLY \u00B7 Week of 2026-02-23</div>';
+  html += '</div>';
+
+  $('#personalView').innerHTML = html;
+  $('#backBtn').addEventListener('click', function(e) { e.preventDefault(); switchView('master'); });
+  $('#clearId').addEventListener('click', function(e) { e.preventDefault(); switchView('master'); });
+  initReveal();
+  setTimeout(animateCounters, 300);
+}
+
+function bindMasterEvents() {
+  $$('.seller-card').forEach(function(c) { c.addEventListener('click', function() { switchView('seller'); }); });
+  $$('.top-owner').forEach(function(c) { c.addEventListener('click', function() { switchView('seller'); }); });
+  $$('.filter-tag').forEach(function(b) {
+    b.addEventListener('click', function() {
+      $$('.filter-tag').forEach(function(x) { x.classList.remove('active'); });
+      this.classList.add('active');
+    });
+  });
+}
+
+function switchView(view) {
+  if (view === 'seller') {
+    renderPersonal();
+    $('#masterView').style.display = 'none';
+    $('#personalView').style.display = 'block';
+    $('#togMaster').classList.remove('active');
+    $('#togSeller').classList.add('active');
+  } else {
+    renderMaster();
+    $('#personalView').style.display = 'none';
+    $('#masterView').style.display = 'block';
+    $('#togSeller').classList.remove('active');
+    $('#togMaster').classList.add('active');
+  }
+  window.scrollTo(0, 0);
+}
+
+function initReveal() {
+  function check() {
+    document.querySelectorAll('.reveal:not(.visible)').forEach(function(el) {
+      if (el.getBoundingClientRect().top < window.innerHeight * 0.95) el.classList.add('visible');
+    });
+  }
+  check(); setTimeout(check, 100); setTimeout(check, 400);
+  window.addEventListener('scroll', check, { passive: true });
+}
+
+window.addEventListener('scroll', function() {
+  var fill = document.getElementById('progressFill');
+  if (!fill) return;
+  var pct = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100;
+  fill.style.width = Math.min(pct, 100) + '%';
+}, { passive: true });
+
+$('#togMaster').addEventListener('click', function() { switchView('master'); });
+$('#togSeller').addEventListener('click', function() { switchView('seller'); });
+
+renderMaster();
+
+})();
+</script>
+</body>
+</html>
