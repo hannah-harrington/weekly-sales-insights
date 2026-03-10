@@ -1,6 +1,6 @@
 # Get Started Here
 
-Weekly Sales Insights is a dashboard that gives each sales rep a personalized weekly report powered by Demandbase data. The NA version lives at [sales-insights-hub.quick.shopify.io](https://sales-insights-hub.quick.shopify.io), and you can set up your own version for your region (EMEA, APAC, etc.) by following this guide.
+Weekly Sales Insights is a dashboard that gives each sales rep a personalized weekly report powered by Demandbase data. The original version (NA Enterprise) lives at [sales-insights-hub.quick.shopify.io](https://sales-insights-hub.quick.shopify.io). Any team can set up their own version by following this guide.
 
 Everything below is done through **Cursor** — you just paste a prompt, and it handles the rest. No coding required.
 
@@ -12,7 +12,7 @@ Make sure you have these four things:
 
 - [ ] A **GitHub account** (any Shopify GitHub account works — [sign up here](https://github.com/signup) if you don't have one)
 - [ ] **Cursor** installed on your laptop ([download it here](https://cursor.sh))
-- [ ] Access to **Demandbase** so you can export your region's weekly reports
+- [ ] Access to **Demandbase** so you can export your team's weekly reports
 - [ ] Access to **Shopify Quick** for publishing your site (ask Hannah if you're not sure)
 
 ---
@@ -25,9 +25,9 @@ Cursor is a code editor with a built-in AI assistant. You don't need to know how
 
 ---
 
-## Set Up Your Region's Dashboard
+## Set Up Your Team's Dashboard
 
-This creates your own independent copy of the Sales Insights site. You'll have your own reps, your own data, and your own URL. Nothing you do here can affect the NA site.
+This creates your own independent copy of the Sales Insights site. You'll have your own reps, your own data, and your own URL. Nothing you do here can affect the original site.
 
 ### Step 1: Create your own copy of the project
 
@@ -37,41 +37,42 @@ Open Cursor and paste this into the chat:
 
 This creates your own copy on GitHub and downloads it to your computer. Cursor will open the project automatically.
 
-### Step 2: Add your region's reps
+### Step 2: Add your team's reps
 
 Before pasting this prompt, fill in the **bold** parts with your actual info:
 
-> Update pipeline/config.py for my region:
-> - Change DEPLOY_SITE_NAME to "**your-region-sales-insights**" (for example, "emea-sales-insights" or "apac-sales-insights")
+> Update pipeline/config.py for my team:
+> - Change DEPLOY_SITE_NAME to "**your-team-sales-insights**" (for example, "b2b-sales-insights" or "emea-sales-insights")
 > - Replace ALL_KNOWN_REPS with these names: **paste your full list of rep names here, separated by commas**
 > - Set ADMINS to ["**your.email@shopify.com**"]
 > - Update CSV_INPUT_DIR to point to wherever I'll save my Demandbase CSV files
 
-Cursor will update the configuration file with your region's details.
+Cursor will update the configuration file with your team's details.
 
 ### Step 3: Update the site branding
 
 > Update the site branding in site/index.html:
-> - Change the title to "**Your Region** Weekly Sales Insights"
-> - Update the header subtitle to match my region
+> - Change the title to "**Your Team** Weekly Sales Insights"
+> - Update the header subtitle to match my team
 > - Change the contact info at the bottom to **your name**
 
 ### Step 4: Update the weekly workflow instructions
 
-> Rewrite MONDAY_WORKFLOW.md for my region. The Demandbase CSVs will be in **the folder where you'll save your CSVs** and the site will be published at **your-region-sales-insights**.quick.shopify.io.
+> Rewrite MONDAY_WORKFLOW.md for my team. The Demandbase CSVs will be in **the folder where you'll save your CSVs** and the site will be published at **your-team-sales-insights**.quick.shopify.io.
 
 ### Step 5: Test it with your data
 
-First, go to Demandbase and export these 4 reports as CSV files for your region:
+First, go to Demandbase and export these reports as CSV files for your team:
 
-1. Accounts Moved to MQA in Last Week w/ No Sales Touches
+1. New Accounts Moved to MQA in Last Week
 2. Accounts Visiting High Value Pages with Lost Opp in Last 12 Months
-3. Newly Engaged People This Week
-4. Newly Engaged People This Week - Activity Report
+3. Accounts Visiting High Value Pages (all accounts)
+4. Newly Engaged People This Week
+5. Newly Engaged People This Week - Activity Report
 
 Save them to the folder you specified in Step 2. Then paste this into Cursor:
 
-> The 4 Demandbase CSVs are in **your folder path**. Run the weekly sales insights pipeline and deploy to Quick.
+> The Demandbase CSVs are in **your folder path**. Run the weekly sales insights pipeline and deploy to Quick.
 
 Cursor will process your data and publish the site.
 
@@ -79,7 +80,7 @@ Cursor will process your data and publish the site.
 
 > Commit all my changes and push to my GitHub fork.
 
-Your site is now live! Share the link with your team — it will be at `your-region-sales-insights.quick.shopify.io` (whatever name you chose in Step 2).
+Your site is now live! Share the link with your team — it will be at `your-team-sales-insights.quick.shopify.io` (whatever name you chose in Step 2).
 
 ---
 
@@ -87,18 +88,18 @@ Your site is now live! Share the link with your team — it will be at `your-reg
 
 Every week (we do Mondays), the update takes about 5 minutes:
 
-1. Export the 4 Demandbase CSVs for your region
+1. Export the Demandbase CSVs for your team
 2. Save them to your CSV folder (overwrite last week's files)
-3. Paste this into Cursor: *"The 4 Demandbase CSVs are in **your folder**. Run the weekly sales insights pipeline and deploy to Quick."*
-4. Share the link in your region's Slack channel
+3. Paste this into Cursor: *"The Demandbase CSVs are in **your folder**. Run the weekly sales insights pipeline and deploy to Quick."*
+4. Share the link in your team's Slack channel
 
 Full details are in the `MONDAY_WORKFLOW.md` file inside your project.
 
 ---
 
-## Getting New Features from NA
+## Getting New Features
 
-When Hannah adds new features or fixes bugs on the NA version, you can pull those improvements into your site without losing any of your region's settings. Paste this into Cursor:
+When Hannah adds new features or fixes bugs on the original version, you can pull those improvements into your site without losing any of your team's settings. Paste this into Cursor:
 
 > Pull the latest changes from hannah-harrington/weekly-sales-insights into my fork.
 
@@ -110,9 +111,9 @@ If Cursor says there's a conflict (meaning you and Hannah both changed the same 
 
 ---
 
-## Want to Edit the NA Site Instead?
+## Want to Edit the Original Site Instead?
 
-If you're on the NA team and want to suggest a change to the main site (not set up your own region), here's the short version:
+If you're on the NA Enterprise team and want to suggest a change to the main site (not set up your own), here's the short version:
 
 1. Ask Hannah to give you access to [the project on GitHub](https://github.com/hannah-harrington/weekly-sales-insights)
 2. Paste into Cursor: *"Clone the repo hannah-harrington/weekly-sales-insights to my Desktop and open it."*
@@ -122,19 +123,15 @@ If you're on the NA team and want to suggest a change to the main site (not set 
 4. When you're happy with the changes, paste: *"Create a new branch for my changes, commit everything, push to GitHub, and open a pull request. Request hannah-harrington as a reviewer."*
 5. Hannah will get notified and review your changes on GitHub. Nothing goes live until she approves.
 
-This keeps the NA site safe — nothing goes live without Hannah's approval.
-
 ---
 
-## Region Overview
+## Active Dashboards
 
-| Region | Site URL | Owner |
+| Team | Site URL | Owner |
 |---|---|---|
-| NA | sales-insights-hub.quick.shopify.io | Hannah Harrington |
-| EMEA | emea-sales-insights.quick.shopify.io | _(your name here)_ |
-| APAC | apac-sales-insights.quick.shopify.io | _(your name here)_ |
+| NA Enterprise | sales-insights-hub.quick.shopify.io | Hannah Harrington |
 
-Each region runs independently with its own data and its own weekly update schedule.
+_Setting up a new one? Add your row here once you're live and push the change to your fork._
 
 ---
 
@@ -142,10 +139,10 @@ Each region runs independently with its own data and its own weekly update sched
 
 You don't need to understand these files to use the tool — Cursor edits them for you. But in case you're curious:
 
-- **The config file** — contains your rep names, team groupings, and site settings. This is what makes the dashboard personalized to your region.
-- **The website** — a single file that shows the dashboard. It reads the data and displays each rep's report.
-- **The pipeline** — a script that takes your Demandbase CSV exports and turns them into the data the website displays.
-- **The workflow doc** — step-by-step instructions for the weekly Monday update.
+- **The config file** (`pipeline/config.py`) — contains your rep names, team groupings, and site settings. This is what makes the dashboard personalized to your team.
+- **The website** (`site/index.html`) — a single file that shows the dashboard. It reads the data and displays each rep's report.
+- **The pipeline** (`pipeline/ingest.py`) — a script that takes your Demandbase CSV exports and turns them into the data the website displays.
+- **The workflow doc** (`MONDAY_WORKFLOW.md`) — step-by-step instructions for the weekly Monday update.
 
 ---
 
