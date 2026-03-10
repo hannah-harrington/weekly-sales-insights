@@ -27,13 +27,19 @@ from pipeline.config import (
     DATA_DIR,
     DEPLOY_SITE_NAME,
     PROJECT_ROOT,
+    SALES_NAV_LEADS_FILE,
     SITE_DIR,
+    SITE_URL,
+    TEAM_LEADS,
+    TEAM_ORDER,
     build_identity_map,
     seller_id_for,
     seller_record,
     team_for,
 )
 from pipeline.sources import demandbase
+from pipeline.sources import salesnav
+from pipeline import slack_notify
 
 
 def get_monday_date() -> date:
@@ -81,14 +87,36 @@ def build_json(week_date: str, source_data: dict) -> dict:
         }
 
     # Build team rollups
-    teams: dict[str, dict] = defaultdict(lambda: {"sellers": [], "summary": {}})
+    teams: dict[str, dict] = defaultdict(
+        lambda: {"lead": None, "sellers": [], "summary": {}}
+    )
     for sid, seller in sellers.items():
         team_name = seller["team"]
+        if teams[team_name]["lead"] is None:
+            teams[team_name]["lead"] = TEAM_LEADS.get(team_name)
         teams[team_name]["sellers"].append(sid)
         for st in all_signal_type_keys:
             teams[team_name]["summary"][st] = (
                 teams[team_name]["summary"].get(st, 0) + seller["summary"].get(st, 0)
             )
+
+    ordered_teams: dict[str, dict] = {}
+    for tn in TEAM_ORDER:
+        if tn in teams:
+            ordered_teams[tn] = teams[tn]
+    for tn in teams:
+        if tn not in ordered_teams:
+            ordered_teams[tn] = teams[tn]
+
+    # Inject Sales Nav top leads for Consumer team reps
+    nav_leads = salesnav.load(SALES_NAV_LEADS_FILE, signals_by_seller)
+    nav_count = 0
+    for seller_name, leads in nav_leads.items():
+        sid = seller_id_for(seller_name)
+        if sid in sellers:
+            sellers[sid]["signals"]["top_leads"] = leads
+            sellers[sid]["summary"]["top_leads"] = len(leads)
+            nav_count += len(leads)
 
     highlights = demandbase.build_highlights(raw_signals)
 
@@ -101,7 +129,7 @@ def build_json(week_date: str, source_data: dict) -> dict:
         for seller_name, seller_signals in signals_by_seller.items():
             type_signals = seller_signals.get(h["type"], [])
             for sig in type_signals:
-                match_key = "account" if h["type"] in ("mqa", "hvp") else "full_name"
+                match_key = "account" if h["type"] in ("mqa_new", "mqa", "hvp", "hvp_all", "all_mqa") else "full_name"
                 if sig.get(match_key) == h["title"]:
                     h["seller_id"] = name_to_id.get(seller_name)
                     h["seller_name"] = seller_name
@@ -109,11 +137,18 @@ def build_json(week_date: str, source_data: dict) -> dict:
             if h["seller_id"]:
                 break
 
+    all_signal_types = dict(signal_types)
+    all_signal_types.update(salesnav.SIGNAL_TYPE_META)
+
+    sources = ["demandbase"]
+    if nav_count > 0:
+        sources.append("salesnav")
+
     return {
         "meta": {
             "week_of": week_date,
             "generated_at": datetime.now(timezone.utc).isoformat(),
-            "sources": ["demandbase"],
+            "sources": sources,
             "total_sellers": len(sellers),
             "sellers_with_signals": sum(
                 1 for s in sellers.values() if s["summary"]["total"] > 0
@@ -122,11 +157,11 @@ def build_json(week_date: str, source_data: dict) -> dict:
         "identity": build_identity_map(),
         "signal_types": {
             st: {k: v for k, v in meta.items()}
-            for st, meta in signal_types.items()
+            for st, meta in all_signal_types.items()
         },
         "sellers": dict(sorted(sellers.items(), key=lambda x: x[1]["name"])),
         "highlights": highlights,
-        "teams": dict(teams),
+        "teams": ordered_teams,
     }
 
 
@@ -216,6 +251,10 @@ def main():
         "--deploy", action="store_true",
         help="Deploy site to quick.shopify.io after generating.",
     )
+    parser.add_argument(
+        "--notify", action="store_true",
+        help="Send Slack DMs to reps with signals (requires SLACK_BOT_TOKEN).",
+    )
     args = parser.parse_args()
 
     week_date = args.date or get_monday_date().isoformat()
@@ -246,6 +285,12 @@ def main():
         labels = [demandbase.SIGNAL_TYPE_META[m]["short_label"] for m in missing]
         print(f"  Warning: Missing CSVs for: {', '.join(labels)}")
     print()
+
+    # --- Load Sales Nav leads ---
+    if SALES_NAV_LEADS_FILE.exists():
+        print(f"Loading Sales Nav leads from {SALES_NAV_LEADS_FILE.name}...")
+    else:
+        print(f"  Sales Nav file not found ({SALES_NAV_LEADS_FILE.name}) — skipping Top Leads")
 
     # --- Build JSON ---
     print("Building JSON data model...")
@@ -279,6 +324,17 @@ def main():
     # --- Deploy ---
     if args.deploy:
         deploy(SITE_DIR)
+        print()
+
+    # --- Slack DMs ---
+    if args.notify:
+        token = slack_notify.get_token()
+        if token:
+            print("Sending Slack DMs...")
+            stats = slack_notify.notify_all(data, SITE_URL, token)
+            print(f"  Sent {stats['sent']} DMs, skipped {stats['skipped']} (no signals/email), {stats['failed']} failed")
+        else:
+            print("WARNING: --notify requested but SLACK_BOT_TOKEN not set. Skipping Slack DMs.")
         print()
 
     print("Done!")

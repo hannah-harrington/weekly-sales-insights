@@ -20,8 +20,12 @@ ARCHIVE_DIR = PROJECT_ROOT / "archive"
 # Where CSVs are dropped (the existing workflow folder)
 CSV_INPUT_DIR = PROJECT_ROOT.parent / "Demandbase weeklys"
 
+# Sales Navigator leads (Consumer team only, static enrichment)
+SALES_NAV_LEADS_FILE = PROJECT_ROOT.parent / "CG_Sales_Nav_Leads_CLEAN.xlsx"
+
 # Quick deployment
-DEPLOY_SITE_NAME = "weekly-sales-insights"
+DEPLOY_SITE_NAME = "sales-insights-hub"
+SITE_URL = f"https://{DEPLOY_SITE_NAME}.quick.shopify.io"
 
 # ---------------------------------------------------------------------------
 # Identity roles
@@ -40,13 +44,51 @@ ADMINS: list[str] = [
     "hannah.harrington@shopify.com",
 ]
 
-# Coaches: email -> dict with name and list of seller IDs they manage.
+# Coaches: email -> dict with name, team(s), and list of seller IDs they manage.
 # The coach view (Phase 5) will show a rollup of these reps' signals.
 COACHES: dict[str, dict] = {
-    # "julie.tsai@shopify.com": {
-    #     "name": "Julie Tsai",
-    #     "reps": ["amanda_avedschmidt", "julien_baunay"],
-    # },
+    "ryan.quarles@shopify.com": {
+        "name": "Ryan Quarles",
+        "teams": ["Consumer"],
+        "reps": [
+            "colin_behenna", "ivka_shepard", "morgan_moran_de_sanchez",
+            "daisy_wright", "ryan_kernus", "erin_choi",
+        ],
+    },
+    "dave.greenberger@shopify.com": {
+        "name": "Dave Greenberger",
+        "teams": ["Emerging"],
+        "reps": [
+            "rebecca_pallister", "alden_morse", "nick_essling",
+            "kristy_shimkus", "tanner_andresen", "anthony_anastasi",
+        ],
+    },
+    "todd.mallett@shopify.com": {
+        "name": "Todd Mallett",
+        "teams": ["Lifestyle 1"],
+        "reps": [
+            "alexandra_seigenberg", "zachary_alton", "kristin_sutton",
+            "gregg_belbeck", "kelsey_bates", "scott_cohen",
+        ],
+    },
+    "kal.stephen@shopify.com": {
+        "name": "Kal Stephen",
+        "teams": ["Lifestyle 2"],
+        "reps": [
+            "aaron_holl", "cassie_steinberg", "sheeva_sairafi",
+            "vicki_bodwell", "nick_herrera", "samantha_schultz",
+        ],
+    },
+    "brandon.gracey@shopify.com": {
+        "name": "Brandon Gracey",
+        "teams": ["Global Accounts", "EMEA"],
+        "reps": [
+            "vanessa_buttinger", "christopher_joannou", "nicole_smelzer",
+            "john_beringer", "nicolas_berg", "melanie_wollnitza",
+            "simon_bennett", "danielle_salvatore", "anastasia_sfregola",
+            "capucine_delval", "nathan_frost", "fiona_taurel",
+        ],
+    },
 }
 
 # Explicit email overrides for reps whose email doesn't follow
@@ -63,10 +105,63 @@ EMAIL_OVERRIDES: dict[str, str] = {
 # ---------------------------------------------------------------------------
 
 TEAM_TO_REPS: dict[str, list[str]] = {
-    # "Team Sam": [
-    #     "Amanda Avedschmidt",
-    #     "Julien Baunay",
-    # ],
+    "Consumer": [
+        "Colin Behenna",
+        "Erin Choi",
+        "Ivka Shepard",
+        "Morgan Moran de Sanchez",
+        "Daisy Wright",
+        "Ryan Kernus",
+    ],
+    "Emerging": [
+        "Rebecca Pallister",
+        "Alden Morse",
+        "Nick Essling",
+        "Kristy Shimkus",
+        "Tanner Andresen",
+        "Anthony Anastasi",
+    ],
+    "Lifestyle 1": [
+        "Alexandra Seigenberg",
+        "Zachary Alton",
+        "Kristin Sutton",
+        "Gregg Belbeck",
+        "Kelsey Bates",
+        "Scott Cohen",
+    ],
+    "Lifestyle 2": [
+        "Aaron Holl",
+        "Cassie Steinberg",
+        "Sheeva Sairafi",
+        "Vicki Bodwell",
+        "Nick Herrera",
+        "Samantha Schultz",
+    ],
+    "Global Accounts": [
+        "Vanessa Buttinger",
+        "Christopher Joannou",
+        "Nicole Smelzer",
+        "John Beringer",
+    ],
+    "EMEA": [
+        "Nicolas Berg",
+        "Melanie Wollnitza",
+        "Simon Bennett",
+        "Danielle Salvatore",
+        "Anastasia Sfregola",
+        "Capucine Delval",
+        "Nathan Frost",
+        "Fiona Taurel",
+    ],
+}
+
+TEAM_LEADS: dict[str, str] = {
+    "Consumer": "Ryan Quarles",
+    "Emerging": "Dave Greenberger",
+    "Lifestyle 1": "Todd Mallett",
+    "Lifestyle 2": "Kal Stephen",
+    "Global Accounts": "Brandon Gracey",
+    "EMEA": "Brandon Gracey",
 }
 
 TEAM_ORDER = list(TEAM_TO_REPS.keys())
@@ -86,6 +181,7 @@ ALL_KNOWN_REPS = [
     "Capucine Delval",
     "Cassie Steinberg",
     "Chris Andreoli",
+    "Christopher Joannou",
     "Colin Behenna",
     "Colton Powell",
     "Daisy Wright",
@@ -94,13 +190,16 @@ ALL_KNOWN_REPS = [
     "Erin Choi",
     "Fiona Taurel",
     "Gavin Spencer",
+    "Gregg Belbeck",
     "Ivka Shepard",
     "John Beringer",
+    "Kelsey Bates",
     "Kristin Sutton",
     "Kristy Shimkus",
     "Madeline Michelson",
     "Melanie Wollnitza",
     "Morgan Moran de Sanchez",
+    "Nathan Frost",
     "Nick Essling",
     "Nick Herrera",
     "Nicolas Berg",
@@ -109,9 +208,56 @@ ALL_KNOWN_REPS = [
     "Ryan Kernus",
     "Samantha Schultz",
     "Scott Cohen",
+    "Sheeva Sairafi",
     "Simon Bennett",
     "Tanner Andresen",
+    "Vanessa Buttinger",
+    "Vicki Bodwell",
+    "Zachary Alton",
 ]
+
+
+# ---------------------------------------------------------------------------
+# Territory codes (from Enterprise Reps spreadsheet, for future use)
+# ---------------------------------------------------------------------------
+
+TERRITORY_MAP: dict[str, list[str]] = {
+    "Colin Behenna": ["AMER_Enterprise_All_Consumer_A_All_01", "AMER_Enterprise_All_Consumer_X_All_01"],
+    "Ivka Shepard": ["AMER_Enterprise_All_Consumer_A_All_02", "AMER_Enterprise_All_Consumer_X_All_02"],
+    "Morgan Moran de Sanchez": ["AMER_Enterprise_All_Consumer_A_All_04", "AMER_Enterprise_All_Consumer_X_All_04"],
+    "Daisy Wright": ["AMER_Enterprise_All_Consumer_A_All_05", "AMER_Enterprise_All_Consumer_X_All_05"],
+    "Ryan Kernus": ["AMER_Enterprise_All_Consumer_A_All_06", "AMER_Enterprise_All_Consumer_X_All_06"],
+    "Erin Choi": ["AMER_Enterprise_All_Consumer_A_All_03"],
+    "Rebecca Pallister": ["AMER_Enterprise_All_Emerging_A_All_01", "AMER_Enterprise_All_Emerging_X_All_01"],
+    "Alden Morse": ["AMER_Enterprise_All_Emerging_A_All_02", "AMER_Enterprise_All_Emerging_X_All_02"],
+    "Nick Essling": ["AMER_Enterprise_All_Emerging_A_All_03", "AMER_Enterprise_All_Emerging_X_All_03"],
+    "Kristy Shimkus": ["AMER_Enterprise_All_Emerging_A_All_05", "AMER_Enterprise_All_Emerging_X_All_05"],
+    "Tanner Andresen": ["AMER_Enterprise_All_Emerging_A_All_06", "AMER_Enterprise_All_Emerging_X_All_06"],
+    "Alexandra Seigenberg": ["AMER_Enterprise_All_Lifestyle_A_All_06", "AMER_Enterprise_All_Lifestyle_X_All_06"],
+    "Zachary Alton": ["AMER_Enterprise_All_Lifestyle_A_All_08", "AMER_Enterprise_All_Lifestyle_X_All_08"],
+    "Kristin Sutton": ["AMER_Enterprise_All_Lifestyle_A_All_09"],
+    "Gregg Belbeck": ["AMER_Enterprise_All_Lifestyle_A_All_10", "AMER_Enterprise_All_Lifestyle_X_All_10"],
+    "Kelsey Bates": ["AMER_Enterprise_All_Lifestyle_A_All_11", "AMER_Enterprise_All_Lifestyle_X_All_11"],
+    "Scott Cohen": ["AMER_Enterprise_All_Lifestyle_A_All_12", "AMER_Enterprise_All_Lifestyle_X_All_12"],
+    "Aaron Holl": ["AMER_Enterprise_All_Lifestyle_A_All_01", "AMER_Enterprise_All_Lifestyle_X_All_01"],
+    "Cassie Steinberg": ["AMER_Enterprise_All_Lifestyle_A_All_02", "AMER_Enterprise_All_Lifestyle_X_All_02"],
+    "Sheeva Sairafi": ["AMER_Enterprise_All_Lifestyle_A_All_03", "AMER_Enterprise_All_Lifestyle_X_All_03"],
+    "Vicki Bodwell": ["AMER_Enterprise_All_Lifestyle_A_All_04", "AMER_Enterprise_All_Lifestyle_X_All_04"],
+    "Nick Herrera": ["AMER_Enterprise_All_Lifestyle_A_All_05", "AMER_Enterprise_All_Lifestyle_X_All_05"],
+    "Samantha Schultz": ["AMER_Enterprise_All_Lifestyle_A_All_07", "AMER_Enterprise_All_Lifestyle_X_All_07"],
+    "Vanessa Buttinger": ["AMER_GA_All_All_A_All_01", "AMER_GA_All_All_X_All_01"],
+    "Christopher Joannou": ["AMER_GA_All_All_A_All_02", "AMER_GA_All_All_X_All_02"],
+    "Nicole Smelzer": ["AMER_GA_All_All_A_All_04", "AMER_GA_All_All_X_All_04"],
+    "John Beringer": ["AMER_GA_All_All_A_All_05", "AMER_GA_All_All_X_All_05"],
+    "Nicolas Berg": ["EMEA_Enterprise_DACH_All_A_All_01", "EMEA_Enterprise_DACH_All_X_All_01"],
+    "Melanie Wollnitza": ["EMEA_Enterprise_DACH_All_A_All_02", "EMEA_Enterprise_DACH_All_X_All_02"],
+    "Simon Bennett": ["EMEA_Enterprise_North_All_A_All_02", "EMEA_Enterprise_North_All_X_All_02"],
+    "Danielle Salvatore": ["EMEA_Enterprise_North_All_A_All_03", "EMEA_Enterprise_North_All_X_All_03"],
+    "Anastasia Sfregola": ["EMEA_Enterprise_South_All_A_All_01", "EMEA_Enterprise_South_All_X_All_01"],
+    "Capucine Delval": ["EMEA_GA_All_All_A_All_02", "EMEA_GA_All_All_X_All_02"],
+    "Nathan Frost": ["EMEA_GA_All_All_A_All_04", "EMEA_GA_All_All_X_All_04"],
+    "Fiona Taurel": ["EMEA_GA_All_All_A_All_05", "EMEA_GA_All_All_X_All_05"],
+}
 
 
 def _normalize_id(name: str) -> str:
@@ -190,6 +336,7 @@ def build_identity_map() -> dict:
         "coaches": {
             email: {
                 "name": info["name"],
+                "teams": list(info["teams"]),
                 "reps": list(info["reps"]),
             }
             for email, info in COACHES.items()

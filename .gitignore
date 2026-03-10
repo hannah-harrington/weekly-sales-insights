@@ -1,4 +1,8 @@
 __pycache__/
 *.pyc
-archive/*.csv
+archive/
+.venv/
 .DS_Store
+*.html
+!site/**/*.html
+setup-branch-protection.sh

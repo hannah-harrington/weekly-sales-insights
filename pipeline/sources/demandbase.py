@@ -11,8 +11,8 @@ from pathlib import Path
 # Each CSV type: how to detect it, which field holds the owner, and
 # which columns to extract (original CSV name -> normalized key).
 CSV_TYPES = {
-    "mqa": {
-        "pattern": "AccountsMovedToMqa",
+    "mqa_new": {
+        "pattern": "NoSalesTouches",
         "exclude_pattern": None,
         "owner_field": "Owner Name",
         "columns": {
@@ -28,7 +28,7 @@ CSV_TYPES = {
         },
     },
     "hvp": {
-        "pattern": "AccountsVisitingHighValuePages",
+        "pattern": "WithLostOpp",
         "exclude_pattern": None,
         "owner_field": "Owner Name",
         "columns": {
@@ -41,6 +41,20 @@ CSV_TYPES = {
             "Top Account Categories": "categories",
             "Priority Summary": "priority",
             "Territory Name": "territory",
+        },
+    },
+    "hvp_all": {
+        "pattern": "AccountsVisitingHighValuePages",
+        "exclude_pattern": "WithLostOpp",
+        "owner_field": "Owner Name",
+        "columns": {
+            "Account Name": "account",
+            "Website": "website",
+            "Account Grade": "grade",
+            "Journey Stage": "journey_stage",
+            "Priority Summary": "priority",
+            "Territory Name": "territory",
+            "Enterprise Web Visits (7 days)": "web_visits",
         },
     },
     "new_people": {
@@ -72,37 +86,50 @@ CSV_TYPES = {
             "Territory Name": "territory",
         },
     },
+    "all_mqa": {
+        "pattern": ["ENT_Acq_MQA", "AllAccountsAtMqa"],
+        "exclude_pattern": None,
+        "owner_field": "Account Owner",
+        "columns": {
+            "Account Name": "account",
+            "Territory Name": "territory",
+            "Industry": "industry",
+            "Billing State/Province": "state",
+            "Total Annual Revenue (USD)": "revenue",
+            "Customer Fit Signals": "fit_signals",
+        },
+    },
 }
 
 # Signal type metadata (used in the JSON output and by the frontend)
 SIGNAL_TYPE_META = {
-    "mqa": {
-        "label": "Accounts Moved to MQA (No Sales Touches)",
-        "short_label": "MQA",
+    "mqa_new": {
+        "label": "New MQA Accounts This Week",
+        "short_label": "New MQA",
         "color": "green",
         "source": "demandbase",
         "description": (
             "A Marketing Qualified Account (MQA) is an account that crossed a "
-            "significant engagement threshold through marketing activity — not "
-            "sales outreach. An account reaches MQA when it either: "
+            "significant engagement threshold through marketing activity. "
+            "An account reaches MQA when it either: "
             "(1) accumulates 200+ marketing engagement points from campaigns, "
             "form fills, and visits to key pages in the last 3 months, or "
             "(2) has 2+ senior contacts (Director, VP, C-suite) each with 30+ "
-            "marketing engagement points. These accounts were flagged this week "
-            "and have had zero sales engagement in the last 30 days."
+            "marketing engagement points. These are all accounts that became "
+            "marketing-qualified in the last 7 days."
         ),
         "display_columns": [
             {"key": "account", "label": "Account"},
             {"key": "grade", "label": "Grade"},
             {"key": "journey_stage", "label": "Stage"},
-            {"key": "engagement_3mo", "label": "Engagement (3 mo.)"},
-            {"key": "keywords", "label": "Intent Keywords"},
             {"key": "priority", "label": "Priority"},
+            {"key": "keywords", "label": "Topics"},
+            {"key": "categories", "label": "Categories"},
         ],
     },
     "hvp": {
         "label": "Accounts Visiting High-Value Pages (Lost Opp in Last 12 Mo.)",
-        "short_label": "HVP",
+        "short_label": "High-Value Pages",
         "color": "rose",
         "source": "demandbase",
         "description": (
@@ -115,9 +142,27 @@ SIGNAL_TYPE_META = {
             {"key": "account", "label": "Account"},
             {"key": "grade", "label": "Grade"},
             {"key": "journey_stage", "label": "Stage"},
-            {"key": "engagement_7d", "label": "Engagement (7 days)"},
-            {"key": "keywords", "label": "Intent Keywords"},
             {"key": "priority", "label": "Priority"},
+            {"key": "keywords", "label": "Topics"},
+            {"key": "categories", "label": "Categories"},
+        ],
+    },
+    "hvp_all": {
+        "label": "Accounts Visiting High-Value Pages",
+        "short_label": "High-Value Pages (All)",
+        "color": "rose",
+        "source": "demandbase",
+        "description": (
+            "All accounts visiting Shopify Plus and enterprise pages this week — "
+            "not just lost opps. This is the full picture of who is browsing "
+            "high-value content right now, regardless of deal history."
+        ),
+        "display_columns": [
+            {"key": "account", "label": "Account"},
+            {"key": "grade", "label": "Grade"},
+            {"key": "journey_stage", "label": "Stage"},
+            {"key": "priority", "label": "Priority"},
+            {"key": "web_visits", "label": "Pages Visited"},
         ],
     },
     "new_people": {
@@ -136,7 +181,7 @@ SIGNAL_TYPE_META = {
             {"key": "full_name", "label": "Name"},
             {"key": "title", "label": "Title"},
             {"key": "email", "label": "Email"},
-            {"key": "engagement_7d", "label": "Engagement (7 days)"},
+            {"key": "categories", "label": "Categories"},
         ],
     },
     "activity": {
@@ -157,6 +202,25 @@ SIGNAL_TYPE_META = {
             {"key": "details", "label": "Details"},
         ],
     },
+    "all_mqa": {
+        "label": "All Accounts at MQA Status",
+        "short_label": "All MQA",
+        "color": "slate",
+        "source": "demandbase",
+        "description": (
+            "A snapshot of every account currently at MQA status in your book. "
+            "This is your full MQA universe — not just what moved this week, "
+            "but every account that has qualified and is still active. Use this "
+            "as a reference to prioritize across your pipeline."
+        ),
+        "display_columns": [
+            {"key": "account", "label": "Account"},
+            {"key": "industry", "label": "Industry"},
+            {"key": "state", "label": "State"},
+            {"key": "revenue", "label": "Revenue"},
+            {"key": "fit_signals", "label": "Fit Signals"},
+        ],
+    },
 }
 
 
@@ -173,11 +237,12 @@ def detect_csv_files(directory: Path) -> dict[str, Path]:
     matched: dict[str, Path] = {}
 
     for csv_type, cfg in CSV_TYPES.items():
-        pattern = cfg["pattern"].lower()
+        raw_pattern = cfg["pattern"]
+        patterns = [p.lower() for p in raw_pattern] if isinstance(raw_pattern, list) else [raw_pattern.lower()]
         exclude = (cfg["exclude_pattern"] or "").lower()
         for fpath in csv_files:
             fname_lower = fpath.name.lower()
-            if pattern in fname_lower:
+            if any(p in fname_lower for p in patterns):
                 if exclude and exclude in fname_lower:
                     continue
                 matched[csv_type] = fpath
@@ -257,24 +322,38 @@ def build_highlights(raw_signals: dict[str, list], max_count: int = 5) -> list[d
     """
     scored: list[tuple[float, dict]] = []
 
-    for row in raw_signals.get("mqa", []):
+    grade_score = {"A": 100, "B": 70, "C": 40, "D": 20}
+
+    for row in raw_signals.get("mqa_new", []):
         pts = _safe_float(row.get("engagement_3mo", "0"))
-        scored.append((pts, {
-            "type": "mqa",
+        g = grade_score.get(row.get("grade", ""), 0)
+        scored.append((pts + g, {
+            "type": "mqa_new",
             "score": pts,
             "title": row.get("account", ""),
-            "subtitle": f'{pts:.0f} engagement pts (3 mo.)',
-            "detail": row.get("keywords", "") or "Moved to MQA, no sales touches",
+            "subtitle": f'Grade {row.get("grade", "—")} · {row.get("journey_stage", "")}',
+            "detail": "New MQA this week",
         }))
 
     for row in raw_signals.get("hvp", []):
         pts = _safe_float(row.get("engagement_7d", "0"))
-        scored.append((pts * 3, {
+        g = grade_score.get(row.get("grade", ""), 0)
+        scored.append(((pts + g) * 3, {
             "type": "hvp",
             "score": pts,
             "title": row.get("account", ""),
-            "subtitle": f'{pts:.0f} engagement pts this week',
-            "detail": row.get("keywords", "") or "Lost opp — back on Plus pages",
+            "subtitle": f'Grade {row.get("grade", "—")} · Lost opp re-engagement',
+            "detail": row.get("priority", "") or "Back on Plus pages",
+        }))
+
+    for row in raw_signals.get("hvp_all", []):
+        g = grade_score.get(row.get("grade", ""), 0)
+        scored.append((g * 2, {
+            "type": "hvp_all",
+            "score": g,
+            "title": row.get("account", ""),
+            "subtitle": f'Grade {row.get("grade", "—")} · Visiting high-value pages',
+            "detail": row.get("priority", "") or "Active on enterprise pages",
         }))
 
     for row in raw_signals.get("new_people", []):

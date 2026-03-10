@@ -1,0 +1,9 @@
+# Default: Hannah reviews everything
+*                       @hannah-harrington
+
+# Region leads can self-merge changes to their fork's config,
+# but in the upstream repo, Hannah still owns these files.
+pipeline/config.py      @hannah-harrington
+site/index.html         @hannah-harrington
+pipeline/ingest.py      @hannah-harrington
+pipeline/sources/       @hannah-harrington

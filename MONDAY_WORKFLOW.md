@@ -2,47 +2,67 @@
 
 **Time: ~5 minutes**
 
-## Step 1: Export 4 CSVs from Demandbase
+> **Note for EMEA/APAC:** This workflow is written for the NA region. If you're running a fork for your own region, the steps are identical — just use your own CSV folder, deploy site name, and Slack channel. See the "For Fork Owners" section at the bottom.
 
-Log into Demandbase and export these 4 reports as CSV:
-1. Accounts Moved to MQA in Last Week w/ No Sales Touches
+## Step 1: Export CSVs from Demandbase
+
+Log into Demandbase and export these reports as CSV:
+
+**Weekly signals (run every week):**
+1. New Accounts Moved to MQA in Last Week (New MQA)
 2. Accounts Visiting High Value Pages with Lost Opp in Last 12 Months
-3. Newly Engaged People This Week
-4. Newly Engaged People This Week - Activity Report
+3. Accounts Visiting High Value Pages (all accounts)
+4. Newly Engaged People This Week _(skip if inaccurate that week)_
+5. Newly Engaged People This Week - Activity Report
 
-## Step 2: Drop them into the folder
+**Snapshot (run once, or refresh periodically):**
+6. All Accounts at MQA (ENT_Acq_MQA Journey Stage Account List)
 
-Move/save all 4 CSVs into:
+## Step 2: Drop them into a dated subfolder
+
+Create a folder named with the date and save all CSVs into it:
 
 ```
-Desktop/Cursor Brain/Demandbase weeklys/
+Desktop/Cursor Brain/Demandbase weeklys/March 9/
 ```
 
-Just drop them in the top level — the script auto-detects them by filename. Overwrite any leftover files from last week.
+The pipeline auto-detects reports by filename. If a report is missing, the pipeline still runs with whatever is there and prints a warning.
 
 ## Step 3: Tell the Cursor agent
 
-Paste this into the Cursor agent chat:
+Paste this into the Cursor agent chat (replace the date with the current week):
 
-> The 4 Demandbase CSVs are in Desktop/Cursor Brain/Demandbase weeklys/. Run the weekly sales insights pipeline and deploy to Quick.
+> The Demandbase CSVs are in Desktop/Cursor Brain/Demandbase weeklys/March 9/. Run the weekly sales insights pipeline, deploy to Quick, and send Slack DMs.
 
 The agent will run from the `sales-insights/` directory:
 ```bash
-cd ~/Desktop/"Cursor Brain"/sales-insights && python3 -m pipeline.ingest --deploy
+cd ~/Desktop/"Cursor Brain"/sales-insights && .venv/bin/python3 -m pipeline.ingest --input-dir "../Demandbase weeklys/March 16" --deploy --notify
 ```
 
+> **Important:** Use `.venv/bin/python3` (not plain `python3`) — the virtual environment has `openpyxl` installed, which is required for Sales Nav Top Leads integration.
+
 This will:
-- Read all 4 CSVs
+- Read all CSVs from the dated subfolder
+- Load Sales Nav leads from `CG_Sales_Nav_Leads_CLEAN.xlsx` and cross-reference with Demandbase intent
 - Build the JSON data model
 - Write to site/data/
 - Archive the CSVs
-- Deploy to https://weekly-sales-insights.quick.shopify.io
+- Deploy to https://sales-insights-hub.quick.shopify.io
+- DM every rep who has signals this week with a personalized link to their report
 
-## Step 4: Share the link
+> **Note:** Slack DMs require `SLACK_BOT_TOKEN` in your environment. Add it to `~/.zshrc`:
+> ```bash
+> export SLACK_BOT_TOKEN="xoxb-your-token-here"
+> ```
+> If the token is missing, the pipeline still runs — it just skips the DMs and prints a warning.
 
-Post in Slack:
+To deploy without DMs: `.venv/bin/python3 -m pipeline.ingest --deploy`
+To send DMs without deploying: `.venv/bin/python3 -m pipeline.ingest --notify`
 
-> New weekly sales insights are live! Find your name and open your report: https://weekly-sales-insights.quick.shopify.io
+> **Deploy note:** Quick now requires interactive terminal confirmation. If deploy fails from the agent, run manually:
+> ```bash
+> cd ~/Desktop/"Cursor Brain"/sales-insights/site && quick deploy . sales-insights-hub
+> ```
 
 ---
 
@@ -57,11 +77,32 @@ Post in Slack:
 
 ---
 
+## For Fork Owners (EMEA, APAC, etc.)
+
+If you're running a forked version for your region, the Monday workflow is the same with these changes:
+
+1. **Your CSVs** come from your region's Demandbase exports (same 4 report types)
+2. **Your folder** is whatever you set `CSV_INPUT_DIR` to in your `pipeline/config.py`
+3. **Your deploy target** is whatever you set `DEPLOY_SITE_NAME` to (e.g. `emea-sales-insights`)
+4. **Your Slack DMs** will link to your site (e.g. `emea-sales-insights.quick.shopify.io`)
+
+### Staying current with upstream
+
+After your Monday deploy, pull in any improvements Hannah has shipped:
+
+> Pull the latest upstream changes from hannah-harrington/weekly-sales-insights into my fork.
+
+This keeps your fork up to date with new features and bug fixes without overwriting your region's config. If you haven't pulled in a while, doing it weekly on Mondays keeps merge conflicts small.
+
+---
+
 ## Technical Details
 
 - **Pipeline location:** `sales-insights/pipeline/`
 - **Site location:** `sales-insights/site/`
 - **Config (team mapping):** `sales-insights/pipeline/config.py`
-- **Live site:** https://weekly-sales-insights.quick.shopify.io
+- **Sales Nav leads:** `Cursor Brain/CG_Sales_Nav_Leads_CLEAN.xlsx` (Consumer team only, 659 leads)
+- **Virtual environment:** `sales-insights/.venv/` (has `openpyxl` for Excel reading)
+- **Live site (NA):** https://sales-insights-hub.quick.shopify.io
 - **JSON archive:** `sales-insights/site/data/` (one file per week)
 - **CSV archive:** `sales-insights/archive/` (raw CSVs stored by date)

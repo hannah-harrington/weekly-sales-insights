@@ -26,6 +26,12 @@
   --rose: #be185d;
   --rose-light: #fef1f6;
   --rose-soft: #f5b8d4;
+  --teal: #0d9488;
+  --teal-light: #f0fdfa;
+  --teal-soft: #99f6e4;
+  --slate: #64748b;
+  --slate-light: #f1f5f9;
+  --slate-soft: #cbd5e1;
   --text-1: #2d2a26;
   --text-2: #5c5852;
   --text-3: #78736a;
@@ -52,6 +58,10 @@ html.dark {
   --warm-soft: #4a3810;
   --rose-light: #2a1020;
   --rose-soft: #4a1830;
+  --teal-light: #0f2a28;
+  --teal-soft: #1a4a46;
+  --slate-light: #1e2330;
+  --slate-soft: #334155;
   --text-1: #f0ede8;
   --text-2: #b8b3aa;
   --text-3: #8a8479;
@@ -159,6 +169,20 @@ body {
 }
 .start-here-body { font-size: 14px; color: var(--text-2); line-height: 1.7; }
 
+.week-summary {
+  background: linear-gradient(135deg, var(--bg-card), color-mix(in srgb, var(--green-soft) 30%, var(--bg-card)));
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: 24px 28px; margin-bottom: 36px; box-shadow: var(--shadow);
+}
+.week-summary-label {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--text-3); margin-bottom: 12px; font-weight: 600;
+}
+.week-summary-line {
+  font-size: 15px; color: var(--text-2); line-height: 1.8;
+}
+.week-summary-line + .week-summary-line { margin-top: 4px; }
+
 /* ── Sections ── */
 .section-wrap { padding: 36px 0; position: relative; }
 .section-wrap::after {
@@ -243,6 +267,9 @@ body {
 .rank-bg-5 { background: var(--accent); }
 .rank-label-hvp { background: var(--rose-light); color: var(--rose); }
 .rank-label-mqa { background: var(--accent-light); color: var(--accent); }
+.rank-label-mqa_new { background: var(--accent-light); color: var(--accent); }
+.rank-label-hvp_all { background: var(--rose-light); color: var(--rose); }
+.rank-label-all_mqa { background: var(--slate-light); color: var(--slate); }
 .rank-label-new_people { background: var(--accent2-light); color: var(--accent2); }
 .rank-label-activity { background: var(--warm-light); color: var(--warm); }
 .top-title { font-family: var(--font-serif); font-size: 17px; font-weight: 400; color: var(--text-1); margin-bottom: 4px; line-height: 1.3; }
@@ -250,6 +277,15 @@ body {
 .top-kw { font-size: 12px; color: var(--warm); font-style: italic; margin-bottom: 6px; }
 .top-owner { font-size: 12px; color: var(--accent); font-weight: 600; cursor: pointer; }
 .top-owner:hover { text-decoration: underline; }
+
+/* ── Team groups ── */
+.team-group { margin-bottom: 32px; }
+.team-group.hidden { display: none; }
+.team-header { display: flex; align-items: baseline; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+.team-name { font-family: var(--font-serif); font-size: 22px; font-weight: 400; color: var(--text-1); }
+.team-lead { font-size: 13px; color: var(--text-3); font-weight: 500; }
+.team-summary { display: flex; gap: 8px; margin-left: auto; flex-wrap: wrap; }
+.team-pill { display: inline-block; padding: 2px 9px; border-radius: 10px; font-size: 11px; font-weight: 600; }
 
 /* ── Seller grid ── */
 .sellers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
@@ -265,7 +301,10 @@ body {
 .seller-pills { display: flex; flex-wrap: wrap; gap: 6px; }
 .pill { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
 .pill-mqa { background: var(--accent-light); color: var(--accent); }
+.pill-mqa_new { background: var(--accent-light); color: var(--accent); }
+.pill-all_mqa { background: var(--slate-light); color: var(--slate); }
 .pill-hvp { background: var(--rose-light); color: var(--rose); }
+.pill-hvp_all { background: var(--rose-light); color: var(--rose); }
 .pill-people,.pill-new_people { background: var(--accent2-light); color: var(--accent2); }
 .pill-activity { background: var(--warm-light); color: var(--warm); }
 
@@ -296,8 +335,8 @@ body {
 .stat-card-high-activity { background: linear-gradient(145deg, var(--warm-light), var(--warm-soft)); box-shadow: 0 4px 20px rgba(217,119,6,.1); }
 .stat-crown { position: absolute; top: -8px; right: -4px; font-size: 18px; }
 .stat-num { font-family: var(--font-serif); font-size: 44px; font-weight: 400; line-height: 1; }
-.stat-num-mqa { color: var(--accent); }
-.stat-num-hvp { color: var(--rose); }
+.stat-num-mqa,.stat-num-mqa_new { color: var(--accent); }
+.stat-num-hvp,.stat-num-hvp_all { color: var(--rose); }
 .stat-num-people,.stat-num-new_people { color: var(--accent2); }
 .stat-num-activity { color: var(--warm); }
 .stat-label { font-size: 13px; color: var(--text-2); margin-top: 6px; font-weight: 500; }
@@ -305,13 +344,67 @@ body {
 
 /* ── Tables ── */
 .signal-section { margin-bottom: 40px; }
+.signal-section-mqa_new {
+  border-left: 4px solid var(--accent);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding-left: 20px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--accent-soft) 40%, transparent), transparent 180px);
+}
+.mqa-priority-banner {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--accent-light); color: var(--accent);
+  font-size: 12px; font-weight: 600; padding: 5px 14px;
+  border-radius: 20px; margin-bottom: 10px;
+}
+.stat-card-mqa-emphasis {
+  border: 2px solid var(--accent) !important;
+  box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 20%, transparent) !important;
+}
+.seller-mqa-indicator {
+  display: inline-block; width: 8px; height: 8px;
+  background: var(--accent); border-radius: 50%;
+  margin-left: 6px; vertical-align: middle;
+}
+.filter-tag-mqa {
+  font-weight: 700 !important;
+  border: 2px solid var(--accent) !important;
+}
 .signal-heading { font-family: var(--font-serif); font-size: 22px; font-weight: 400; display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
 .signal-desc { font-size: 14px; color: var(--text-3); margin-bottom: 14px; line-height: 1.7; }
 .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
 .badge-mqa { background: var(--accent-light); color: var(--accent); }
+.badge-mqa_new { background: var(--accent-light); color: var(--accent); }
+.badge-all_mqa { background: var(--slate-light); color: var(--slate); }
 .badge-hvp { background: var(--rose-light); color: var(--rose); }
+.badge-hvp_all { background: var(--rose-light); color: var(--rose); }
 .badge-people,.badge-new_people { background: var(--accent2-light); color: var(--accent2); }
 .badge-activity { background: var(--warm-light); color: var(--warm); }
+.badge-top_leads { background: var(--teal-light); color: var(--teal); }
+
+/* Top Leads section */
+.top-leads-section { margin: 32px 0; }
+.top-leads-heading { display: flex; align-items: center; gap: 10px; font-family: var(--font-serif); font-size: 22px; margin-bottom: 4px; }
+.top-leads-desc { color: var(--text-3); font-size: 14px; margin-bottom: 16px; line-height: 1.5; }
+.top-leads-meta { font-size: 12px; color: var(--text-3); margin-bottom: 12px; font-style: italic; }
+.intent-active-row { background: var(--teal-light) !important; }
+.intent-active-row td:first-child { border-left: 3px solid var(--teal); }
+.intent-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 600; color: var(--teal); white-space: nowrap; }
+.intent-badge-inactive { color: var(--text-3); font-weight: 400; }
+.fit-pill { display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.fit-excellent { background: #dcfce7; color: #166534; }
+.fit-good { background: #ecfccb; color: #3f6212; }
+.fit-potential { background: #fef3c7; color: #92400e; }
+.fit-poor { background: var(--bg-muted); color: var(--text-3); }
+html.dark .fit-excellent { background: #14532d; color: #86efac; }
+html.dark .fit-good { background: #1a2e05; color: #bef264; }
+html.dark .fit-potential { background: #451a03; color: #fcd34d; }
+html.dark .fit-poor { background: var(--bg-muted); color: var(--text-3); }
+.priority-pill { display: inline-block; padding: 2px 8px; border-radius: 8px; font-size: 11px; font-weight: 500; }
+.priority-high { color: var(--rose); }
+.priority-medium { color: var(--warm); }
+.priority-low { color: var(--text-3); }
+.leads-toggle { display: block; width: 100%; text-align: center; padding: 12px; margin-top: 8px; background: var(--bg-muted); border: 1px solid var(--border); border-radius: var(--radius-sm); cursor: pointer; font-size: 13px; font-weight: 500; color: var(--teal); transition: background .2s; }
+.leads-toggle:hover { background: var(--teal-light); }
 .data-table { width: 100%; border-collapse: collapse; font-size: 14px; background: var(--bg-card); border-radius: var(--radius-sm); overflow: hidden; box-shadow: var(--shadow); min-width: 600px; }
 .data-table th { background: var(--bg); text-align: left; padding: 12px 16px; border-bottom: 2px solid var(--border); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: var(--text-2); white-space: nowrap; }
 .data-table td { padding: 12px 16px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.6; }
@@ -518,9 +611,15 @@ function esc(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-var TYPE_CLS = { mqa:'mqa', hvp:'hvp', new_people:'new_people', activity:'activity' };
+function filterVisibleCols(cols, rows) {
+  return cols.filter(function(c) {
+    return rows.some(function(r) { return r[c.key] && String(r[c.key]).trim() !== ''; });
+  });
+}
+
+var TYPE_CLS = { mqa:'mqa', mqa_new:'mqa_new', hvp:'hvp', hvp_all:'hvp_all', new_people:'new_people', activity:'activity', all_mqa:'all_mqa', top_leads:'top_leads' };
 var RANK_BG = ['rank-bg-1','rank-bg-2','rank-bg-3','rank-bg-4','rank-bg-5'];
-var STAT_VIBES = { mqa:'accounts raising their hand', hvp:'reconsidering Shopify', new_people:'fresh contacts this week', activity:'actions they took' };
+var STAT_VIBES = { mqa_new:'newly qualified this week', hvp:'reconsidering Shopify', hvp_all:'browsing enterprise pages', new_people:'fresh contacts this week', activity:'actions they took', all_mqa:'your full MQA pipeline' };
 
 function badgeCls(t) { return 'badge-' + (TYPE_CLS[t] || t); }
 function pillCls(t) { return 'pill-' + (TYPE_CLS[t] || t); }
@@ -541,10 +640,13 @@ function getFirstName() {
 }
 
 var SIGNAL_DEFS = {
-  mqa: { q:"What's an MQA?", a:'Think of it as an account raising its hand. An MQA crossed a big engagement threshold through marketing alone \u2014 no sales touches. These accounts are warm and waiting for you to reach out.' },
-  hvp: { q:'What does HVP mean?', a:'These are accounts that previously said no (Closed Lost) but are back on Shopify Plus pages this week. They\u2019re reconsidering. The timing is perfect to re-engage.' },
+  mqa_new: { q:"What's an MQA?", a:'A Marketing Qualified Account (MQA) crossed a big engagement threshold through marketing activity \u2014 200+ engagement points in the last 3 months, or multiple senior contacts each showing strong intent. These are the accounts that became marketing-qualified this week. They\u2019re warm and waiting for your outreach.' },
+  hvp: { q:'What are High-Value Pages?', a:'These are accounts that previously said no (Closed Lost) but are back on Shopify Plus pages this week. They\u2019re reconsidering. The timing is perfect to re-engage.' },
+  hvp_all: { q:'What is High-Value Pages (All)?', a:'All accounts visiting Shopify Plus and enterprise pages this week \u2014 not just lost opps. This is the full picture of who is actively browsing high-value content right now.' },
   new_people: { q:'Who are these new people?', a:'Brand-new contacts from key titles (marketing, ecommerce, C-suite) who engaged with Shopify for the first time this week. Fresh leads who weren\u2019t on your radar before.' },
-  activity: { q:'What are these activities?', a:'The specific things (webinars, events, email clicks, form fills) that drove engagement from new contacts. Use these details to personalize your outreach and start real conversations.' }
+  activity: { q:'What are these activities?', a:'The specific things (webinars, events, email clicks, form fills) that drove engagement from new contacts. Use these details to personalize your outreach and start real conversations.' },
+  all_mqa: { q:'What is All MQA?', a:'A snapshot of every account in your book that currently has MQA status. Not just what moved this week \u2014 your entire MQA universe. Use this to prioritize across your full pipeline.' },
+  top_leads: { q:'What are Top Leads?', a:'Your highest-priority contacts from LinkedIn Sales Navigator, ranked by account fit quality. Leads at accounts with active Demandbase intent signals this week are highlighted \u2014 these are the people to reach out to right now.' }
 };
 
 function openModal(type) {
@@ -666,7 +768,7 @@ window.addEventListener('popstate', function(e) {
    ═══════════════════════════════════════════ */
 function renderMaster() {
   var m = DATA.meta;
-  var types = Object.keys(DATA.signal_types);
+  var types = Object.keys(DATA.signal_types).filter(function(t) { return t !== 'top_leads'; });
   var sellers = DATA.sellers;
   var sellerIds = Object.keys(sellers);
 
@@ -706,7 +808,8 @@ function renderMaster() {
   html += '<button class="filter-tag active" data-filter="all">All Signals</button>';
   types.forEach(function(t) {
     var st = DATA.signal_types[t];
-    html += '<span class="filter-group"><button class="filter-tag" data-filter="' + t + '">' + esc(st.short_label) + ' (' + totals[t] + ')</button><button class="help-btn" data-help="' + t + '" aria-label="What is ' + esc(st.short_label) + '?">?</button></span>';
+    var extraCls = (t === 'mqa_new') ? ' filter-tag-mqa' : '';
+    html += '<span class="filter-group"><button class="filter-tag' + extraCls + '" data-filter="' + t + '">' + esc(st.short_label) + ' (' + totals[t] + ')</button><button class="help-btn" data-help="' + t + '" aria-label="What is ' + esc(st.short_label) + '?">?</button></span>';
   });
   html += '</div>';
 
@@ -736,27 +839,56 @@ function renderMaster() {
   });
   html += '</div></div></div>';
 
-  // Sellers
+  // Sellers — grouped by team
   html += '<div class="wrap section-wrap">';
   html += '<div class="section-emoji reveal">\uD83D\uDC65</div>';
   html += '<div class="section-kicker reveal">Your team</div>';
   html += '<div class="section-head reveal">See What Each Seller Has This Week</div>';
   html += '<div class="section-deck reveal">Click any name to see their full personalized report.</div>';
-  html += '<div class="sellers-grid" id="sellersGrid">';
+  html += '<div id="sellersGrid">';
 
-  sellerIds.sort(function(a, b) { return sellers[a].name.localeCompare(sellers[b].name); });
-  sellerIds.forEach(function(sid) {
+  var teams = DATA.teams || {};
+  var teamNames = Object.keys(teams);
+
+  function renderSellerCard(sid) {
     var s = sellers[sid];
-    if (s.summary.total === 0) return;
+    if (!s || s.summary.total === 0) return '';
     var typesPresent = types.filter(function(t) { return s.summary[t] > 0; }).join(' ');
-    html += '<div class="seller-card reveal" data-seller="' + esc(sid) + '" data-name="' + esc(s.name.toLowerCase()) + '" data-types="' + typesPresent + '" tabindex="0" role="button" aria-label="View ' + esc(s.name) + ' report">';
-    html += '<div class="seller-head"><span class="seller-name">' + esc(s.name) + '</span><span class="seller-total">' + s.summary.total + ' signals</span></div>';
-    html += '<div class="seller-pills">';
+    var c = '';
+    c += '<div class="seller-card reveal" data-seller="' + esc(sid) + '" data-name="' + esc(s.name.toLowerCase()) + '" data-types="' + typesPresent + '" tabindex="0" role="button" aria-label="View ' + esc(s.name) + ' report">';
+    var mqaDot = (s.summary.mqa_new > 0) ? '<span class="seller-mqa-indicator" title="Has new MQA accounts"></span>' : '';
+    c += '<div class="seller-head"><span class="seller-name">' + esc(s.name) + mqaDot + '</span><span class="seller-total">' + s.summary.total + ' signals</span></div>';
+    c += '<div class="seller-pills">';
     types.forEach(function(t) {
-      if (s.summary[t] > 0) html += '<span class="pill ' + pillCls(t) + '">' + s.summary[t] + ' ' + DATA.signal_types[t].short_label + '</span>';
+      if (s.summary[t] > 0) c += '<span class="pill ' + pillCls(t) + '">' + s.summary[t] + ' ' + DATA.signal_types[t].short_label + '</span>';
     });
+    c += '</div></div>';
+    return c;
+  }
+
+  teamNames.forEach(function(tn) {
+    var team = teams[tn];
+    var teamSellers = (team.sellers || []).slice().sort(function(a, b) {
+      return (sellers[a] ? sellers[a].name : '').localeCompare(sellers[b] ? sellers[b].name : '');
+    });
+    var hasSignals = teamSellers.some(function(sid) { return sellers[sid] && sellers[sid].summary.total > 0; });
+    if (!hasSignals) return;
+
+    html += '<div class="team-group reveal" data-team="' + esc(tn) + '">';
+    html += '<div class="team-header">';
+    html += '<span class="team-name">' + esc(tn) + '</span>';
+    if (team.lead) html += '<span class="team-lead">' + esc(team.lead) + '</span>';
+    html += '<span class="team-summary">';
+    types.forEach(function(t) {
+      var count = team.summary[t] || 0;
+      if (count > 0) html += '<span class="team-pill ' + pillCls(t) + '">' + count + ' ' + DATA.signal_types[t].short_label + '</span>';
+    });
+    html += '</span></div>';
+    html += '<div class="sellers-grid">';
+    teamSellers.forEach(function(sid) { html += renderSellerCard(sid); });
     html += '</div></div>';
   });
+
   html += '</div>';
   html += '<div id="noResults" style="display:none;text-align:center;color:var(--text-3);padding:48px 0;font-size:15px;" aria-live="polite">No sellers match your search.</div>';
   html += '</div>';
@@ -820,9 +952,70 @@ function renderMaster() {
 /* ═══════════════════════════════════════════
    Render: Personal
    ═══════════════════════════════════════════ */
+function renderTopLeads(sellerId) {
+  var seller = DATA.sellers[sellerId];
+  var leads = seller && seller.signals && seller.signals.top_leads;
+  if (!leads || leads.length === 0) return '';
+
+  var LIMIT = 20;
+  var total = leads.length;
+  var intentCount = leads.filter(function(l) { return l.intent_active; }).length;
+  var showAll = false;
+  var sectionId = 'topLeadsSection';
+
+  var html = '<div class="top-leads-section signal-section reveal" id="' + sectionId + '">';
+  html += '<div class="top-leads-heading"><span class="badge badge-top_leads">Top Leads</span> Sales Nav Leads for Your Accounts <button class="help-btn" data-help="top_leads" aria-label="What are Top Leads?">?</button></div>';
+  html += '<div class="top-leads-desc">Your highest-priority contacts from LinkedIn Sales Navigator, ranked by account fit.';
+  if (intentCount > 0) html += ' <strong>' + intentCount + ' lead' + (intentCount !== 1 ? 's' : '') + '</strong> at accounts with active intent this week.';
+  html += '</div>';
+
+  html += '<div class="table-wrap"><table class="data-table"><thead><tr>';
+  html += '<th>Name</th><th>Title</th><th>Company</th><th>City</th><th>Fit</th><th>Intent</th>';
+  html += '</tr></thead><tbody id="topLeadsBody">';
+
+  leads.forEach(function(lead, idx) {
+    var rowCls = lead.intent_active ? ' class="intent-active-row"' : '';
+    var hidden = idx >= LIMIT ? ' style="display:none" data-extra-lead="1"' : '';
+    html += '<tr' + rowCls + hidden + '>';
+    html += '<td>' + esc(lead.name) + '</td>';
+    html += '<td>' + esc(lead.title) + '</td>';
+    html += '<td>' + esc(lead.company) + '</td>';
+    html += '<td>' + esc(lead.city) + '</td>';
+
+    var fit = lead.fit_score || '';
+    var fitShort = fit.replace(' Fit', '');
+    var fitCls = 'fit-poor';
+    if (fit === 'Excellent Fit') fitCls = 'fit-excellent';
+    else if (fit === 'Good Fit') fitCls = 'fit-good';
+    else if (fit === 'Potential Fit') fitCls = 'fit-potential';
+    html += '<td><span class="fit-pill ' + fitCls + '">' + esc(fitShort) + '</span></td>';
+
+    if (lead.intent_active) {
+      var types = (lead.intent_types || []).map(function(t) {
+        var st = DATA.signal_types[t];
+        return st ? st.short_label : t;
+      }).join(', ');
+      html += '<td><span class="intent-badge">\uD83D\uDD25 Active</span></td>';
+    } else {
+      html += '<td><span class="intent-badge intent-badge-inactive">\u2014</span></td>';
+    }
+    html += '</tr>';
+  });
+
+  html += '</tbody></table></div>';
+
+  if (total > LIMIT) {
+    html += '<button class="leads-toggle" id="topLeadsToggle">Show all ' + total + ' leads</button>';
+  }
+
+  html += '<div class="top-leads-meta">Lead data from Sales Navigator. Intent flags refresh weekly from Demandbase signals.</div>';
+  html += '</div>';
+  return html;
+}
+
 function renderPersonal(sellerId) {
   var seller = DATA.sellers[sellerId];
-  var types = Object.keys(DATA.signal_types);
+  var types = Object.keys(DATA.signal_types).filter(function(t) { return t !== 'top_leads'; });
   var m = DATA.meta;
   var firstName = seller.name.split(' ')[0];
   var initials = seller.name.split(' ').map(function(w) { return w.charAt(0); }).join('').substring(0, 2).toUpperCase();
@@ -860,8 +1053,29 @@ function renderPersonal(sellerId) {
     html += '<div class="start-here-body">' + esc(startHere.body) + '</div></div>';
   }
 
-  // Stat cards with intensity
-  var statDefs = types.map(function(t) {
+  // Weekly summary
+  var summaryLines = [];
+  if (hotCount > 0) {
+    var activeTypes = nonZeroTypes.map(function(t) {
+      var st = DATA.signal_types[t];
+      return (seller.summary[t] || 0) + ' ' + st.short_label;
+    });
+    summaryLines.push('You have <strong>' + hotCount + ' total signal' + (hotCount !== 1 ? 's' : '') + '</strong> this week: ' + activeTypes.join(', ') + '.');
+    var mqaCount = seller.summary.mqa_new || 0;
+    if (mqaCount > 0) summaryLines.push('\uD83D\uDD25 <strong>' + mqaCount + ' new MQA account' + (mqaCount !== 1 ? 's' : '') + '</strong> just crossed the engagement threshold \u2014 these are your warmest leads.');
+    var hvpCount = (seller.summary.hvp || 0) + (seller.summary.hvp_all || 0);
+    if (hvpCount > 0) summaryLines.push('\uD83D\uDD01 <strong>' + hvpCount + ' account' + (hvpCount !== 1 ? 's' : '') + '</strong> visiting high-value pages \u2014 re-engagement opportunities.');
+    var peopleCount = seller.summary.new_people || 0;
+    if (peopleCount > 0) summaryLines.push('\uD83D\uDC64 <strong>' + peopleCount + ' new contact' + (peopleCount !== 1 ? 's' : '') + '</strong> engaged with Shopify for the first time.');
+  } else {
+    summaryLines.push('No engagement signals for your accounts this week. This changes week to week \u2014 check back next Monday.');
+  }
+  html += '<div class="week-summary reveal"><div class="week-summary-label">\uD83D\uDCCB Your Week at a Glance</div>';
+  summaryLines.forEach(function(line) { html += '<div class="week-summary-line">' + line + '</div>'; });
+  html += '</div>';
+
+  // Stat cards with intensity (exclude top_leads — persistent, not weekly)
+  var statDefs = types.filter(function(t) { return t !== 'top_leads'; }).map(function(t) {
     var st = DATA.signal_types[t];
     return { key: t, num: seller.summary[t] || 0, label: st.short_label, cls: TYPE_CLS[t] || t, vibe: STAT_VIBES[t] || '' };
   });
@@ -873,7 +1087,8 @@ function renderPersonal(sellerId) {
     if (s.num === 0) cardCls = 'stat-card-muted';
     else if (s.num === maxStat) cardCls = 'stat-card-high-' + s.cls;
     else cardCls = 'stat-card-low-' + s.cls;
-    html += '<div class="stat-card ' + cardCls + ' reveal">';
+    var mqaEmphasis = (s.key === 'mqa_new' && s.num > 0) ? ' stat-card-mqa-emphasis' : '';
+    html += '<div class="stat-card ' + cardCls + mqaEmphasis + ' reveal">';
     if (s.num === maxStat && s.num > 0) html += '<span class="stat-crown">\u2B50</span>';
     html += '<div class="stat-num stat-num-' + s.cls + '">' + s.num + '</div>';
     html += '<div class="stat-label">' + esc(s.label) + '</div>';
@@ -881,6 +1096,9 @@ function renderPersonal(sellerId) {
     html += '</div>';
   });
   html += '</div>';
+
+  // Top Leads (Consumer team only)
+  html += renderTopLeads(sellerId);
 
   // Signal sections
   var hasAnyData = false;
@@ -890,10 +1108,12 @@ function renderPersonal(sellerId) {
     hasAnyData = true;
     var st = DATA.signal_types[t];
     var cls = TYPE_CLS[t] || t;
-    var cols = st.display_columns;
+    var cols = filterVisibleCols(st.display_columns, signals);
     var def = SIGNAL_DEFS[t];
+    var isMqa = t === 'mqa_new';
 
-    html += '<div class="signal-section reveal">';
+    html += '<div class="signal-section' + (isMqa ? ' signal-section-mqa_new' : '') + ' reveal">';
+    if (isMqa) html += '<div class="mqa-priority-banner">\u2B50 Priority \u2014 These accounts are warm and waiting for your outreach</div>';
     html += '<div class="signal-heading"><span class="badge badge-' + cls + '">' + esc(st.short_label) + '</span> ' + esc(st.label) + ' <button class="help-btn" data-help="' + t + '" aria-label="What is ' + esc(st.short_label) + '?">?</button></div>';
     if (def) html += '<div class="signal-desc">' + esc(def.a) + '</div>';
 
@@ -931,12 +1151,65 @@ function renderPersonal(sellerId) {
     html += '<div style="text-align:center;color:var(--text-3);padding:48px 0;font-size:15px;">No engagement signals for your accounts this week.</div>';
   }
 
+  // Archive browser
+  var isArchive = CURRENT_WEEK !== LATEST_WEEK;
+  if (isArchive) {
+    html += '<div class="archive-banner"><strong>\uD83D\uDCC5 Viewing week of ' + esc(CURRENT_WEEK) + '</strong>';
+    html += '<button class="archive-banner-btn" id="personalBackToCurrentBtn">Back to current week</button></div>';
+  }
+  html += '<div class="section-emoji reveal" style="margin-top:32px;">\uD83D\uDCC5</div>';
+  html += '<div class="section-kicker reveal">Weekly archive</div>';
+  html += '<div class="section-head reveal">Browse Your Past Weeks</div>';
+  html += '<div class="section-deck reveal">See how your signals have changed week over week.</div>';
+  html += '<div class="archive-grid reveal">';
+
+  var isViewingLatest = CURRENT_WEEK === LATEST_WEEK;
+  html += '<div class="archive-link' + (isViewingLatest ? ' current' : '') + '" data-week="' + esc(LATEST_WEEK) + '" tabindex="0" role="button" aria-label="Load current week">';
+  html += '<div><span class="archive-week-label">Week of ' + esc(LATEST_WEEK) + '</span><span class="archive-tag archive-tag-current">Current</span></div>';
+  html += '</div>';
+
+  var pastWeeks = WEEKS.filter(function(w) { return w !== LATEST_WEEK; });
+  pastWeeks.forEach(function(w) {
+    var isViewing = w === CURRENT_WEEK;
+    html += '<div class="archive-link' + (isViewing ? ' viewing' : '') + '" data-week="' + esc(w) + '" tabindex="0" role="button" aria-label="Load week of ' + esc(w) + '">';
+    html += '<div><span class="archive-week-label">Week of ' + esc(w) + '</span>';
+    if (isViewing) html += '<span class="archive-tag archive-tag-viewing">Viewing</span>';
+    html += '</div></div>';
+  });
+
+  if (pastWeeks.length === 0 && WEEKS.length <= 1) {
+    html += '<div class="archive-empty"><span aria-hidden="true">\uD83D\uDCC5</span><span>No previous weeks yet \u2014 check back next Monday!</span></div>';
+  }
+  html += '</div>';
+
   html += '<footer class="footer">CONFIDENTIAL \u2014 SHOPIFY INTERNAL USE ONLY \u00B7 Week of ' + esc(m.week_of) + '</footer>';
   html += '</div>';
 
   $('#personalView').innerHTML = html;
   $('#clearIdentity').addEventListener('click', function(e) { e.preventDefault(); clearSeller(); showMaster(); });
   bindHelpButtons();
+
+  // Bind Top Leads toggle
+  var toggleBtn = $('#topLeadsToggle');
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', function() {
+      var extras = $$('[data-extra-lead]');
+      var expanded = extras.length > 0 && extras[0].style.display !== 'none';
+      extras.forEach(function(tr) { tr.style.display = expanded ? 'none' : ''; });
+      this.textContent = expanded ? 'Show all ' + $$('#topLeadsBody tr').length + ' leads' : 'Show top 20 only';
+    });
+  }
+
+  // Bind archive events in personal view
+  $$('#personalView .archive-link').forEach(function(el) {
+    var handler = function() { var w = this.dataset.week; if (w) loadWeek(w, sellerId); };
+    el.addEventListener('click', handler);
+    activateOnKey(el, handler);
+  });
+  var personalBackBtn = $('#personalBackToCurrentBtn');
+  if (personalBackBtn) {
+    personalBackBtn.addEventListener('click', function() { loadWeek(LATEST_WEEK, sellerId); });
+  }
 }
 
 /* ═══════════════════════════════════════════
@@ -1034,16 +1307,21 @@ function applyCardFilters(q) {
     card.classList.toggle('hidden', !show);
     if (show) visible++;
   });
+  $$('.team-group').forEach(function(group) {
+    var hasVisible = group.querySelectorAll('.seller-card:not(.hidden)').length > 0;
+    group.classList.toggle('hidden', !hasVisible);
+  });
   var nr = $('#noResults');
   if (nr) nr.style.display = visible === 0 ? 'block' : 'none';
 }
 
-function loadWeek(week) {
+function loadWeek(week, sellerId) {
   var isLatest = !week || week === LATEST_WEEK;
   var url = isLatest ? 'data/current.json' : 'data/' + week + '.json';
 
-  $('#masterView').style.opacity = '0.4';
-  $('#masterView').style.pointerEvents = 'none';
+  var activeView = sellerId ? '#personalView' : '#masterView';
+  $(activeView).style.opacity = '0.4';
+  $(activeView).style.pointerEvents = 'none';
   window.scrollTo({ top: 0, behavior: 'smooth' });
 
   fetch(url + '?v=' + Date.now())
@@ -1054,18 +1332,30 @@ function loadWeek(week) {
       document.title = 'Weekly Sales Insights \u2014 ' + CURRENT_WEEK;
       var params = new URLSearchParams(location.search);
       if (isLatest) { params.delete('week'); } else { params.set('week', week); }
-      params.delete('seller');
-      var qs = params.toString();
-      history.pushState(null, '', location.pathname + (qs ? '?' + qs : ''));
-      CURRENT_SELLER = null;
-      showMaster();
-      $('#masterView').style.opacity = '';
-      $('#masterView').style.pointerEvents = '';
+
+      if (sellerId && DATA.sellers[sellerId]) {
+        params.set('seller', sellerId);
+        var qs = params.toString();
+        history.pushState({ seller: sellerId }, '', location.pathname + (qs ? '?' + qs : ''));
+        CURRENT_SELLER = sellerId;
+        renderPersonal(sellerId);
+        $(activeView).style.opacity = '';
+        $(activeView).style.pointerEvents = '';
+        initReveal();
+      } else {
+        params.delete('seller');
+        var qs = params.toString();
+        history.pushState(null, '', location.pathname + (qs ? '?' + qs : ''));
+        CURRENT_SELLER = null;
+        showMaster();
+        $(activeView).style.opacity = '';
+        $(activeView).style.pointerEvents = '';
+      }
     })
     .catch(function() {
       alert('Could not load data for week ' + week);
-      $('#masterView').style.opacity = '';
-      $('#masterView').style.pointerEvents = '';
+      $(activeView).style.opacity = '';
+      $(activeView).style.pointerEvents = '';
     });
 }
 
