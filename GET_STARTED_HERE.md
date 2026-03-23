@@ -15,6 +15,21 @@ Make sure you have these four things:
 - [ ] Access to **Demandbase** so you can export your team's weekly reports
 - [ ] Access to **Shopify Quick** for publishing your site (ask Hannah if you're not sure)
 
+### Two things that need extra setup
+
+**Slack DMs to reps**
+The pipeline can send each rep a personalized Slack DM after every weekly run. To enable this, you need a Slack bot token:
+1. Request a bot token for your workspace (ask your Slack admin, or submit via the Shopify internal Slack app approval process)
+2. Once approved, add it to your terminal config: `export SLACK_BOT_TOKEN="xoxb-your-token-here"` in `~/.zshrc`
+3. Then run the pipeline with `--notify` and DMs will go out automatically
+
+Without a token, the pipeline still runs — it just skips DMs and prints a warning.
+
+**Account enrichment (platform, pages visited, intent signals)**
+The NA Enterprise version enriches account rows with current platform, pages visited on Shopify.com, and G2 activity. This data comes from an internal Signal Hub and is not included in this repo — it's specific to Hannah's territory.
+
+If you want enrichment in your version, you'd need to generate your own enrichment file from your team's Signal Hub data. Reach out to Hannah for help with this — it's not required to get the dashboard running.
+
 ---
 
 ## How Cursor Works
