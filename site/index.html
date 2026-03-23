@@ -270,6 +270,11 @@ body {
 .rank-label-mqa_new { background: var(--accent-light); color: var(--accent); }
 .rank-label-hvp_all { background: var(--rose-light); color: var(--rose); }
 .rank-label-all_mqa { background: var(--slate-light); color: var(--slate); }
+.rank-label-intent_agentic { background: #ede9fe; color: #6d28d9; }
+.rank-label-intent_compete { background: #fee2e2; color: #b91c1c; }
+.rank-label-intent_international { background: #ccfbf1; color: #0f766e; }
+.rank-label-intent_marketing { background: #ffedd5; color: #c2410c; }
+.rank-label-intent_b2b { background: #dbeafe; color: #1d4ed8; }
 .rank-label-new_people { background: var(--accent2-light); color: var(--accent2); }
 .rank-label-activity { background: var(--warm-light); color: var(--warm); }
 .top-title { font-family: var(--font-serif); font-size: 17px; font-weight: 400; color: var(--text-1); margin-bottom: 4px; line-height: 1.3; }
@@ -303,6 +308,11 @@ body {
 .pill-mqa { background: var(--accent-light); color: var(--accent); }
 .pill-mqa_new { background: var(--accent-light); color: var(--accent); }
 .pill-all_mqa { background: var(--slate-light); color: var(--slate); }
+.pill-intent_agentic { background: #ede9fe; color: #6d28d9; }
+.pill-intent_compete { background: #fee2e2; color: #b91c1c; }
+.pill-intent_international { background: #ccfbf1; color: #0f766e; }
+.pill-intent_marketing { background: #ffedd5; color: #c2410c; }
+.pill-intent_b2b { background: #dbeafe; color: #1d4ed8; }
 .pill-hvp { background: var(--rose-light); color: var(--rose); }
 .pill-hvp_all { background: var(--rose-light); color: var(--rose); }
 .pill-people,.pill-new_people { background: var(--accent2-light); color: var(--accent2); }
@@ -337,6 +347,11 @@ body {
 .stat-num { font-family: var(--font-serif); font-size: 44px; font-weight: 400; line-height: 1; }
 .stat-num-mqa,.stat-num-mqa_new { color: var(--accent); }
 .stat-num-hvp,.stat-num-hvp_all { color: var(--rose); }
+.stat-num-intent_agentic { color: #6d28d9; }
+.stat-num-intent_compete { color: #b91c1c; }
+.stat-num-intent_international { color: #0f766e; }
+.stat-num-intent_marketing { color: #c2410c; }
+.stat-num-intent_b2b { color: #1d4ed8; }
 .stat-num-people,.stat-num-new_people { color: var(--accent2); }
 .stat-num-activity { color: var(--warm); }
 .stat-label { font-size: 13px; color: var(--text-2); margin-top: 6px; font-weight: 500; }
@@ -375,11 +390,29 @@ body {
 .badge-mqa { background: var(--accent-light); color: var(--accent); }
 .badge-mqa_new { background: var(--accent-light); color: var(--accent); }
 .badge-all_mqa { background: var(--slate-light); color: var(--slate); }
+.badge-intent_agentic { background: #ede9fe; color: #6d28d9; }
+.badge-intent_compete { background: #fee2e2; color: #b91c1c; }
+.badge-intent_international { background: #ccfbf1; color: #0f766e; }
+.badge-intent_marketing { background: #ffedd5; color: #c2410c; }
+.badge-intent_b2b { background: #dbeafe; color: #1d4ed8; }
 .badge-hvp { background: var(--rose-light); color: var(--rose); }
 .badge-hvp_all { background: var(--rose-light); color: var(--rose); }
 .badge-people,.badge-new_people { background: var(--accent2-light); color: var(--accent2); }
 .badge-activity { background: var(--warm-light); color: var(--warm); }
 .badge-top_leads { background: var(--teal-light); color: var(--teal); }
+.badge-anz_high_intent { background: var(--accent-light); color: var(--accent); }
+.badge-anz_new_people { background: var(--accent2-light); color: var(--accent2); }
+.badge-anz_activity { background: var(--warm-light); color: var(--warm); }
+.badge-anz_website_visits { background: var(--rose-light); color: var(--rose); }
+.pill-anz_high_intent { background: var(--accent-light); color: var(--accent); }
+.pill-anz_new_people { background: var(--accent2-light); color: var(--accent2); }
+.pill-anz_activity { background: var(--warm-light); color: var(--warm); }
+.pill-anz_website_visits { background: var(--rose-light); color: var(--rose); }
+.region-pills { display: flex; gap: 8px; margin-bottom: 12px; }
+.region-pill { padding: 6px 16px; border-radius: 20px; border: 1.5px solid var(--border); background: transparent; color: var(--text-2); font-size: 13px; font-family: var(--ff); cursor: pointer; transition: all .15s; }
+.region-pill:hover { border-color: var(--text-2); }
+.region-pill.active { background: var(--text-1); color: var(--bg); border-color: var(--text-1); }
+.region-tag { display: inline-block; font-size: 10px; font-weight: 600; letter-spacing: .5px; padding: 2px 6px; border-radius: 4px; margin-left: 6px; vertical-align: middle; background: var(--border); color: var(--text-3); }
 
 /* Top Leads section */
 .top-leads-section { margin: 32px 0; }
@@ -595,6 +628,7 @@ var DATA = null;
 var WEEKS = [];
 var CURRENT_SELLER = null;
 var ACTIVE_FILTER = 'all';
+var ACTIVE_REGION = 'all';
 var CURRENT_WEEK = null;
 var IAP_EMAIL = null;
 var IDENTITY_ROLE = null;
@@ -617,9 +651,9 @@ function filterVisibleCols(cols, rows) {
   });
 }
 
-var TYPE_CLS = { mqa:'mqa', mqa_new:'mqa_new', hvp:'hvp', hvp_all:'hvp_all', new_people:'new_people', activity:'activity', all_mqa:'all_mqa', top_leads:'top_leads' };
+var TYPE_CLS = { mqa:'mqa', mqa_new:'mqa_new', hvp:'hvp', hvp_all:'hvp_all', new_people:'new_people', activity:'activity', all_mqa:'all_mqa', top_leads:'top_leads', anz_high_intent:'anz_high_intent', anz_new_people:'anz_new_people', anz_activity:'anz_activity', anz_website_visits:'anz_website_visits', intent_agentic:'intent_agentic', intent_compete:'intent_compete', intent_international:'intent_international', intent_marketing:'intent_marketing', intent_b2b:'intent_b2b' };
 var RANK_BG = ['rank-bg-1','rank-bg-2','rank-bg-3','rank-bg-4','rank-bg-5'];
-var STAT_VIBES = { mqa_new:'newly qualified this week', hvp:'reconsidering Shopify', hvp_all:'browsing enterprise pages', new_people:'fresh contacts this week', activity:'actions they took', all_mqa:'your full MQA pipeline' };
+var STAT_VIBES = { mqa_new:'newly qualified this week', hvp:'reconsidering Shopify', hvp_all:'browsing enterprise pages', new_people:'fresh contacts this week', activity:'actions they took', all_mqa:'your full MQA pipeline', anz_high_intent:'high intent, no sales touches', anz_new_people:'newly engaged this week', anz_activity:'recent contact activity', anz_website_visits:'website visits this week', intent_agentic:'AI & agentic commerce interest', intent_compete:'evaluating competitors', intent_international:'cross-border & global interest', intent_marketing:'marketing & growth interest', intent_b2b:'B2B & POS interest' };
 
 function badgeCls(t) { return 'badge-' + (TYPE_CLS[t] || t); }
 function pillCls(t) { return 'pill-' + (TYPE_CLS[t] || t); }
@@ -646,7 +680,11 @@ var SIGNAL_DEFS = {
   new_people: { q:'Who are these new people?', a:'Brand-new contacts from key titles (marketing, ecommerce, C-suite) who engaged with Shopify for the first time this week. Fresh leads who weren\u2019t on your radar before.' },
   activity: { q:'What are these activities?', a:'The specific things (webinars, events, email clicks, form fills) that drove engagement from new contacts. Use these details to personalize your outreach and start real conversations.' },
   all_mqa: { q:'What is All MQA?', a:'A snapshot of every account in your book that currently has MQA status. Not just what moved this week \u2014 your entire MQA universe. Use this to prioritize across your full pipeline.' },
-  top_leads: { q:'What are Top Leads?', a:'Your highest-priority contacts from LinkedIn Sales Navigator, ranked by account fit quality. Leads at accounts with active Demandbase intent signals this week are highlighted \u2014 these are the people to reach out to right now.' }
+  top_leads: { q:'What are Top Leads?', a:'Your highest-priority contacts from LinkedIn Sales Navigator, ranked by account fit quality. Leads at accounts with active Demandbase intent signals this week are highlighted \u2014 these are the people to reach out to right now.' },
+  anz_high_intent: { q:'What are High Intent Accounts?', a:'Accounts showing strong engagement signals in the last 7 days that have not been contacted by sales yet. These are your warmest untouched accounts \u2014 prioritize outreach here.' },
+  anz_new_people: { q:'Who are newly engaged people?', a:'Contacts who engaged with Shopify for the first time this week. Fresh inbound signals from people who weren\u2019t previously on your radar.' },
+  anz_activity: { q:'What is Contact Activity?', a:'Specific activities (events, webinars, email clicks, campaigns) from contacts at your accounts. Use these details to personalize outreach based on what they actually interacted with.' },
+  anz_website_visits: { q:'What are Website Visits?', a:'Accounts visiting Shopify pages in the last 7 days, grouped by account to show which companies are actively researching Shopify right now.' }
 };
 
 function openModal(type) {
@@ -803,10 +841,30 @@ function renderMaster() {
     html += '</div><div class="search-results" id="searchResults" role="listbox" aria-live="polite"></div></div>';
   }
 
-  // Filters
+  // Region filter — only show if there are multiple regions in the data
+  var allRegions = {};
+  Object.keys(DATA.teams || {}).forEach(function(tn) {
+    var r = (DATA.teams[tn].region || 'NA');
+    allRegions[r] = true;
+  });
+  var regionList = Object.keys(allRegions).sort();
+  var showRegionFilter = regionList.length > 1;
+
+  if (showRegionFilter) {
+    var savedRegion = localStorage.getItem('si_region') || 'all';
+    html += '<div class="region-pills reveal" id="regionPills">';
+    html += '<button class="region-pill' + (savedRegion === 'all' ? ' active' : '') + '" data-region="all">All Regions</button>';
+    regionList.forEach(function(r) {
+      html += '<button class="region-pill' + (savedRegion === r ? ' active' : '') + '" data-region="' + esc(r) + '">' + esc(r) + '</button>';
+    });
+    html += '</div>';
+  }
+
+  // Filters — scope to active region
   html += '<div class="filter-bar reveal" role="toolbar" aria-label="Signal type filters">';
   html += '<button class="filter-tag active" data-filter="all">All Signals</button>';
   types.forEach(function(t) {
+    if (totals[t] === 0) return;
     var st = DATA.signal_types[t];
     var extraCls = (t === 'mqa_new') ? ' filter-tag-mqa' : '';
     html += '<span class="filter-group"><button class="filter-tag' + extraCls + '" data-filter="' + t + '">' + esc(st.short_label) + ' (' + totals[t] + ')</button><button class="help-btn" data-help="' + t + '" aria-label="What is ' + esc(st.short_label) + '?">?</button></span>';
@@ -854,9 +912,10 @@ function renderMaster() {
     var s = sellers[sid];
     if (!s || s.summary.total === 0) return '';
     var typesPresent = types.filter(function(t) { return s.summary[t] > 0; }).join(' ');
+    var sellerRegion = s.region || 'NA';
     var c = '';
-    c += '<div class="seller-card reveal" data-seller="' + esc(sid) + '" data-name="' + esc(s.name.toLowerCase()) + '" data-types="' + typesPresent + '" tabindex="0" role="button" aria-label="View ' + esc(s.name) + ' report">';
-    var mqaDot = (s.summary.mqa_new > 0) ? '<span class="seller-mqa-indicator" title="Has new MQA accounts"></span>' : '';
+    c += '<div class="seller-card reveal" data-seller="' + esc(sid) + '" data-name="' + esc(s.name.toLowerCase()) + '" data-types="' + typesPresent + '" data-region="' + esc(sellerRegion) + '" tabindex="0" role="button" aria-label="View ' + esc(s.name) + ' report">';
+    var mqaDot = (s.summary.mqa_new > 0 || s.summary.anz_high_intent > 0) ? '<span class="seller-mqa-indicator" title="Has hot accounts"></span>' : '';
     c += '<div class="seller-head"><span class="seller-name">' + esc(s.name) + mqaDot + '</span><span class="seller-total">' + s.summary.total + ' signals</span></div>';
     c += '<div class="seller-pills">';
     types.forEach(function(t) {
@@ -868,15 +927,16 @@ function renderMaster() {
 
   teamNames.forEach(function(tn) {
     var team = teams[tn];
+    var teamRegion = team.region || 'NA';
     var teamSellers = (team.sellers || []).slice().sort(function(a, b) {
       return (sellers[a] ? sellers[a].name : '').localeCompare(sellers[b] ? sellers[b].name : '');
     });
     var hasSignals = teamSellers.some(function(sid) { return sellers[sid] && sellers[sid].summary.total > 0; });
     if (!hasSignals) return;
 
-    html += '<div class="team-group reveal" data-team="' + esc(tn) + '">';
+    html += '<div class="team-group reveal" data-team="' + esc(tn) + '" data-region="' + esc(teamRegion) + '">';
     html += '<div class="team-header">';
-    html += '<span class="team-name">' + esc(tn) + '</span>';
+    html += '<span class="team-name">' + esc(tn) + (showRegionFilter ? '<span class="region-tag">' + esc(teamRegion) + '</span>' : '') + '</span>';
     if (team.lead) html += '<span class="team-lead">' + esc(team.lead) + '</span>';
     html += '<span class="team-summary">';
     types.forEach(function(t) {
@@ -1015,7 +1075,13 @@ function renderTopLeads(sellerId) {
 
 function renderPersonal(sellerId) {
   var seller = DATA.sellers[sellerId];
-  var types = Object.keys(DATA.signal_types).filter(function(t) { return t !== 'top_leads'; });
+  var sellerRegion = seller.region || 'NA';
+  var types = Object.keys(DATA.signal_types).filter(function(t) {
+    if (t === 'top_leads') return false;
+    var isAnzType = t.indexOf('anz_') === 0;
+    if (sellerRegion === 'ANZ') return isAnzType;
+    return !isAnzType;
+  });
   var m = DATA.meta;
   var firstName = seller.name.split(' ')[0];
   var initials = seller.name.split(' ').map(function(w) { return w.charAt(0); }).join('').substring(0, 2).toUpperCase();
@@ -1126,6 +1192,12 @@ function renderPersonal(sellerId) {
       cols.forEach(function(c) { html += '<td>' + esc(row[c.key]) + '</td>'; });
       html += '</tr>';
 
+      // MQA brief
+      if (t === 'mqa_new' && row.brief) {
+        html += '<tr class="row-explain"><td colspan="' + cols.length + '"><div class="row-explain-inner">';
+        html += '<span style="color:var(--text-2);font-style:normal;">💡 ' + esc(row.brief) + '</span>';
+        html += '</div></td></tr>';
+      }
       // HVP row explanation
       if (t === 'hvp') {
         html += '<tr class="row-explain"><td colspan="' + cols.length + '"><div class="row-explain-inner">';
@@ -1247,6 +1319,24 @@ function bindMasterEvents() {
       applyCardFilters(searchVal);
     });
   });
+  // Region filter pills
+  $$('.region-pill').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      $$('.region-pill').forEach(function(b) { b.classList.remove('active'); });
+      this.classList.add('active');
+      ACTIVE_REGION = this.dataset.region || 'all';
+      localStorage.setItem('si_region', ACTIVE_REGION);
+      var searchVal = $('#hubSearch') ? $('#hubSearch').value.toLowerCase().trim() : '';
+      applyCardFilters(searchVal);
+    });
+  });
+  // Restore saved region on load
+  var savedRegion = localStorage.getItem('si_region') || 'all';
+  if (savedRegion !== 'all') {
+    ACTIVE_REGION = savedRegion;
+    var searchVal = $('#hubSearch') ? $('#hubSearch').value.toLowerCase().trim() : '';
+    applyCardFilters(searchVal);
+  }
   var backBtn = $('#backToCurrentBtn');
   if (backBtn) {
     backBtn.addEventListener('click', function() { loadWeek(LATEST_WEEK); });
@@ -1303,11 +1393,14 @@ function applyCardFilters(q) {
   $$('.seller-card').forEach(function(card) {
     var nameMatch = !q || card.dataset.name.indexOf(q) !== -1;
     var typeMatch = ACTIVE_FILTER === 'all' || card.dataset.types.indexOf(ACTIVE_FILTER) !== -1;
-    var show = nameMatch && typeMatch;
+    var regionMatch = ACTIVE_REGION === 'all' || card.dataset.region === ACTIVE_REGION;
+    var show = nameMatch && typeMatch && regionMatch;
     card.classList.toggle('hidden', !show);
     if (show) visible++;
   });
   $$('.team-group').forEach(function(group) {
+    var regionMatch = ACTIVE_REGION === 'all' || group.dataset.region === ACTIVE_REGION;
+    if (!regionMatch) { group.classList.add('hidden'); return; }
     var hasVisible = group.querySelectorAll('.seller-card:not(.hidden)').length > 0;
     group.classList.toggle('hidden', !hasVisible);
   });

@@ -4,6 +4,53 @@ Running log of decisions, changes, and lessons learned each week. Add new entrie
 
 ---
 
+## Week of March 23, 2026
+
+### What changed this week
+
+- **First Slack DMs to reps** — Pipeline now sends personalized DMs directly to reps (not shared in team channels). Works without a bot token — uses personal session token via `callm` credentials. Run `node ~/pi-backup/refresh-callm-creds.js` before starting each week to keep the token fresh.
+- **Lead notify module** (`pipeline/lead_notify.py`) — Added `--notify-leads` flag. Sends per-team signal summaries to each team lead. Brandon Gracey receives a rolled-up all-teams summary every Monday.
+- **Signal Hub enrichment** — Pipeline now pulls platform, page visits, G2 activities, and tripwire data from `demandbase-signals-staging.quick.shopify.io` and enriches HVP All, All MQA, and New MQA account rows. New MQA accounts get AI-generated briefs combining platform + pages researched + intent keywords + engagement score.
+- **SFDC BigQuery integration** (`pipeline/sources/sfdc_bq.py`) — Stub added for enriching briefs with open opps, last activity date, and engaged contacts from SFDC. Not yet wired to live BigQuery (requires access — contact Jonathan Sinclair).
+
+### Rep feedback received
+
+- **Nathan Frost:** Asked what counts as "engagement" (open, click, form fill?) in the Activity section → add tooltip
+- **Nathan Frost:** Asked what "Agentic Commerce Intent" engagement number represents → improve tooltip/description
+- **Nathan Frost:** Asked whether reps can see what specific event triggered an account in Intent/MQA sections → gap in data, need to surface event type
+
+### Decisions made
+
+1. **DMs over channel posts** — Switched from posting signals to team Slack channels to sending direct DMs to individual reps. More personal, more actionable, less noise for teammates who don't have signals that week.
+2. **Signal Hub enrichment stays out of Git** — `signal_hub_enrichment.json` (1.3MB, 4,491 accounts) excluded from the repo. It contains Shopify internal account data and must be regenerated from the Signal Hub. A fork owner with their own territory would need to generate their own copy.
+
+---
+
+## Week of March 16, 2026
+
+### What changed this week
+
+- **Enterprise Intent Report added** (`EntIntent` CSV) — 5 new intent signal sections per seller: Agentic Commerce (violet), Compete (red), International (teal), Marketing & Growth (orange), B2B (blue). Each section shows top 10 accounts by engagement, filtered by keyword matches. Defined in `INTENT_CATEGORIES` in `pipeline/sources/demandbase.py`.
+- **ANZ support** (`pipeline/sources/demandbase_anz.py`) — Added `--anz-input-dir` flag for ANZ team CSV data. ANZ reps: Bronte Hogarth, Chachi Apolinario, Kole Mahan, Lauren Critten, Shane Kilgour (lead: James Johnson). ANZ data runs independently and never interferes with the NA pipeline.
+- **CSV count now 6 weekly + 1 snapshot** — Added Enterprise Intent Report. Updated MONDAY_WORKFLOW.md to reflect the full list.
+
+### Decisions made
+
+1. **One account can appear in multiple intent categories** — An account showing intent for both "Agentic Commerce" and "Compete" keywords will appear in both sections. This is intentional — shows breadth of interest.
+2. **Capped at 10 per category** — Each intent section shows max 10 accounts per seller, sorted by highest 3-month engagement. Avoids overwhelming reps with a long list.
+
+---
+
+## Week of March 9, 2026
+
+### What changed this week
+
+- Routine pipeline run. No structural changes.
+- Verified `Newly Engaged People This Week` file was inaccurate again — skipped, pipeline handled gracefully.
+- First week with all 5 weekly signal types confirmed working in production.
+
+---
+
 ## Week of March 2, 2026
 
 ### What changed this week

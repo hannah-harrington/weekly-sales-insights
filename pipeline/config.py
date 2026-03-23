@@ -23,6 +23,9 @@ CSV_INPUT_DIR = PROJECT_ROOT.parent / "Demandbase weeklys"
 # Sales Navigator leads (Consumer team only, static enrichment)
 SALES_NAV_LEADS_FILE = PROJECT_ROOT.parent / "CG_Sales_Nav_Leads_CLEAN.xlsx"
 
+# ANZ CSV input (optional, passed via --anz-input-dir)
+ANZ_INPUT_DIR = PROJECT_ROOT.parent / "Demandbase weeklys"
+
 # Quick deployment
 DEPLOY_SITE_NAME = "sales-insights-hub"
 SITE_URL = f"https://{DEPLOY_SITE_NAME}.quick.shopify.io"
@@ -79,14 +82,34 @@ COACHES: dict[str, dict] = {
             "vicki_bodwell", "nick_herrera", "samantha_schultz",
         ],
     },
-    "brandon.gracey@shopify.com": {
-        "name": "Brandon Gracey",
-        "teams": ["Global Accounts", "EMEA"],
+    "thom.armstrong@shopify.com": {
+        "name": "Thom Armstrong",
+        "teams": ["Global Accounts"],
         "reps": [
             "vanessa_buttinger", "christopher_joannou", "nicole_smelzer",
-            "john_beringer", "nicolas_berg", "melanie_wollnitza",
+            "john_beringer",
+        ],
+    },
+    "brandon.gracey@shopify.com": {
+        "name": "Brandon Gracey",
+        "teams": ["Consumer", "Emerging", "Lifestyle 1", "Lifestyle 2", "Global Accounts", "EMEA"],
+        "reps": [],
+    },
+    "daniel.glock@shopify.com": {
+        "name": "Daniel Glock",
+        "teams": ["EMEA"],
+        "reps": [
+            "nicolas_berg", "melanie_wollnitza",
             "simon_bennett", "danielle_salvatore", "anastasia_sfregola",
             "capucine_delval", "nathan_frost", "fiona_taurel",
+        ],
+    },
+    "james.johnson@shopify.com": {
+        "name": "James Johnson",
+        "teams": ["ANZ"],
+        "reps": [
+            "bronte_hogarth", "chachi_apolinario", "kole_mahan",
+            "lauren_critten", "shane_kilgour",
         ],
     },
 }
@@ -95,6 +118,7 @@ COACHES: dict[str, dict] = {
 # the firstname.lastname@shopify.com convention.
 EMAIL_OVERRIDES: dict[str, str] = {
     # "Dev Admin": "dev.admin@shopify.com",
+    "Morgan Moran de Sanchez": "morgan.mds@shopify.com",
 }
 
 # ---------------------------------------------------------------------------
@@ -153,6 +177,13 @@ TEAM_TO_REPS: dict[str, list[str]] = {
         "Nathan Frost",
         "Fiona Taurel",
     ],
+    "ANZ": [
+        "Bronte Hogarth",
+        "Chachi Apolinario",
+        "Kole Mahan",
+        "Lauren Critten",
+        "Shane Kilgour",
+    ],
 }
 
 TEAM_LEADS: dict[str, str] = {
@@ -160,11 +191,22 @@ TEAM_LEADS: dict[str, str] = {
     "Emerging": "Dave Greenberger",
     "Lifestyle 1": "Todd Mallett",
     "Lifestyle 2": "Kal Stephen",
-    "Global Accounts": "Brandon Gracey",
-    "EMEA": "Brandon Gracey",
+    "Global Accounts": "Thom Armstrong",
+    "EMEA": "Daniel Glock",
+    "ANZ": "James Johnson",
 }
 
 TEAM_ORDER = list(TEAM_TO_REPS.keys())
+
+REGION_MAP: dict[str, str] = {
+    "Consumer": "NA",
+    "Emerging": "NA",
+    "Lifestyle 1": "NA",
+    "Lifestyle 2": "NA",
+    "Global Accounts": "NA",
+    "EMEA": "EMEA",
+    "ANZ": "ANZ",
+}
 
 # ---------------------------------------------------------------------------
 # Seller directory
@@ -178,8 +220,10 @@ ALL_KNOWN_REPS = [
     "Anakaren Olivo",
     "Anastasia Sfregola",
     "Anthony Anastasi",
+    "Bronte Hogarth",
     "Capucine Delval",
     "Cassie Steinberg",
+    "Chachi Apolinario",
     "Chris Andreoli",
     "Christopher Joannou",
     "Colin Behenna",
@@ -194,8 +238,10 @@ ALL_KNOWN_REPS = [
     "Ivka Shepard",
     "John Beringer",
     "Kelsey Bates",
+    "Kole Mahan",
     "Kristin Sutton",
     "Kristy Shimkus",
+    "Lauren Critten",
     "Madeline Michelson",
     "Melanie Wollnitza",
     "Morgan Moran de Sanchez",
@@ -208,6 +254,7 @@ ALL_KNOWN_REPS = [
     "Ryan Kernus",
     "Samantha Schultz",
     "Scott Cohen",
+    "Shane Kilgour",
     "Sheeva Sairafi",
     "Simon Bennett",
     "Tanner Andresen",

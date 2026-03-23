@@ -4,17 +4,37 @@ Slack DM notifications for Weekly Sales Insights.
 Sends each rep a personalized DM with their signal count and a direct
 link to their report. Uses the Slack Web API via urllib (no extra deps).
 
-Requires SLACK_BOT_TOKEN env var with scopes: chat:write, users:read.email
+Token resolution order:
+1. SLACK_BOT_TOKEN env var (bot token, xoxb-...) — preferred, requires Slack app approval
+2. Personal session token from ~/.config/callm/credentials.json (xoxc-...) — workaround
+   Uses a static email→user ID map (slack_user_map.json) since lookupByEmail
+   doesn't work with personal tokens.
 """
 
 import json
 import os
+import pathlib
 import time
 import urllib.error
 import urllib.parse
 import urllib.request
 
 _user_cache: dict[str, str | None] = {}
+
+# Static email→user ID map used when personal token is active (no bot token)
+_USER_MAP: dict[str, str] = {}
+_USER_MAP_LOADED = False
+
+def _load_user_map() -> None:
+    """Load the static slack_user_map.json if not already loaded."""
+    global _USER_MAP, _USER_MAP_LOADED
+    if _USER_MAP_LOADED:
+        return
+    map_path = pathlib.Path(__file__).parent / "slack_user_map.json"
+    if map_path.exists():
+        data = json.loads(map_path.read_text())
+        _USER_MAP = {k: v for k, v in data.items() if not k.startswith("_")}
+    _USER_MAP_LOADED = True
 
 
 def _api_call(method: str, token: str, params: dict | None = None) -> dict:
@@ -33,11 +53,26 @@ def _api_call(method: str, token: str, params: dict | None = None) -> dict:
 
 
 def lookup_slack_user(email: str, token: str) -> str | None:
-    """Resolve a Shopify email to a Slack user ID. Returns None on failure."""
+    """Resolve a Shopify email to a Slack user ID. Returns None on failure.
+
+    If using a personal token (xoxc-), falls back to the static user map
+    since lookupByEmail requires a bot token.
+    """
     if not email:
         return None
     if email in _user_cache:
         return _user_cache[email]
+
+    # Personal tokens can't use lookupByEmail — use static map instead
+    if token.startswith("xoxc-"):
+        _load_user_map()
+        uid = _USER_MAP.get(email)
+        if uid:
+            _user_cache[email] = uid
+            return uid
+        print(f"  [Slack] {email} not in user map, skipping (add manually to slack_user_map.json)")
+        _user_cache[email] = None
+        return None
 
     try:
         result = _api_call("users.lookupByEmail", token, {"email": email})
@@ -171,5 +206,27 @@ def notify_all(data: dict, site_url: str, token: str) -> dict:
 
 
 def get_token() -> str | None:
-    """Read the Slack bot token from the environment."""
-    return os.environ.get("SLACK_BOT_TOKEN")
+    """Get the Slack token.
+
+    Tries in order:
+    1. SLACK_BOT_TOKEN env var (bot token — preferred)
+    2. Personal session token from ~/.config/callm/credentials.json (workaround)
+    """
+    bot_token = os.environ.get("SLACK_BOT_TOKEN")
+    if bot_token:
+        return bot_token
+
+    # Fallback: personal token from callm credentials
+    creds_path = pathlib.Path.home() / ".config" / "callm" / "credentials.json"
+    if creds_path.exists():
+        try:
+            creds = json.loads(creds_path.read_text())
+            token = creds.get("info", {}).get("token")
+            if token:
+                print("  [Slack] Using personal session token (no SLACK_BOT_TOKEN set).")
+                print("  [Slack] Run `node ~/pi-backup/refresh-callm-creds.js` if DMs fail.")
+                return token
+        except (json.JSONDecodeError, KeyError):
+            pass
+
+    return None

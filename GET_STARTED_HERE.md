@@ -67,8 +67,9 @@ First, go to Demandbase and export these reports as CSV files for your team:
 1. New Accounts Moved to MQA in Last Week
 2. Accounts Visiting High Value Pages with Lost Opp in Last 12 Months
 3. Accounts Visiting High Value Pages (all accounts)
-4. Newly Engaged People This Week
-5. Newly Engaged People This Week - Activity Report
+4. Engaged People This Week - Activity Report _(use the broad "Engaged" version — it's the superset)_
+5. Enterprise Intent Report _(filename must contain `EntIntent` — powers the 5 intent signal sections per seller)_
+6. Newly Engaged People This Week _(optional — skip if data looks off that week)_
 
 Save them to the folder you specified in Step 2. Then paste this into Cursor:
 

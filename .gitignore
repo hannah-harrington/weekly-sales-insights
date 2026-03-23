@@ -6,3 +6,5 @@ archive/
 *.html
 !site/**/*.html
 setup-branch-protection.sh
+# Internal account enrichment data — regenerate from demandbase-signals-staging.quick.shopify.io
+pipeline/signal_hub_enrichment.json
