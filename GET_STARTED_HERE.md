@@ -60,6 +60,16 @@ Cursor will update the configuration file with your team's details.
 
 > Rewrite MONDAY_WORKFLOW.md for my team. The Demandbase CSVs will be in **the folder where you'll save your CSVs** and the site will be published at **your-team-sales-insights**.quick.shopify.io.
 
+### Step 4b: Set up the Python environment
+
+> Create a Python virtual environment and install dependencies:
+> ```bash
+> cd ~/Desktop/weekly-sales-insights
+> python3 -m venv .venv
+> .venv/bin/pip install -r requirements.txt
+> ```
+> You only need to do this once. The only dependency is `openpyxl` (for reading Sales Nav Excel files).
+
 ### Step 5: Test it with your data
 
 First, go to Demandbase and export these reports as CSV files for your team:
