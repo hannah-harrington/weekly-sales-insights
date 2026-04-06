@@ -40,9 +40,9 @@ Desktop/Cursor Brain/Demandbase weeklys/March 9/
 
 The pipeline auto-detects reports by filename. If a report is missing, the pipeline still runs with whatever is there and prints a warning.
 
-## Step 3: Tell the Cursor agent
+## Step 3: Tell Cursor or Pi
 
-Paste this into the Cursor agent chat (replace the date with the current week):
+Paste this into the Cursor or Pi chat (replace the date with the current week):
 
 > The Demandbase CSVs are in Desktop/Cursor Brain/Demandbase weeklys/March 9/. Run the weekly sales insights pipeline, deploy to Quick, and send Slack DMs.
 
@@ -120,7 +120,7 @@ If `--anz-input-dir` is not passed, the pipeline runs NA-only as before. ANZ dat
 | Problem | Fix |
 |---|---|
 | "No CSV files found" | CSVs aren't in the folder or wrong directory |
-| Script errors | Paste the error into Cursor chat and ask to fix it |
+| Script errors | Paste the error into Cursor or Pi chat and ask to fix it |
 | Need to backfill a past week | Ask: "Run the weekly report for [date] and deploy" |
 | Want to preview before deploying | Ask: "Run the weekly report but don't deploy yet" |
 
