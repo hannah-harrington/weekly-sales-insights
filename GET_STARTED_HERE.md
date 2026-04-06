@@ -25,10 +25,20 @@ The pipeline can send each rep a personalized Slack DM after every weekly run. T
 
 Without a token, the pipeline still runs — it just skips DMs and prints a warning.
 
+**Salesloft email click signals (optional)**
+The pipeline can pull named contacts who clicked links in rep emails from Salesloft, surfacing them as an additional signal alongside Demandbase data. To enable this:
+1. Get an admin-level Salesloft API key: Salesloft → Settings → API → API Keys → Create key (needs admin access to see all reps' emails, not just your own)
+2. Add it to your terminal config: `export SALESLOFT_API_KEY="your-key-here"` in `~/.zshrc`
+
+Without a key, the pipeline still runs — it just skips Salesloft signals.
+
 **Account enrichment (platform, pages visited, intent signals)**
 The NA Enterprise version enriches account rows with current platform, pages visited on Shopify.com, and G2 activity. This data comes from an internal Signal Hub and is not included in this repo — it's specific to Hannah's territory.
 
 If you want enrichment in your version, you'd need to generate your own enrichment file from your team's Signal Hub data. Reach out to Hannah for help with this — it's not required to get the dashboard running.
+
+**Google News headlines (no setup required)**
+Each rep's top accounts automatically surface 3 recent news headlines inline — giving reps a talking point before outreach. This uses a free Google News RSS feed with no API key needed. It just works out of the box.
 
 ---
 

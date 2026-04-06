@@ -27,6 +27,8 @@ Log into Demandbase and export these reports as CSV:
 **Snapshot (run once, or refresh periodically):**
 7. All Accounts at MQA (ENT_Acq_MQA Journey Stage Account List)
 
+> **What the pipeline does with these:** Top accounts per rep get 3 live Google News headlines pulled automatically (no setup — it just runs). If `SALESLOFT_API_KEY` is set, Salesloft email click signals are also included. The blacklist (`pipeline/blacklist.json`) suppresses low-signal accounts (Big Tech, universities, parent entities) before any signals are surfaced to reps.
+
 ## Step 2: Drop them into a dated subfolder
 
 Create a folder named with the date and save all CSVs into it:
