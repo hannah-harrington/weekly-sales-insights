@@ -140,6 +140,7 @@ last_activity AS (
 engaged_contacts AS (
   SELECT
     c.account_id,
+    c.name,
     c.title,
     COUNT(DISTINCT c.contact_id) AS contact_count
   FROM `shopify-dw.sales.sales_contacts_v1` c
@@ -147,7 +148,7 @@ engaged_contacts AS (
     ON c.contact_id = a.contact_id
   WHERE c.account_id IN (SELECT account_id FROM matched_accounts)
     AND a.activity_date >= TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 90 DAY)
-  GROUP BY c.account_id, c.title
+  GROUP BY c.account_id, c.name, c.title
 )
 
 SELECT
@@ -159,6 +160,7 @@ SELECT
   oo.stage       AS opp_stage,
   oo.acv_usd,
   oo.close_date,
+  ec.name        AS contact_name,
   ec.title       AS contact_title,
   ec.contact_count
 FROM matched_accounts ma
@@ -221,9 +223,12 @@ LEFT JOIN engaged_contacts ec ON ma.account_id = ec.account_id
 
         # Engaged contacts (grouped by title — no PII name access without permit)
         contact_title = row.get("contact_title")
-        if contact_title and contact_title not in rec["_seen_contacts"]:
-            rec["_seen_contacts"].add(contact_title)
+        contact_name = row.get("contact_name") or ""
+        contact_key = contact_name or contact_title
+        if contact_key and contact_key not in rec["_seen_contacts"]:
+            rec["_seen_contacts"].add(contact_key)
             rec["engaged_contacts"].append({
+                "name":  contact_name,
                 "title": contact_title,
                 "count": int(row.get("contact_count") or 1),
             })
@@ -265,3 +270,279 @@ def days_since(date_str: str | None) -> int | None:
         return (date.today() - date.fromisoformat(date_str)).days
     except ValueError:
         return None
+
+
+def _strip_html(text: str | None, max_len: int = 2500) -> str | None:
+    """Strip HTML tags and truncate for display."""
+    if not text:
+        return None
+    import re as _re
+    clean = _re.sub(r'<[^>]+>', ' ', text)
+    clean = _re.sub(r'&amp;', '&', clean)
+    clean = _re.sub(r'&lt;', '<', clean)
+    clean = _re.sub(r'&gt;', '>', clean)
+    clean = _re.sub(r'&quot;', '"', clean)
+    clean = _re.sub(r'&#39;', "'", clean)
+    clean = _re.sub(r'\s+', ' ', clean).strip()
+    return clean[:max_len] if len(clean) > max_len else clean
+
+
+def load_account_details(account_names: list[str]) -> dict:
+    """
+    Pull rich SFDC account details for a list of account names.
+
+    Returns a dict keyed by lowercase account name with:
+      industry, employees, revenue, ecomm_platform, pos_solution,
+      competitor_contract_end_date, merchant_overview, description,
+      city, country, why_at_risk, account_url, new_opportunity_url,
+      plus_status, plan_name, account_priority_d2c
+
+    When multiple SFDC records exist for the same account name, picks
+    the richest one (merchant_overview > description > highest revenue).
+    """
+    if not account_names:
+        return {}
+
+    clean = list({n.strip() for n in account_names if n and n.strip()})
+    if not clean:
+        return {}
+
+    sql = f"""
+SELECT
+  name,
+  industry,
+  number_of_employees,
+  annual_total_revenue_usd,
+  annual_online_revenue,
+  ecomm_platform,
+  pos_solution,
+  CAST(competitor_contract_end_date AS STRING)  AS competitor_contract_end_date,
+  merchant_overview,
+  description,
+  billing_city,
+  billing_country,
+  why_at_risk,
+  account_url,
+  new_opportunity_url,
+  plus_status,
+  plan_name,
+  account_priority_d2c
+FROM `shopify-dw.sales.sales_accounts_v1`
+WHERE LOWER(name) IN ({_sql_string_list([n.lower() for n in clean])})
+ORDER BY
+  -- prefer records with the richest data
+  (CASE WHEN merchant_overview IS NOT NULL THEN 0 ELSE 1 END),
+  (CASE WHEN description       IS NOT NULL THEN 0 ELSE 1 END),
+  COALESCE(annual_total_revenue_usd, 0) DESC
+"""
+
+    try:
+        rows = _run_bq(sql)
+    except RuntimeError:
+        return {}
+
+    result: dict[str, dict] = {}
+    for row in rows:
+        name_key = (row.get("name") or "").strip().lower()
+        if not name_key or name_key in result:
+            continue  # keep first (richest) record per name
+        result[name_key] = {
+            "industry":                    row.get("industry"),
+            "employees":                   row.get("number_of_employees"),
+            "revenue_usd":                 row.get("annual_total_revenue_usd"),
+            "annual_online_revenue":       row.get("annual_online_revenue"),
+            "ecomm_platform":              row.get("ecomm_platform"),
+            "pos_solution":                row.get("pos_solution"),
+            "competitor_contract_end":     row.get("competitor_contract_end_date"),
+            "merchant_overview":           _strip_html(row.get("merchant_overview"), 3000),
+            "description":                 _strip_html(row.get("description"), 500),
+            "city":                        row.get("billing_city"),
+            "country":                     row.get("billing_country"),
+            "why_at_risk":                 _strip_html(row.get("why_at_risk"), 300),
+            "account_url":                 row.get("account_url"),
+            "new_opportunity_url":         row.get("new_opportunity_url"),
+            "plus_status":                 row.get("plus_status"),
+            "plan_name":                   row.get("plan_name"),
+            "account_priority_d2c":        row.get("account_priority_d2c"),
+        }
+    return result
+
+
+def load_account_activities(account_names: list[str], months_back: int = 6) -> dict:
+    """
+    Pull recent SFDC activity log for a list of accounts.
+
+    Returns a dict keyed by lowercase account name, where each value is a list of:
+      {activity_type, activity_date, subject, status, contact_title}
+
+    Sorted most-recent first, capped at 10 per account.
+    """
+    if not account_names:
+        return {}
+
+    clean = list({n.strip() for n in account_names if n and n.strip()})
+    if not clean:
+        return {}
+
+    sql = f"""
+WITH ranked AS (
+  SELECT
+    LOWER(a.name)                           AS account_key,
+    act.activity_type,
+    CAST(DATE(act.activity_date) AS STRING) AS activity_date,
+    act.subject,
+    act.status,
+    c.name                                  AS contact_name,
+    c.title                                 AS contact_title,
+    ROW_NUMBER() OVER (
+      PARTITION BY LOWER(a.name)
+      ORDER BY act.activity_date DESC
+    ) AS rn
+  FROM `shopify-dw.intermediate.salesforce_activities_v2` act
+  JOIN `shopify-dw.sales.sales_accounts_v1` a
+    ON act.account_id = a.account_id
+  LEFT JOIN `shopify-dw.sales.sales_contacts_v1` c
+    ON act.contact_id = c.contact_id
+  WHERE LOWER(a.name) IN ({_sql_string_list([n.lower() for n in clean])})
+    AND act.activity_date >= TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL {months_back * 30} DAY)
+)
+SELECT account_key, activity_type, activity_date, subject, status, contact_name, contact_title
+FROM ranked
+WHERE rn <= 10
+ORDER BY account_key, activity_date DESC
+"""
+
+    # Batch into chunks of 100 to avoid CLI arg length limits
+    BATCH = 100
+    all_rows = []
+    for i in range(0, len(clean), BATCH):
+        batch = clean[i:i + BATCH]
+        batch_sql = sql.replace(
+            f"IN ({_sql_string_list([n.lower() for n in clean])})",
+            f"IN ({_sql_string_list([n.lower() for n in batch])})"
+        )
+        try:
+            all_rows.extend(_run_bq(batch_sql))
+        except RuntimeError:
+            continue
+
+    result: dict[str, list] = {}
+    for row in all_rows:
+        key = (row.get("account_key") or "").strip()
+        if not key:
+            continue
+        if key not in result:
+            result[key] = []
+        if len(result[key]) < 10:  # cap at 10 per account
+            result[key].append({
+                "type":          row.get("activity_type") or "Activity",
+                "date":          row.get("activity_date") or "",
+                "subject":       row.get("subject") or "",
+                "status":        row.get("status") or "",
+                "contact_name":  row.get("contact_name") or "",
+                "contact_title": row.get("contact_title") or "",
+            })
+    return result
+
+
+_SFDC_BASE = "https://banff.lightning.force.com/lightning/r"
+
+def load_people_contact_data(account_names: list[str]) -> dict:
+    """
+    For a list of account names, return SFDC contact data matched by name + title.
+
+    Returns a dict keyed by lowercase account name, where each value is a list of:
+      {name, title, email, contact_url, last_contact_date, days_since_contact, in_sfdc}
+
+    Used to enrich Demandbase activity/new_people rows with SFDC contact details.
+    Requires sdp-pii permit for name + email columns.
+    """
+    if not account_names:
+        return {}
+
+    clean = list({n.strip() for n in account_names if n and n.strip()})
+    if not clean:
+        return {}
+
+    sql = f"""
+SELECT
+  a.name                                                       AS account_name,
+  c.name                                                       AS contact_name,
+  c.title,
+  c.email,
+  c.contact_id,
+  CAST(MAX(DATE(act.activity_date)) AS STRING)                 AS last_contact_date,
+  DATE_DIFF(CURRENT_DATE(), MAX(DATE(act.activity_date)), DAY) AS days_since_contact
+FROM `shopify-dw.sales.sales_contacts_v1` c
+JOIN `shopify-dw.sales.sales_accounts_v1` a
+  ON c.account_id = a.account_id
+LEFT JOIN `shopify-dw.intermediate.salesforce_activities_v2` act
+  ON c.contact_id = act.contact_id
+WHERE LOWER(a.name) IN ({_sql_string_list([n.lower() for n in clean])})
+  AND c.title IS NOT NULL
+GROUP BY a.name, c.name, c.title, c.email, c.contact_id
+ORDER BY a.name, days_since_contact ASC NULLS LAST
+"""
+
+    try:
+        rows = _run_bq(sql)
+    except RuntimeError:
+        return {}
+
+    result: dict[str, list] = {}
+    for row in rows:
+        acct = (row.get("account_name") or "").strip().lower()
+        if not acct:
+            continue
+        if acct not in result:
+            result[acct] = []
+        contact_id = row.get("contact_id") or ""
+        result[acct].append({
+            "name":               row.get("contact_name") or "",
+            "title":              row.get("title") or "",
+            "email":              row.get("email") or "",
+            "contact_url":        f"{_SFDC_BASE}/Contact/{contact_id}/view" if contact_id else "",
+            "last_contact_date":  row.get("last_contact_date"),
+            "days_since_contact": int(row["days_since_contact"]) if row.get("days_since_contact") is not None else None,
+            "in_sfdc":            True,
+        })
+    return result
+
+
+def match_person_contact(people_data: dict, account_name: str, title: str, full_name: str = "") -> dict | None:
+    """
+    Given a Demandbase person's account + name + title, find the best SFDC contact match.
+
+    Priority: exact name match → exact title match → title word-overlap.
+    Returns the enriched contact dict (name, title, email, contact_url, days_since_contact, in_sfdc) or None.
+    """
+    contacts = people_data.get(account_name.lower().strip(), [])
+    if not contacts:
+        return None
+
+    # 1. Exact name match (most reliable — requires sdp-pii)
+    if full_name:
+        name_lower = full_name.lower().strip()
+        for c in contacts:
+            if c.get("name", "").lower().strip() == name_lower:
+                return c
+
+    title_lower = (title or "").lower().strip()
+
+    # 2. Exact title match
+    for c in contacts:
+        if c["title"].lower().strip() == title_lower:
+            return c
+
+    # 3. Word-overlap match — at least 2 significant words in common
+    title_words = set(w for w in title_lower.split() if len(w) > 3)
+    best = None
+    best_overlap = 0
+    for c in contacts:
+        c_words = set(w for w in c["title"].lower().split() if len(w) > 3)
+        overlap = len(title_words & c_words)
+        if overlap >= 2 and overlap > best_overlap:
+            best_overlap = overlap
+            best = c
+
+    return best

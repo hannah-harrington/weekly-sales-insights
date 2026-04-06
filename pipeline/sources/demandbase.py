@@ -8,6 +8,7 @@ and returns structured signals grouped by seller.
 import csv
 import json
 from pathlib import Path
+from pipeline.config import EXCLUDED_OWNERS
 
 # Each CSV type: how to detect it, which field holds the owner, and
 # which columns to extract (original CSV name -> normalized key).
@@ -112,6 +113,24 @@ CSV_TYPES = {
             "High Intent Keywords": "high_intent_keywords",
             "Enterprise Intent Keyword Sets (7 days)": "intent_sets",
             "Competitive Intent Keywords (High)": "competitive_keywords",
+        },
+    },
+    "g2_intent": {
+        "pattern": "G2",
+        "exclude_pattern": None,
+        "owner_field": "Account Owner",
+        "columns": {
+            "Account Name": "account",
+            "Website": "website",
+            "Account Grade": "grade",
+            "Journey Stage [Enterprise Acquisition Journey]": "journey_stage",
+            "Industry": "industry",
+            "Billing State/Province": "state",
+            "Total Annual Revenue (USD)": "revenue",
+            "Priority Summary": "priority",
+            "Territory Name": "territory",
+            "Salesforce Account Id": "sfdc_account_id",
+            "Customer Fit Signals": "fit_signals",
         },
     },
 }
@@ -238,6 +257,7 @@ SIGNAL_TYPE_META = {
         ),
         "display_columns": [
             {"key": "account", "label": "Account"},
+            {"key": "seniority", "label": "Level"},
             {"key": "full_name", "label": "Name"},
             {"key": "title", "label": "Title"},
             {"key": "email", "label": "Email"},
@@ -250,12 +270,17 @@ SIGNAL_TYPE_META = {
         "color": "amber",
         "source": "demandbase",
         "description": (
-            "The specific activities (webinars, events, email clicks, campaigns) "
-            "that drove engagement from the newly engaged people above. Use this "
-            "to personalize your outreach based on what they actually interacted with."
+            "The specific activity that drove engagement from each newly engaged person. "
+            "Engagement types include: email opens and clicks, form fills, webinar registrations "
+            "and attendance, event sign-ups, content downloads, and direct visits to key pages. "
+            "Each row shows the person, the type of activity (e.g. 'Attended webinar', "
+            "'Filled out contact form'), and the details of what they interacted with. "
+            "Use this to personalize your outreach — a form fill is a much stronger signal "
+            "than an email open."
         ),
         "display_columns": [
             {"key": "account", "label": "Account"},
+            {"key": "seniority", "label": "Level"},
             {"key": "full_name", "label": "Name"},
             {"key": "title", "label": "Title"},
             {"key": "category", "label": "Category"},
@@ -290,7 +315,16 @@ _INTENT_META = {
         "label": "Agentic Commerce Intent",
         "short_label": "Agentic Commerce",
         "color": "violet",
-        "description": "Accounts in your book showing high intent around AI, agentic commerce, LLMs, and conversational commerce. These accounts are researching where AI fits in their commerce stack.",
+        "description": (
+            "Accounts in your book that Demandbase has detected researching AI and agentic "
+            "commerce topics across the web — not just on Shopify.com. The 'Signals' column "
+            "shows the exact keywords they triggered (e.g. 'ai chatbot', 'large language models'). "
+            "The 'Engagement (3mo)' number is their total Demandbase engagement score over the "
+            "last 3 months — it's a composite of every tracked interaction: page visits, content "
+            "downloads, ad clicks, and intent keyword matches. Higher = more active. 500+ is "
+            "strong; 1,000+ is very strong. Use the signals column to tailor your outreach — "
+            "'I saw you're researching AI in commerce' opens a better conversation than a cold intro."
+        ),
         "display_columns": [
             {"key": "account", "label": "Account"},
             {"key": "journey_stage", "label": "Stage"},
@@ -302,7 +336,15 @@ _INTENT_META = {
         "label": "Competitive Intent",
         "short_label": "Compete",
         "color": "red",
-        "description": "Accounts actively researching Shopify's competitors. They're evaluating their options — good time to get in front of them.",
+        "description": (
+            "Accounts that Demandbase has detected researching Shopify's competitors across "
+            "the web — reading reviews, visiting competitor sites, searching for comparisons. "
+            "The 'Researching' column shows which platforms they're looking at "
+            "(e.g. 'salesforce commerce cloud', 'bigcommerce'). This is an active evaluation "
+            "signal — they are in-market right now. The 'Engagement (3mo)' number is their "
+            "overall Demandbase engagement score (web activity + content + intent keywords) "
+            "over the last 3 months. Accounts here are prime for a Shopify comparison conversation."
+        ),
         "display_columns": [
             {"key": "account", "label": "Account"},
             {"key": "journey_stage", "label": "Stage"},
@@ -354,12 +396,107 @@ SIGNAL_TYPE_META.update({
     for k, v in _INTENT_META.items()
 })
 
+SIGNAL_TYPE_META["g2_intent"] = {
+    "label": "Accounts Actively Researching on G2",
+    "short_label": "G2 Research",
+    "color": "amber",
+    "source": "demandbase",
+    "description": (
+        "These accounts are actively researching commerce platforms on G2 — "
+        "a third-party software review site where buyers compare vendors before making "
+        "a decision. G2 activity is one of the strongest buying intent signals available: "
+        "it means someone at this company is actively evaluating vendors right now, "
+        "not just passively browsing. The Account Grade (A–D) reflects Demandbase's "
+        "fit score. Priority Summary shows the commercial segment fit (D2C, B2B, Retail). "
+        "Timing on these accounts is critical — reach out while they're actively comparing."
+    ),
+    "display_columns": [
+        {"key": "account", "label": "Account"},
+        {"key": "grade", "label": "Grade"},
+        {"key": "journey_stage", "label": "Stage"},
+        {"key": "priority", "label": "Fit"},
+        {"key": "industry", "label": "Industry"},
+    ],
+}
+
 
 def _safe_float(val: str | None) -> float:
     try:
         return float(val)
     except (ValueError, TypeError):
         return 0.0
+
+
+# ---------------------------------------------------------------------------
+# Contact seniority classifier
+# ---------------------------------------------------------------------------
+
+import re as _re
+
+# Each entry: (tier_name, list_of_regex_patterns)
+# Ordered highest → lowest — first match wins.
+# All patterns are matched against the lowercased title using re.search.
+_SENIORITY_TIERS: list[tuple[str, list[str]]] = [
+    ("C-Suite", [
+        r"\bchief\b",
+        r"\bceo\b", r"\bcoo\b", r"\bcto\b", r"\bcfo\b",
+        r"\bcio\b", r"\bcmo\b", r"\bcdo\b", r"\bcso\b",
+        r"(?<!vice )\bpresident\b",   # "President" but not "Vice President"
+        r"\bfounder\b",
+        r"\bowner\b",
+        r"\bprincipal\b",
+        r"\bexecutive director\b",
+        r"\bmanaging director\b",
+        r"\bgroup managing\b",
+    ]),
+    ("VP", [
+        r"\bvice president\b",
+        r"\bsvp\b", r"\bevp\b", r"\bavp\b",
+        r"(?<!\w)vp(?!\w)",          # "VP" as standalone token
+    ]),
+    ("Director", [
+        r"\bdirector\b",
+        r"\bdir\b",
+        r"\bhead of\b",
+        r"\bglobal head\b",
+        r"\bregional head\b",
+    ]),
+    ("Manager", [
+        r"\bmanager\b",
+        r"\bmgr\b",
+        r"\bteam lead\b",
+    ]),
+]
+
+_SENIORITY_ORDER = {tier: i for i, (tier, _) in enumerate(_SENIORITY_TIERS)}
+
+# Pre-compile all patterns for speed
+_SENIORITY_COMPILED: list[tuple[str, list[_re.Pattern]]] = [
+    (tier, [_re.compile(p) for p in patterns])
+    for tier, patterns in _SENIORITY_TIERS
+]
+
+
+def classify_seniority(title: str) -> str:
+    """
+    Return the seniority tier for a job title string.
+
+    Tiers (in priority order): C-Suite, VP, Director, Manager, IC
+    Returns 'IC' (individual contributor) if no higher tier matches.
+    """
+    if not title:
+        return "IC"
+    t = title.lower()
+    for tier, patterns in _SENIORITY_COMPILED:
+        for pat in patterns:
+            if pat.search(t):
+                return tier
+    return "IC"
+
+
+def seniority_sort_key(tier: str) -> int:
+    """Lower number = higher seniority (for sorting)."""
+    return _SENIORITY_ORDER.get(tier, len(_SENIORITY_TIERS))
 
 
 def detect_csv_files(directory: Path) -> dict[str, Path]:
@@ -414,6 +551,25 @@ def _normalize_row(row: dict[str, str], column_map: dict[str, str]) -> dict[str,
     if "revenue" in result and result["revenue"]:
         result["revenue"] = _format_revenue(result["revenue"])
     return result
+
+
+def _load_blacklist() -> set[str]:
+    """
+    Load the paid blacklist from pipeline/blacklist.json.
+    Returns a set of lowercase account names to suppress from all signals.
+    Accounts on this list are excluded from rep reports — they include big tech,
+    telecom, big-box retail, universities (student research inflates signals),
+    parent/holding entities with no direct commerce, and low-quality junk.
+    """
+    blacklist_path = Path(__file__).parent.parent / "blacklist.json"
+    if not blacklist_path.exists():
+        return set()
+    try:
+        with open(blacklist_path, encoding="utf-8") as f:
+            data = json.load(f)
+        return set(data.get("accounts", []))
+    except Exception:
+        return set()
 
 
 def _load_enrichment(directory: Path) -> dict:
@@ -609,40 +765,91 @@ def generate_mqa_brief(row: dict, enrichment: dict, sfdc_info: dict | None = Non
     return " ".join(parts)
 
 
-def enrich_briefs_with_sfdc(source_data: dict, sfdc_data: dict) -> None:
+def _build_sfdc_field(sfdc_info: dict) -> dict:
     """
-    Post-process: re-generate MQA briefs with SFDC data and update in place.
+    Build the structured sfdc dict stored on each row.
+    Includes rich opp details and computed helper fields for the frontend.
+    """
+    from pipeline.sources.sfdc_bq import days_since as _days_since
+    open_opps = sfdc_info.get("open_opps") or []
+    contacts = sfdc_info.get("engaged_contacts") or []
+    last_activity = sfdc_info.get("last_activity_date")
+    days = _days_since(last_activity)
 
-    Mutates source_data["raw_signals"]["mqa_new"] rows and all corresponding
-    rows in source_data["signals_by_seller"] so every brief includes SFDC context.
+    # Top 2 opps with stage + ACV for display
+    opp_summaries = []
+    for o in open_opps[:2]:
+        entry = {"stage": o.get("stage") or "", "close_date": o.get("close_date") or ""}
+        try:
+            acv = float(o.get("acv_usd") or 0)
+            entry["acv_str"] = f"${acv:,.0f}" if acv > 0 else ""
+        except (ValueError, TypeError):
+            entry["acv_str"] = ""
+        opp_summaries.append(entry)
+
+    return {
+        # Counts (for summary badges)
+        "open_opp_count": len(open_opps),
+        "engaged_contact_count": sum(c.get("count", 1) for c in contacts),
+        # Rich details (for tooltip / expanded view)
+        "open_opps": opp_summaries,
+        "last_activity_date": last_activity,
+        "days_since_activity": days,
+        # Computed helpers for frontend badge logic
+        "has_deal": len(open_opps) > 0,
+        "is_cold": days is not None and days > 60,
+        "is_warm": days is not None and 0 < days <= 30,
+        "no_activity": days is None,
+        "engaged_contact_titles": [c["title"] for c in contacts[:3] if c.get("title")],
+        "engaged_contacts": [
+            {"name": c.get("name", ""), "title": c.get("title", "")}
+            for c in contacts[:5]
+            if c.get("name") or c.get("title")
+        ],
+    }
+
+
+def enrich_briefs_with_sfdc(source_data: dict, sfdc_data: dict) -> int:
+    """
+    Post-process: enrich signal rows with SFDC data and update in place.
+
+    Covers:
+      - mqa_new: re-generates the text brief with SFDC context
+      - hvp, hvp_all, intent_*: attaches structured sfdc dict only (no text brief)
+
+    Mutates both source_data["raw_signals"] and source_data["signals_by_seller"].
+    Returns total number of rows enriched.
     """
     from pipeline.sources.sfdc_bq import lookup as sfdc_lookup
 
-    enrichment = _load_enrichment(Path("."))  # fallback — enrichment already applied
+    # Signal types that get the full text brief re-generated
+    BRIEF_TYPES = {"mqa_new"}
+    # Signal types that get structured sfdc dict only
+    SFDC_TYPES = {"mqa_new", "hvp", "hvp_all",
+                  "intent_agentic", "intent_compete", "intent_international",
+                  "intent_marketing", "intent_b2b"}
 
     updated = 0
-    for row in source_data.get("raw_signals", {}).get("mqa_new", []):
-        sfdc_info = sfdc_lookup(sfdc_data, row.get("account", ""), row.get("website", ""))
-        if sfdc_info:
-            row["brief"] = generate_mqa_brief(row, {}, sfdc_info)
-            row["sfdc"] = {
-                "open_opp_count": len(sfdc_info.get("open_opps") or []),
-                "last_activity_date": sfdc_info.get("last_activity_date"),
-                "engaged_contact_count": sum(c.get("count", 1) for c in (sfdc_info.get("engaged_contacts") or [])),
-            }
-            updated += 1
 
-    # Mirror updates into per-seller signal rows (same account name = same data)
-    for seller_signals in source_data.get("signals_by_seller", {}).values():
-        for row in seller_signals.get("mqa_new", []):
+    # --- Raw signals ---
+    for sig_type in SFDC_TYPES:
+        for row in source_data.get("raw_signals", {}).get(sig_type, []):
             sfdc_info = sfdc_lookup(sfdc_data, row.get("account", ""), row.get("website", ""))
             if sfdc_info:
-                row["brief"] = generate_mqa_brief(row, {}, sfdc_info)
-                row["sfdc"] = {
-                    "open_opp_count": len(sfdc_info.get("open_opps") or []),
-                    "last_activity_date": sfdc_info.get("last_activity_date"),
-                    "engaged_contact_count": sum(c.get("count", 1) for c in (sfdc_info.get("engaged_contacts") or [])),
-                }
+                row["sfdc"] = _build_sfdc_field(sfdc_info)
+                if sig_type in BRIEF_TYPES:
+                    row["brief"] = generate_mqa_brief(row, {}, sfdc_info)
+                updated += 1
+
+    # --- Per-seller signals (mirror the same data) ---
+    for seller_signals in source_data.get("signals_by_seller", {}).values():
+        for sig_type in SFDC_TYPES:
+            for row in seller_signals.get(sig_type, []):
+                sfdc_info = sfdc_lookup(sfdc_data, row.get("account", ""), row.get("website", ""))
+                if sfdc_info:
+                    row["sfdc"] = _build_sfdc_field(sfdc_info)
+                    if sig_type in BRIEF_TYPES:
+                        row["brief"] = generate_mqa_brief(row, {}, sfdc_info)
 
     return updated
 
@@ -716,11 +923,13 @@ def load(directory: Path) -> dict:
     """
     file_map = detect_csv_files(directory)
     enrichment = _load_enrichment(directory)
-    enrich_types = {"hvp_all", "all_mqa", "mqa_new"}
+    blacklist = _load_blacklist()
+    enrich_types = {"hvp_all", "all_mqa", "mqa_new", "g2_intent"}
 
     signals_by_seller: dict[str, dict[str, list]] = {}
     raw_signals: dict[str, list] = {}
     files_found: dict[str, str] = {}
+    blacklist_filtered: list[str] = []  # track what gets suppressed
 
     for csv_type, filepath in file_map.items():
         cfg = CSV_TYPES[csv_type]
@@ -735,12 +944,29 @@ def load(directory: Path) -> dict:
             owner = (row.get(owner_field) or "").strip()
             if not owner:
                 continue
+            if owner in EXCLUDED_OWNERS:
+                continue
 
             norm_row = _normalize_row(row, column_map)
+
+            # Suppress blacklisted accounts from all rep signals
+            if blacklist and norm_row.get("account", "").lower().strip() in blacklist:
+                blacklist_filtered.append(norm_row.get("account", ""))
+                continue
+
+            # Skip activity/people rows where any field contains "SUPPRESSION"
+            if csv_type in ("activity", "new_people"):
+                row_text = " ".join(str(v) for v in norm_row.values()).upper()
+                if "SUPPRESSION" in row_text:
+                    continue
+
             if csv_type in enrich_types:
                 norm_row = _enrich_row(norm_row, enrichment)
             if csv_type == "mqa_new":
                 norm_row["brief"] = generate_mqa_brief(norm_row, enrichment)
+            # Add seniority tier to any row that has a title field
+            if norm_row.get("title"):
+                norm_row["seniority"] = classify_seniority(norm_row["title"])
             if csv_type == "intent":
                 norm_row["owner"] = owner  # preserve owner for intent processing
             normalized.append(norm_row)
@@ -759,11 +985,62 @@ def load(directory: Path) -> dict:
         else:
             raw_signals[csv_type] = normalized
 
+    # Process HVP People file (PeopleVisitingHighValuePages) — stored as by-account lookup
+    # Not routed to individual reps; used to enrich HVP account cards in the frontend
+    hvp_people_by_account: dict[str, list] = {}
+    all_csv_files = [f for f in directory.iterdir() if f.suffix.lower() == ".csv"]
+    hvp_people_file = None
+    for fpath in all_csv_files:
+        if "peoplevisitinghighvaluepages" in fpath.name.lower():
+            hvp_people_file = fpath
+            break
+    if hvp_people_file:
+        files_found["hvp_people"] = hvp_people_file.name
+        for row in _read_csv(hvp_people_file):
+            acct = (row.get("Account Name") or "").strip()
+            if not acct:
+                continue
+            # Filter to ≥2 engagement points
+            try:
+                eng = float(row.get("Engagement Points (7 days)") or 0)
+            except ValueError:
+                eng = 0.0
+            if eng < 2:
+                continue
+            # Skip blacklisted accounts
+            if blacklist and acct.lower() in blacklist:
+                continue
+            person = {
+                "full_name": (row.get("Full Name") or "").strip(),
+                "title": (row.get("Title") or "").strip(),
+                "email": (row.get("Email") or "").strip(),
+                "engagement_7d": eng,
+                "seniority": classify_seniority((row.get("Title") or "").strip()),
+            }
+            key = acct.lower()
+            if key not in hvp_people_by_account:
+                hvp_people_by_account[key] = []
+            hvp_people_by_account[key].append(person)
+        # Sort each account's people by engagement descending
+        for key in hvp_people_by_account:
+            hvp_people_by_account[key].sort(key=lambda p: p["engagement_7d"], reverse=True)
+        print(f"  People Visiting HVP: {sum(len(v) for v in hvp_people_by_account.values())} people (≥2 eng pts) across {len(hvp_people_by_account)} accounts  <- {hvp_people_file.name}")
+
+    # Log blacklist suppressions
+    if blacklist_filtered:
+        unique_suppressed = sorted(set(blacklist_filtered))
+        print(f"\n🚫 Blacklist filter: suppressed {len(blacklist_filtered)} row(s) across {len(unique_suppressed)} unique account(s):")
+        for name in unique_suppressed:
+            print(f"   - {name}")
+    else:
+        print("\n✅ Blacklist filter: no blacklisted accounts found in this week's signals.")
+
     return {
         "signal_types": SIGNAL_TYPE_META,
         "signals_by_seller": signals_by_seller,
         "raw_signals": raw_signals,
         "files_found": files_found,
+        "hvp_people_by_account": hvp_people_by_account,
     }
 
 
@@ -816,6 +1093,16 @@ def build_highlights(raw_signals: dict[str, list], max_count: int = 5) -> list[d
             "title": row.get("full_name", ""),
             "subtitle": row.get("title", ""),
             "detail": row.get("account", ""),
+        }))
+
+    for row in raw_signals.get("g2_intent", []):
+        g = grade_score.get(row.get("grade", ""), 0)
+        scored.append((g * 3, {
+            "type": "g2_intent",
+            "score": g,
+            "title": row.get("account", ""),
+            "subtitle": f'Grade {row.get("grade", "—")} · G2 vendor research',
+            "detail": row.get("priority", "") or "Actively comparing vendors on G2",
         }))
 
     scored.sort(key=lambda x: x[0], reverse=True)

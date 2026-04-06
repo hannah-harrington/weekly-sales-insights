@@ -21,6 +21,7 @@ from collections import defaultdict
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
+import csv
 from pipeline.config import (
     ARCHIVE_DIR,
     CSV_INPUT_DIR,
@@ -42,6 +43,7 @@ from pipeline.sources import demandbase
 from pipeline.sources import demandbase_anz
 from pipeline.sources import salesnav
 from pipeline.sources import sfdc_bq
+from pipeline.sources import news as news_fetcher
 from pipeline import slack_notify
 from pipeline import lead_notify
 
@@ -202,6 +204,10 @@ def build_json(week_date: str, source_data: dict, anz_source_data: dict | None =
         "sellers": dict(sorted(sellers.items(), key=lambda x: x[1]["name"])),
         "highlights": highlights,
         "teams": ordered_teams,
+        "account_details":        source_data.get("account_details", {}),
+        "account_activities":     source_data.get("account_activities", {}),
+        "account_news":           source_data.get("account_news", {}),
+        "hvp_people_by_account":  source_data.get("hvp_people_by_account", {}),
     }
 
 
@@ -217,8 +223,104 @@ def write_json(data: dict, week_date: str) -> Path:
     with open(current_path, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
 
+    # current-v2.json is the file the site loads (supports BQ-enriched and non-enriched runs)
+    current_v2_path = DATA_DIR / "current-v2.json"
+    with open(current_v2_path, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2, ensure_ascii=False)
+
     update_weeks_index()
     return dated_path
+
+
+# Signal types that carry account-level data (used for featured accounts logging)
+_ACCOUNT_SIGNAL_TYPES = [
+    "mqa_new", "hvp", "hvp_all", "all_mqa",
+    "intent_agentic", "intent_compete", "intent_international",
+    "intent_marketing", "intent_b2b", "g2_intent", "activity",
+]
+
+_FEATURED_LOG_PATH = PROJECT_ROOT / "data" / "featured_accounts_log.csv"
+_FEATURED_LOG_FIELDNAMES = [
+    "week", "account", "website", "seller_name", "seller_email",
+    "team", "segment", "region", "signal_types",
+    "journey_stage", "has_open_opp", "sfdc_opp_count",
+]
+
+
+def log_featured_accounts(data: dict, week_date: str) -> int:
+    """
+    Append this week's featured accounts to the running history log.
+
+    Skips any (week, account, seller) rows already in the file so re-runs
+    are safe. Returns the number of new rows written.
+    """
+    _FEATURED_LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
+
+    # Build set of existing (week, account, seller) keys to avoid duplicates
+    existing: set[tuple[str, str, str]] = set()
+    if _FEATURED_LOG_PATH.exists():
+        with open(_FEATURED_LOG_PATH, newline="", encoding="utf-8") as f:
+            for row in csv.DictReader(f):
+                existing.add((row["week"], row["account"], row["seller_name"]))
+
+    new_rows = []
+    for seller in data.get("sellers", {}).values():
+        seller_name  = seller.get("name", "")
+        seller_email = seller.get("email", "")
+        team         = seller.get("team", "")
+        segment      = seller.get("segment", "")
+        region       = seller.get("region", "")
+
+        account_map: dict[str, dict] = {}
+        for st in _ACCOUNT_SIGNAL_TYPES:
+            for sig in seller.get("signals", {}).get(st, []):
+                name = sig.get("account", "").strip()
+                if not name:
+                    continue
+                entry = account_map.setdefault(name, {
+                    "website": "", "journey_stage": "",
+                    "has_open_opp": False, "sfdc_opp_count": 0,
+                    "signal_types": [],
+                })
+                if st not in entry["signal_types"]:
+                    entry["signal_types"].append(st)
+                if not entry["website"] and sig.get("website"):
+                    entry["website"] = sig["website"]
+                if not entry["journey_stage"] and sig.get("journey_stage"):
+                    entry["journey_stage"] = sig["journey_stage"]
+                sfdc = sig.get("sfdc") or {}
+                opp_count = sfdc.get("open_opp_count", 0) or 0
+                if opp_count > entry["sfdc_opp_count"]:
+                    entry["sfdc_opp_count"] = opp_count
+                    entry["has_open_opp"] = True
+
+        for account_name, entry in account_map.items():
+            key = (week_date, account_name, seller_name)
+            if key in existing:
+                continue
+            new_rows.append({
+                "week":           week_date,
+                "account":        account_name,
+                "website":        entry["website"],
+                "seller_name":    seller_name,
+                "seller_email":   seller_email,
+                "team":           team,
+                "segment":        segment,
+                "region":         region,
+                "signal_types":   ",".join(entry["signal_types"]),
+                "journey_stage":  entry["journey_stage"],
+                "has_open_opp":   "yes" if entry["has_open_opp"] else "no",
+                "sfdc_opp_count": entry["sfdc_opp_count"],
+            })
+
+    write_header = not _FEATURED_LOG_PATH.exists() or _FEATURED_LOG_PATH.stat().st_size == 0
+    with open(_FEATURED_LOG_PATH, "a", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=_FEATURED_LOG_FIELDNAMES)
+        if write_header:
+            writer.writeheader()
+        writer.writerows(new_rows)
+
+    return len(new_rows)
 
 
 def update_weeks_index():
@@ -252,7 +354,7 @@ def deploy(site_dir: Path) -> str | None:
     """Deploy the site directory to Quick."""
     print(f"Deploying to {DEPLOY_SITE_NAME}.quick.shopify.io ...")
     result = subprocess.run(
-        ["quick", "deploy", ".", DEPLOY_SITE_NAME],
+        ["quick", "deploy", ".", DEPLOY_SITE_NAME, "--force"],
         cwd=str(site_dir),
         input="y\n",
         capture_output=True,
@@ -304,8 +406,16 @@ def main():
         help="Send weekly summary DMs to team leads and Brandon Gracey.",
     )
     parser.add_argument(
+        "--notify-personal", action="store_true",
+        help="Send personalised 'Start here' DMs to reps (account-level callouts). Replaces --notify when ready.",
+    )
+    parser.add_argument(
         "--no-sfdc", action="store_true",
         help="Skip SFDC enrichment from BigQuery (useful for offline/test runs).",
+    )
+    parser.add_argument(
+        "--no-news", action="store_true",
+        help="Skip Google News fetch (useful for quick/offline runs).",
     )
     args = parser.parse_args()
 
@@ -330,14 +440,24 @@ def main():
         sys.exit(1)
 
     for csv_type, fname in source_data["files_found"].items():
-        count = len(source_data["raw_signals"].get(csv_type, []))
+        if csv_type == "intent":
+            # intent rows are split into sub-categories — sum them all
+            count = sum(
+                len(source_data["raw_signals"].get(cat, []))
+                for cat in demandbase.INTENT_CATEGORIES
+            )
+        elif csv_type == "hvp_people":
+            # hvp_people stored as by-account lookup, not raw_signals
+            count = sum(len(v) for v in source_data.get("hvp_people_by_account", {}).values())
+        else:
+            count = len(source_data["raw_signals"].get(csv_type, []))
         print(f"  {count:>4} rows  <- {fname}")
 
     missing = [
         st for st in demandbase.CSV_TYPES if st not in source_data["files_found"]
     ]
     if missing:
-        labels = [demandbase.SIGNAL_TYPE_META[m]["short_label"] for m in missing]
+        labels = [demandbase.SIGNAL_TYPE_META[m]["short_label"] if m in demandbase.SIGNAL_TYPE_META else m for m in missing]
         print(f"  Warning: Missing CSVs for: {', '.join(labels)}")
     print()
 
@@ -363,20 +483,109 @@ def main():
 
     # --- SFDC enrichment from BigQuery ---
     if not args.no_sfdc:
-        mqa_rows = source_data["raw_signals"].get("mqa_new", [])
-        if mqa_rows:
+        # Collect all unique accounts across all signal types (mqa_new, hvp_all, intent_*)
+        _sfdc_signal_types = ["mqa_new", "hvp_all", "hvp",
+                              "intent_agentic", "intent_compete", "intent_international",
+                              "intent_marketing", "intent_b2b"]
+        all_sfdc_names: list[str] = []
+        all_sfdc_websites: list[str] = []
+        for _st in _sfdc_signal_types:
+            for r in source_data["raw_signals"].get(_st, []):
+                if r.get("account"):
+                    all_sfdc_names.append(r["account"])
+                if r.get("website"):
+                    all_sfdc_websites.append(r["website"])
+
+        if all_sfdc_names or all_sfdc_websites:
             print("Loading SFDC enrichment from BigQuery...")
             try:
-                websites = [r.get("website", "") for r in mqa_rows]
-                names = [r.get("account", "") for r in mqa_rows]
-                sfdc_data = sfdc_bq.load(names=names, websites=websites)
+                sfdc_data = sfdc_bq.load(names=all_sfdc_names, websites=all_sfdc_websites)
                 updated = demandbase.enrich_briefs_with_sfdc(source_data, sfdc_data)
-                print(f"  Enriched {updated} of {len(mqa_rows)} MQA briefs with SFDC data")
+                total_accounts = len({n.lower() for n in all_sfdc_names if n})
+                print(f"  Enriched {updated} rows across {total_accounts} accounts with SFDC data")
             except Exception as exc:
-                print(f"  Warning: SFDC enrichment failed ({exc}) — briefs will use Demandbase-only data")
+                print(f"  Warning: SFDC enrichment failed ({exc}) — reports will use Demandbase-only data")
+
+            # Pull rich account details (overview, platform, revenue, SFDC links, etc.)
+            print("Loading SFDC account details from BigQuery...")
+            try:
+                source_data["account_details"] = sfdc_bq.load_account_details(all_sfdc_names)
+                print(f"  Loaded details for {len(source_data['account_details'])} accounts")
+            except Exception as exc:
+                print(f"  Warning: Account details failed ({exc}) — skipping")
+                source_data["account_details"] = {}
+
+            # Pull recent SFDC activity log per account
+            print("Loading SFDC activity history from BigQuery...")
+            try:
+                source_data["account_activities"] = sfdc_bq.load_account_activities(all_sfdc_names)
+                print(f"  Loaded activity history for {len(source_data['account_activities'])} accounts")
+            except Exception as exc:
+                print(f"  Warning: Activity history failed ({exc}) — skipping")
+                source_data["account_activities"] = {}
+
+        # --- People contact enrichment (new_people + activity rows) ---
+        people_accounts = list({
+            r["account"]
+            for st in ("new_people", "activity")
+            for r in source_data["raw_signals"].get(st, [])
+            if r.get("account")
+        })
+        if people_accounts:
+            print("Loading SFDC people contact data from BigQuery...")
+            try:
+                people_contact_data = sfdc_bq.load_people_contact_data(people_accounts)
+                enriched_people = 0
+                for st in ("new_people", "activity"):
+                    for row in source_data["raw_signals"].get(st, []):
+                        match = sfdc_bq.match_person_contact(
+                            people_contact_data,
+                            row.get("account", ""),
+                            row.get("title", ""),
+                            row.get("full_name", ""),
+                        )
+                        if match:
+                            row["sfdc_contact"] = match
+                            enriched_people += 1
+                        else:
+                            row["sfdc_contact"] = {"in_sfdc": False}
+                print(f"  Enriched {enriched_people} people rows with SFDC contact data")
+            except Exception as exc:
+                print(f"  Warning: People contact enrichment failed ({exc}) — skipping")
         print()
     else:
         print("Skipping SFDC enrichment (--no-sfdc).")
+        print()
+
+    # --- Google News fetch ---
+    if not args.no_news:
+        _news_signal_types = ["mqa_new", "hvp", "hvp_all",
+                              "intent_agentic", "intent_compete", "g2_intent"]
+        news_account_names = list({
+            r["account"]
+            for _st in _news_signal_types
+            for r in source_data["raw_signals"].get(_st, [])
+            if r.get("account")
+        })
+        if news_account_names:
+            print("Fetching Google News for top accounts...")
+            try:
+                source_data["account_news"] = news_fetcher.fetch_account_news(
+                    news_account_names, week_date=week_date
+                )
+                accounts_with_news = sum(
+                    1 for v in source_data["account_news"].values() if v
+                )
+                print(f"  Got news for {accounts_with_news}/{len(news_account_names)} accounts")
+            except Exception as exc:
+                print(f"  Warning: News fetch failed ({exc}) — skipping")
+                source_data["account_news"] = {}
+        else:
+            source_data["account_news"] = {}
+        print()
+    else:
+        print("Skipping Google News fetch (--no-news).")
+        source_data["account_news"] = {}
         print()
 
     # --- Load Sales Nav leads ---
@@ -405,6 +614,12 @@ def main():
     print(f"  {DATA_DIR / 'weeks.json'}")
     print()
 
+    # --- Log featured accounts ---
+    print("Logging featured accounts...")
+    new_rows = log_featured_accounts(data, week_date)
+    print(f"  {new_rows} new rows appended to {_FEATURED_LOG_PATH.name}")
+    print()
+
     # --- Archive ---
     if not args.no_archive:
         print("Archiving CSVs...")
@@ -428,6 +643,17 @@ def main():
             print(f"  Sent {notify_stats['sent']} DMs, skipped {notify_stats['skipped']} (no signals/email), {notify_stats['failed']} failed")
         else:
             print("WARNING: --notify requested but no Slack token found. Run: node ~/pi-backup/refresh-callm-creds.js")
+        print()
+
+    # --- Personalised Slack DMs to reps ---
+    if args.notify_personal:
+        token = slack_notify.get_token()
+        if token:
+            print("Sending personalised Slack DMs to reps...")
+            p_stats = slack_notify.notify_all_personal(data, SITE_URL, token)
+            print(f"  Sent {p_stats['sent']}, skipped {p_stats['skipped']}, failed {p_stats['failed']}")
+        else:
+            print("WARNING: --notify-personal requested but no Slack token found. Run: node ~/pi-backup/refresh-callm-creds.js")
         print()
 
     # --- Slack DMs to leads ---

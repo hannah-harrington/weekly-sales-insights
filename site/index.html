@@ -263,6 +263,7 @@ body {
 .rank-label-intent_international { background: #ccfbf1; color: #0f766e; }
 .rank-label-intent_marketing { background: #ffedd5; color: #c2410c; }
 .rank-label-intent_b2b { background: #dbeafe; color: #1d4ed8; }
+.rank-label-g2_intent { background: #fef3c7; color: #b45309; }
 .rank-label-new_people { background: var(--accent2-light); color: var(--accent2); }
 .rank-label-activity { background: var(--warm-light); color: var(--warm); }
 .top-title { font-family: var(--font-serif); font-size: 17px; font-weight: 400; color: var(--text-1); margin-bottom: 4px; line-height: 1.3; }
@@ -279,6 +280,8 @@ body {
 .team-lead { font-size: 13px; color: var(--text-3); font-weight: 500; }
 .team-summary { display: flex; gap: 8px; margin-left: auto; flex-wrap: wrap; }
 .team-pill { display: inline-block; padding: 2px 9px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+.coach-link { cursor: pointer; color: var(--accent2); transition: opacity .15s; }
+.coach-link:hover { opacity: .75; text-decoration: underline; }
 
 /* ── Seller grid ── */
 .sellers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
@@ -301,6 +304,7 @@ body {
 .pill-intent_international { background: #ccfbf1; color: #0f766e; }
 .pill-intent_marketing { background: #ffedd5; color: #c2410c; }
 .pill-intent_b2b { background: #dbeafe; color: #1d4ed8; }
+.pill-g2_intent { background: #fef3c7; color: #b45309; }
 .pill-hvp { background: var(--rose-light); color: var(--rose); }
 .pill-hvp_all { background: var(--rose-light); color: var(--rose); }
 .pill-people,.pill-new_people { background: var(--accent2-light); color: var(--accent2); }
@@ -340,6 +344,8 @@ body {
 .stat-pill-intent_marketing .stat-pill-num { color: var(--warm); }
 .stat-pill-intent_b2b { background: #dbeafe; border-color: #93c5fd; }
 .stat-pill-intent_b2b .stat-pill-num { color: #1d4ed8; }
+.stat-pill-g2_intent { background: #fef3c7; border-color: #fcd34d; }
+.stat-pill-g2_intent .stat-pill-num { color: #b45309; }
 .stat-pill-new_people,.stat-pill-activity { background: var(--accent2-light); border-color: var(--accent2-soft); }
 .stat-pill-new_people .stat-pill-num,.stat-pill-activity .stat-pill-num { color: var(--accent2); }
 .stat-pill-all_mqa { background: var(--slate-light); border-color: var(--slate-soft); }
@@ -386,6 +392,7 @@ body {
 .badge-intent_international { background: #ccfbf1; color: #0f766e; }
 .badge-intent_marketing { background: #ffedd5; color: #c2410c; }
 .badge-intent_b2b { background: #dbeafe; color: #1d4ed8; }
+.badge-g2_intent { background: #fef3c7; color: #b45309; }
 .badge-hvp { background: var(--rose-light); color: var(--rose); }
 .badge-hvp_all { background: var(--rose-light); color: var(--rose); }
 .badge-people,.badge-new_people { background: var(--accent2-light); color: var(--accent2); }
@@ -802,9 +809,9 @@ function filterVisibleCols(cols, rows) {
   });
 }
 
-var TYPE_CLS = { mqa:'mqa', mqa_new:'mqa_new', hvp:'hvp', hvp_all:'hvp_all', new_people:'new_people', activity:'activity', all_mqa:'all_mqa', top_leads:'top_leads', anz_high_intent:'anz_high_intent', anz_new_people:'anz_new_people', anz_activity:'anz_activity', anz_website_visits:'anz_website_visits', intent_agentic:'intent_agentic', intent_compete:'intent_compete', intent_international:'intent_international', intent_marketing:'intent_marketing', intent_b2b:'intent_b2b' };
+var TYPE_CLS = { mqa:'mqa', mqa_new:'mqa_new', hvp:'hvp', hvp_all:'hvp_all', new_people:'new_people', activity:'activity', all_mqa:'all_mqa', top_leads:'top_leads', anz_high_intent:'anz_high_intent', anz_new_people:'anz_new_people', anz_activity:'anz_activity', anz_website_visits:'anz_website_visits', intent_agentic:'intent_agentic', intent_compete:'intent_compete', intent_international:'intent_international', intent_marketing:'intent_marketing', intent_b2b:'intent_b2b', g2_intent:'g2_intent' };
 var RANK_BG = ['rank-bg-1','rank-bg-2','rank-bg-3','rank-bg-4','rank-bg-5'];
-var STAT_VIBES = { mqa_new:'newly qualified this week', hvp:'reconsidering Shopify', hvp_all:'browsing enterprise pages', new_people:'fresh contacts this week', activity:'actions they took', all_mqa:'your full MQA pipeline', anz_high_intent:'high intent, no sales touches', anz_new_people:'newly engaged this week', anz_activity:'recent contact activity', anz_website_visits:'website visits this week', intent_agentic:'AI & agentic commerce interest', intent_compete:'evaluating competitors', intent_international:'cross-border & global interest', intent_marketing:'marketing & growth interest', intent_b2b:'B2B & POS interest' };
+var STAT_VIBES = { mqa_new:'newly qualified this week', hvp:'reconsidering Shopify', hvp_all:'browsing enterprise pages', new_people:'fresh contacts this week', activity:'actions they took', all_mqa:'your full MQA pipeline', anz_high_intent:'high intent, no sales touches', anz_new_people:'newly engaged this week', anz_activity:'recent contact activity', anz_website_visits:'website visits this week', intent_agentic:'AI & agentic commerce interest', intent_compete:'evaluating competitors', intent_international:'cross-border & global interest', intent_marketing:'marketing & growth interest', intent_b2b:'B2B & POS interest', g2_intent:'actively comparing vendors on G2' };
 
 function badgeCls(t) { return 'badge-' + (TYPE_CLS[t] || t); }
 function pillCls(t) { return 'pill-' + (TYPE_CLS[t] || t); }
@@ -835,7 +842,8 @@ var SIGNAL_DEFS = {
   anz_high_intent: { q:'What are High Intent Accounts?', a:'Accounts showing strong engagement signals in the last 7 days that have not been contacted by sales yet. These are your warmest untouched accounts \u2014 prioritize outreach here.' },
   anz_new_people: { q:'Who are newly engaged people?', a:'Contacts who engaged with Shopify for the first time this week. Fresh inbound signals from people who weren\u2019t previously on your radar.' },
   anz_activity: { q:'What is Contact Activity?', a:'Specific activities (events, webinars, email clicks, campaigns) from contacts at your accounts. Use these details to personalize outreach based on what they actually interacted with.' },
-  anz_website_visits: { q:'What are Website Visits?', a:'Accounts visiting Shopify pages in the last 7 days, grouped by account to show which companies are actively researching Shopify right now.' }
+  anz_website_visits: { q:'What are Website Visits?', a:'Accounts visiting Shopify pages in the last 7 days, grouped by account to show which companies are actively researching Shopify right now.' },
+  g2_intent: { q:'What is G2 Research?', a:'G2 is a software review and comparison site where buyers research and evaluate vendors before making a decision. When an account appears here, it means someone at that company is actively on G2 comparing commerce platforms right now — not just passively browsing. This is one of the strongest buying intent signals available. Account Grade (A–D) is Demandbase\'s fit score for how well the account matches Shopify\'s ICP. Reach out while they\'re actively in evaluation mode.' }
 };
 
 function openModal(type) {
@@ -1088,7 +1096,7 @@ function generateCoachSummary(coachData) {
   var totalMqa = mqaReps.reduce(function(s, rid) { return s + (DATA.sellers[rid].summary.mqa_new || 0); }, 0);
   if (totalMqa > 0) {
     var names = mqaReps.map(function(rid) { return DATA.sellers[rid].name.split(' ')[0]; });
-    parts.push(totalMqa + ' new MQA account' + (totalMqa > 1 ? 's' : '') + ' this week \u2014 ' + names.join(' and ') + ' should be your first check-ins.');
+    parts.push(totalMqa + ' new MQA account' + (totalMqa > 1 ? 's' : '') + ' this week \u2014 check in with ' + names.join(' and ') + ' first.');
   }
 
   var topAccts = computeTeamTopAccounts(repIds, 1);
@@ -1227,6 +1235,23 @@ function renderCoach(coachData) {
         html += '<div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:4px;">';
         html += '<a href="' + esc(ad.sfdc_url) + '" target="_blank" rel="noopener" style="font-size:12px;color:var(--accent2);text-decoration:none;font-weight:500;">View in SFDC \u2197</a>';
         html += '</div>';
+      }
+      // Recent news (coach view)
+      var coachNews = (DATA.account_news || {})[acc.name.toLowerCase()] || [];
+      if (coachNews.length > 0) {
+        html += '<div style="margin-top:10px;padding:10px 12px;background:var(--bg);border-radius:8px;">';
+        html += '<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3);margin-bottom:6px;">\uD83D\uDCF0 Recent news</div>';
+        html += '<div style="display:flex;flex-direction:column;gap:6px;">';
+        coachNews.forEach(function(article) {
+          html += '<div style="font-size:12px;">';
+          html += '<a href="' + esc(article.url) + '" target="_blank" rel="noopener" style="color:var(--text-1);text-decoration:none;font-weight:500;line-height:1.5;">' + esc(article.title) + '</a>';
+          html += '<div style="font-size:11px;color:var(--text-3);margin-top:1px;">';
+          if (article.source) html += esc(article.source);
+          if (article.source && article.date) html += ' \u00B7 ';
+          if (article.date) html += esc(article.date);
+          html += '</div></div>';
+        });
+        html += '</div></div>';
       }
       html += '<div class="coach-rep-drill" data-seller="' + esc(acc.repId) + '">View ' + esc(acc.repName) + '\u2019s full report \u2192</div>';
       html += '</div></div>';
@@ -1488,15 +1513,35 @@ function renderMaster() {
     if (!s || s.summary.total === 0) return '';
     var typesPresent = types.filter(function(t) { return s.summary[t] > 0; }).join(' ');
     var sellerRegion = s.region || 'NA';
+
+    // Compute the same 4 key stats as the seller page header
+    var mqaCount  = s.summary.mqa_new || 0;
+    var hvpCount  = s.summary.hvp || 0;
+    var peopleCount = (s.summary.activity || 0) + (s.summary.new_people || 0);
+    var intentCount = ['intent_agentic','intent_compete','intent_international','intent_marketing','intent_b2b']
+      .reduce(function(sum, t) { return sum + (s.summary[t] || 0); }, 0);
+
+    var stats = [];
+    if (mqaCount > 0)     stats.push({ n: mqaCount,     l: 'New MQA',   cls: 'mqa_new' });
+    if (hvpCount > 0)     stats.push({ n: hvpCount,     l: 'Prev. CL',  cls: 'hvp' });
+    if (peopleCount > 0)  stats.push({ n: peopleCount,  l: 'Engaged',   cls: 'new_people' });
+    if (intentCount > 0)  stats.push({ n: intentCount,  l: 'Intent',    cls: 'intent_compete' });
+
     var c = '';
     c += '<div class="seller-card reveal" data-seller="' + esc(sid) + '" data-name="' + esc(s.name.toLowerCase()) + '" data-types="' + typesPresent + '" data-region="' + esc(sellerRegion) + '" tabindex="0" role="button" aria-label="View ' + esc(s.name) + ' report">';
-    var mqaDot = (s.summary.mqa_new > 0 || s.summary.anz_high_intent > 0) ? '<span class="seller-mqa-indicator" title="Has hot accounts"></span>' : '';
-    c += '<div class="seller-head"><span class="seller-name">' + esc(s.name) + mqaDot + '</span><span class="seller-total">' + s.summary.total + ' signals</span></div>';
-    c += '<div class="seller-pills">';
-    types.forEach(function(t) {
-      if (s.summary[t] > 0) c += '<span class="pill ' + pillCls(t) + '">' + s.summary[t] + ' ' + DATA.signal_types[t].short_label + '</span>';
-    });
-    c += '</div></div>';
+    var mqaDot = (mqaCount > 0 || s.summary.anz_high_intent > 0) ? '<span class="seller-mqa-indicator" title="Has hot accounts"></span>' : '';
+    c += '<div class="seller-head"><span class="seller-name">' + esc(s.name) + mqaDot + '</span></div>';
+    if (stats.length > 0) {
+      c += '<div style="display:grid;grid-template-columns:repeat(' + Math.min(stats.length, 4) + ',1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-top:10px;">';
+      stats.forEach(function(st) {
+        c += '<div style="background:var(--bg-card);padding:7px 6px;text-align:center;">';
+        c += '<div style="font-family:var(--font-serif);font-size:16px;color:var(--text-1);line-height:1;">' + st.n + '</div>';
+        c += '<div style="font-size:10px;color:var(--text-3);margin-top:2px;line-height:1.2;">' + esc(st.l) + '</div>';
+        c += '</div>';
+      });
+      c += '</div>';
+    }
+    c += '</div>';
     return c;
   }
 
@@ -1509,16 +1554,34 @@ function renderMaster() {
     var hasSignals = teamSellers.some(function(sid) { return sellers[sid] && sellers[sid].summary.total > 0; });
     if (!hasSignals) return;
 
+    // Team-level key stats
+    var tMqa     = team.summary.mqa_new || 0;
+    var tHvp     = team.summary.hvp || 0;
+    var tPeople  = (team.summary.activity || 0) + (team.summary.new_people || 0);
+    var tIntent  = ['intent_agentic','intent_compete','intent_international','intent_marketing','intent_b2b']
+      .reduce(function(sum, t) { return sum + (team.summary[t] || 0); }, 0);
+    var teamStats = [];
+    if (tMqa > 0)    teamStats.push(tMqa + ' New MQA');
+    if (tHvp > 0)    teamStats.push(tHvp + ' Prev. CL');
+    if (tPeople > 0) teamStats.push(tPeople + ' engaged');
+    if (tIntent > 0) teamStats.push(tIntent + ' intent');
+
+    var coachSlug = team.lead ? nameToSlug(team.lead) : null;
+
     html += '<div class="team-group reveal" data-team="' + esc(tn) + '" data-region="' + esc(teamRegion) + '">';
     html += '<div class="team-header">';
     html += '<span class="team-name">' + esc(tn) + (showRegionFilter ? '<span class="region-tag">' + esc(teamRegion) + '</span>' : '') + '</span>';
-    if (team.lead) html += '<span class="team-lead">' + esc(team.lead) + '</span>';
-    html += '<span class="team-summary">';
-    types.forEach(function(t) {
-      var count = team.summary[t] || 0;
-      if (count > 0) html += '<span class="team-pill ' + pillCls(t) + '">' + count + ' ' + DATA.signal_types[t].short_label + '</span>';
-    });
-    html += '</span></div>';
+    if (team.lead) {
+      if (coachSlug) {
+        html += '<span class="team-lead coach-link" data-coach="' + esc(coachSlug) + '" tabindex="0" role="link" title="View coach view">' + esc(team.lead) + ' \u2197</span>';
+      } else {
+        html += '<span class="team-lead">' + esc(team.lead) + '</span>';
+      }
+    }
+    if (teamStats.length > 0) {
+      html += '<span style="font-size:11px;color:var(--text-3);margin-left:auto;">' + teamStats.join(' \u00B7 ') + '</span>';
+    }
+    html += '</div>';
     html += '<div class="sellers-grid">';
     teamSellers.forEach(function(sid) { html += renderSellerCard(sid); });
     html += '</div></div>';
@@ -1573,7 +1636,7 @@ function renderMaster() {
    Top Accounts — priority scoring + render
    ═══════════════════════════════════════════ */
 var SIGNAL_WEIGHTS = {
-  mqa_new:100, hvp:80, intent_compete:60, hvp_all:40,
+  mqa_new:100, hvp:80, intent_compete:60, g2_intent:55, hvp_all:40,
   intent_agentic:35, intent_international:30,
   intent_marketing:25, intent_b2b:25,
   new_people:20, activity:15, all_mqa:10
@@ -1789,135 +1852,167 @@ function renderTopAccounts(signals) {
     buildAccountTags(acc).forEach(function(t) { html += '<span class="badge ' + t.c + '" style="font-size:11px;padding:2px 8px;">' + esc(t.l) + '</span>'; });
     html += '</div></div><div class="priority-expand">\u2304</div></div>';
 
-    // Expanded detail
-    var ad = (DATA.account_details || {})[acc.name.toLowerCase()] || {};
-    html += '<div class="priority-detail">';
+    html += renderAccountCardExpanded(acc, peopleLookup);
+    html += '</div>';
+  });
 
-    // Account overview / brief — richest available source
-    var overview = ad.merchant_overview || ad.description;
-    if (overview) {
-      html += '<div style="font-size:12px;color:var(--text-2);line-height:1.7;margin-bottom:12px;padding:12px 16px;background:var(--bg);border-radius:8px;border-left:3px solid var(--accent-soft);">' + esc(overview) + '</div>';
-    } else {
-      var mqaRow = acc.details.mqa_new;
-      if (mqaRow && mqaRow.brief) html += '<div style="font-size:12px;color:var(--text-2);margin-bottom:12px;padding:12px 16px;background:var(--bg);border-radius:8px;">\uD83D\uDCA1 ' + esc(mqaRow.brief) + '</div>';
-    }
+  html += '</div>';
+  return html;
+}
 
-    // Outreach angle
-    var acctSuggestion = suggestAccountOutreach(acc);
-    if (acctSuggestion.length > 0) {
-      html += '<div style="margin-bottom:14px;padding:12px 14px;background:var(--accent-light);border-radius:8px;border-left:3px solid var(--accent);">';
-      html += '<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin-bottom:6px;">Outreach angle</div>';
-      acctSuggestion.forEach(function(line) {
-        html += '<div style="font-size:12px;color:var(--text-2);line-height:1.65;padding-left:10px;position:relative;margin-bottom:4px;">';
-        html += '<span style="position:absolute;left:0;color:var(--accent);">\u203A</span>' + esc(line);
-        html += '</div>';
-      });
+/* ═══════════════════════════════════════════
+   Shared expanded card detail renderer
+   Used by Top Accounts and G2 Research sections
+   ═══════════════════════════════════════════ */
+function renderAccountCardExpanded(acc, peopleLookup) {
+  var html = '';
+  var ad = (DATA.account_details || {})[acc.name.toLowerCase()] || {};
+  html += '<div class="priority-detail">';
+
+  // Account overview / brief — richest available source
+  var overview = ad.merchant_overview || ad.description;
+  if (overview) {
+    html += '<div style="font-size:12px;color:var(--text-2);line-height:1.7;margin-bottom:12px;padding:12px 16px;background:var(--bg);border-radius:8px;border-left:3px solid var(--accent-soft);">' + esc(overview) + '</div>';
+  } else {
+    var mqaRow = acc.details && acc.details.mqa_new;
+    if (mqaRow && mqaRow.brief) html += '<div style="font-size:12px;color:var(--text-2);margin-bottom:12px;padding:12px 16px;background:var(--bg);border-radius:8px;">\uD83D\uDCA1 ' + esc(mqaRow.brief) + '</div>';
+  }
+
+  // Outreach angle
+  var acctSuggestion = suggestAccountOutreach(acc);
+  if (acctSuggestion.length > 0) {
+    html += '<div style="margin-bottom:14px;padding:12px 14px;background:var(--accent-light);border-radius:8px;border-left:3px solid var(--accent);">';
+    html += '<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin-bottom:6px;">Outreach angle</div>';
+    acctSuggestion.forEach(function(line) {
+      html += '<div style="font-size:12px;color:var(--text-2);line-height:1.65;padding-left:10px;position:relative;margin-bottom:4px;">';
+      html += '<span style="position:absolute;left:0;color:var(--accent);">\u203A</span>' + esc(line);
       html += '</div>';
-    }
+    });
+    html += '</div>';
+  }
 
-    // Account facts row
-    var facts = [];
-    if (ad.industry) facts.push(ad.industry);
-    if (ad.city && ad.country) facts.push(ad.city + ', ' + ad.country);
-    else if (ad.country) facts.push(ad.country);
-    if (ad.employees) facts.push(parseInt(ad.employees).toLocaleString() + ' employees');
-    if (ad.revenue_usd) {
-      var rev = parseFloat(ad.revenue_usd);
-      var revStr = rev >= 1e9 ? '$' + (rev/1e9).toFixed(1) + 'B' : rev >= 1e6 ? '$' + Math.round(rev/1e6) + 'M' : '$' + Math.round(rev).toLocaleString();
-      facts.push(revStr + ' revenue');
-    } else if (ad.annual_online_revenue) {
-      facts.push(ad.annual_online_revenue + ' online revenue');
-    }
-    if (facts.length > 0) {
-      html += '<div class="priority-detail-row"><span class="priority-detail-icon">\uD83C\uDFE2</span><span>' + esc(facts.join(' \u00B7 ')) + '</span></div>';
-    }
+  // Account facts row
+  var facts = [];
+  if (ad.industry) facts.push(ad.industry);
+  if (ad.city && ad.country) facts.push(ad.city + ', ' + ad.country);
+  else if (ad.country) facts.push(ad.country);
+  if (ad.employees) facts.push(parseInt(ad.employees).toLocaleString() + ' employees');
+  if (ad.revenue_usd) {
+    var rev = parseFloat(ad.revenue_usd);
+    var revStr = rev >= 1e9 ? '$' + (rev/1e9).toFixed(1) + 'B' : rev >= 1e6 ? '$' + Math.round(rev/1e6) + 'M' : '$' + Math.round(rev).toLocaleString();
+    facts.push(revStr + ' revenue');
+  } else if (ad.annual_online_revenue) {
+    facts.push(ad.annual_online_revenue + ' online revenue');
+  }
+  if (facts.length > 0) {
+    html += '<div class="priority-detail-row"><span class="priority-detail-icon">\uD83C\uDFE2</span><span>' + esc(facts.join(' \u00B7 ')) + '</span></div>';
+  }
 
-    // Tech stack
-    var tech = [];
-    if (ad.ecomm_platform) tech.push('Ecomm: ' + ad.ecomm_platform);
-    if (ad.pos_solution) tech.push('POS: ' + ad.pos_solution);
-    var anyRow = acc.details.mqa_new || acc.details.hvp_all || acc.details.hvp || {};
-    if (!ad.ecomm_platform && anyRow.platform) tech.push('Platform: ' + anyRow.platform);
-    if (tech.length > 0) {
-      html += '<div class="priority-detail-row"><span class="priority-detail-icon">\uD83D\uDDA5</span><span>' + esc(tech.join(' \u00B7 ')) + '</span></div>';
-    }
+  // Tech stack
+  var tech = [];
+  if (ad.ecomm_platform) tech.push('Ecomm: ' + ad.ecomm_platform);
+  if (ad.pos_solution) tech.push('POS: ' + ad.pos_solution);
+  var anyRow = (acc.details && (acc.details.mqa_new || acc.details.hvp_all || acc.details.hvp || acc.details.g2_intent)) || {};
+  if (!ad.ecomm_platform && anyRow.platform) tech.push('Platform: ' + anyRow.platform);
+  if (tech.length > 0) {
+    html += '<div class="priority-detail-row"><span class="priority-detail-icon">\uD83D\uDDA5</span><span>' + esc(tech.join(' \u00B7 ')) + '</span></div>';
+  }
 
-    // Competitor contract end date — timing signal
-    if (ad.competitor_contract_end) {
-      html += '<div class="priority-detail-row"><span class="priority-detail-icon">\uD83D\uDCC5</span><span><span class="priority-detail-label">Competitor contract ends</span>' + esc(ad.competitor_contract_end) + ' — good timing for outreach</span></div>';
-    }
+  // Competitor contract end date — timing signal
+  if (ad.competitor_contract_end) {
+    html += '<div class="priority-detail-row"><span class="priority-detail-icon">\uD83D\uDCC5</span><span><span class="priority-detail-label">Competitor contract ends</span>' + esc(ad.competitor_contract_end) + ' — good timing for outreach</span></div>';
+  }
 
-    // Pages visited from Demandbase
-    if (anyRow.pages_visited) {
-      html += '<div class="priority-detail-row"><span class="priority-detail-icon">\uD83D\uDCC4</span><span><span class="priority-detail-label">Pages researched</span>' + esc(anyRow.pages_visited) + '</span></div>';
-    }
+  // Pages visited from Demandbase
+  if (anyRow.pages_visited) {
+    html += '<div class="priority-detail-row"><span class="priority-detail-icon">\uD83D\uDCC4</span><span><span class="priority-detail-label">Pages researched</span>' + esc(anyRow.pages_visited) + '</span></div>';
+  }
 
-    // Intent keywords
-    if (acc.keywords.length > 0) {
-      html += '<div class="priority-detail-row"><span class="priority-detail-icon">\uD83C\uDFF7</span><span><span class="priority-detail-label">Intent keywords </span>';
-      acc.keywords.slice(0,10).forEach(function(k){ html += '<span class="kw-chip">' + esc(k) + '</span>'; });
-      html += '</span></div>';
-    }
+  // Intent keywords
+  if (acc.keywords && acc.keywords.length > 0) {
+    html += '<div class="priority-detail-row"><span class="priority-detail-icon">\uD83C\uDFF7</span><span><span class="priority-detail-label">Intent keywords </span>';
+    acc.keywords.slice(0,10).forEach(function(k){ html += '<span class="kw-chip">' + esc(k) + '</span>'; });
+    html += '</span></div>';
+  }
 
-    // At-risk notes
-    if (ad.why_at_risk) {
-      html += '<div class="priority-detail-row"><span class="priority-detail-icon">\u26A0\uFE0F</span><span><span class="priority-detail-label">Risk note</span>' + esc(ad.why_at_risk) + '</span></div>';
-    }
+  // At-risk notes
+  if (ad.why_at_risk) {
+    html += '<div class="priority-detail-row"><span class="priority-detail-icon">\u26A0\uFE0F</span><span><span class="priority-detail-label">Risk note</span>' + esc(ad.why_at_risk) + '</span></div>';
+  }
 
-    // SFDC deal + activity
-    var sfdc = acc.sfdc;
-    if (sfdc) {
-      if (sfdc.open_opps && sfdc.open_opps[0]) {
-        var o = sfdc.open_opps[0];
-        var oppStr = (o.stage || 'Open Deal') + (o.acv_str ? ' \u00B7 ' + o.acv_str : '') + (o.close_date ? ' \u00B7 closes ' + o.close_date : '');
-        html += '<div class="priority-detail-row"><span class="priority-detail-icon">\uD83D\uDCCA</span><span><span class="priority-detail-label">Open deal</span>' + esc(oppStr) + '</span></div>';
-      }
-      if (sfdc.no_activity) {
-        html += '<div class="priority-detail-row"><span class="priority-detail-icon">\u23F1</span><span><span class="priority-detail-label">Last SFDC activity</span>No activity on record</span></div>';
-      } else if (sfdc.days_since_activity != null) {
-        html += '<div class="priority-detail-row"><span class="priority-detail-icon">\u23F1</span><span><span class="priority-detail-label">Last SFDC activity</span>' + esc(sfdc.days_since_activity === 0 ? 'Today' : sfdc.days_since_activity + ' days ago') + '</span></div>';
-      }
-      if (sfdc.engaged_contacts && sfdc.engaged_contacts.length > 0) {
-        html += '<div class="priority-detail-row" style="align-items:flex-start;"><span class="priority-detail-icon">\uD83D\uDC64</span><span style="flex:1;"><span class="priority-detail-label">SFDC contacts engaged (90d)</span>';
-        html += '<div style="margin-top:5px;display:flex;flex-direction:column;gap:4px;">';
-        sfdc.engaged_contacts.forEach(function(c) {
-          html += '<div style="font-size:12px;color:var(--text-2);">';
-          if (c.name) html += '<span style="color:var(--text-1);font-weight:500;">' + esc(c.name) + '</span>';
-          if (c.name && c.title) html += ' \u00B7 ';
-          if (c.title) html += esc(c.title);
-          html += '</div>';
-        });
-        html += '</div></span></div>';
-      } else if (sfdc.engaged_contact_titles && sfdc.engaged_contact_titles.length > 0) {
-        html += '<div class="priority-detail-row"><span class="priority-detail-icon">\uD83D\uDC64</span><span><span class="priority-detail-label">SFDC contacts engaged (90d)</span>' + esc(sfdc.engaged_contact_titles.slice(0,3).join(', ')) + '</span></div>';
-      }
+  // SFDC deal + activity
+  var sfdc = acc.sfdc;
+  if (sfdc) {
+    if (sfdc.open_opps && sfdc.open_opps[0]) {
+      var o = sfdc.open_opps[0];
+      var oppStr = (o.stage || 'Open Deal') + (o.acv_str ? ' \u00B7 ' + o.acv_str : '') + (o.close_date ? ' \u00B7 closes ' + o.close_date : '');
+      html += '<div class="priority-detail-row"><span class="priority-detail-icon">\uD83D\uDCCA</span><span><span class="priority-detail-label">Open deal</span>' + esc(oppStr) + '</span></div>';
     }
-
-    // SFDC activity history for this account
-    var acctActivities = (DATA.account_activities || {})[acc.name.toLowerCase()] || [];
-    if (acctActivities.length > 0) {
-      html += '<div class="priority-detail-row" style="align-items:flex-start;"><span class="priority-detail-icon">\uD83D\uDCCB</span><span style="flex:1;">';
-      html += '<span class="priority-detail-label">Recent SFDC activity</span>';
-      html += '<div style="margin-top:6px;display:flex;flex-direction:column;gap:5px;">';
-      acctActivities.forEach(function(act) {
-        var typeLabel = act.type || 'Activity';
-        var typeColor = act.type === 'Email' ? 'var(--accent2)' : act.type === 'Call' ? 'var(--teal)' : 'var(--warm)';
-        html += '<div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;">';
-        html += '<span style="font-weight:700;color:' + typeColor + ';white-space:nowrap;min-width:44px;">' + esc(typeLabel) + '</span>';
-        html += '<span style="color:var(--text-2);flex:1;">';
-        var contactLabel = act.contact_name || act.contact_title || '';
-        if (contactLabel) html += '<span style="color:var(--text-1);font-weight:500;">' + esc(contactLabel) + '</span>';
-        if (act.contact_name && act.contact_title) html += ' <span style="color:var(--text-3);">(' + esc(act.contact_title) + ')</span>';
-        if (contactLabel) html += ' \u00B7 ';
-        html += esc(act.subject || '');
-        html += '</span>';
-        if (act.date) html += '<span style="color:var(--text-3);white-space:nowrap;margin-left:6px;">' + esc(act.date) + '</span>';
+    if (sfdc.no_activity) {
+      html += '<div class="priority-detail-row"><span class="priority-detail-icon">\u23F1</span><span><span class="priority-detail-label">Last SFDC activity</span>No activity on record</span></div>';
+    } else if (sfdc.days_since_activity != null) {
+      html += '<div class="priority-detail-row"><span class="priority-detail-icon">\u23F1</span><span><span class="priority-detail-label">Last SFDC activity</span>' + esc(sfdc.days_since_activity === 0 ? 'Today' : sfdc.days_since_activity + ' days ago') + '</span></div>';
+    }
+    if (sfdc.engaged_contacts && sfdc.engaged_contacts.length > 0) {
+      html += '<div class="priority-detail-row" style="align-items:flex-start;"><span class="priority-detail-icon">\uD83D\uDC64</span><span style="flex:1;"><span class="priority-detail-label">SFDC contacts engaged (90d)</span>';
+      html += '<div style="margin-top:5px;display:flex;flex-direction:column;gap:4px;">';
+      sfdc.engaged_contacts.forEach(function(c) {
+        html += '<div style="font-size:12px;color:var(--text-2);">';
+        if (c.name) html += '<span style="color:var(--text-1);font-weight:500;">' + esc(c.name) + '</span>';
+        if (c.name && c.title) html += ' \u00B7 ';
+        if (c.title) html += esc(c.title);
         html += '</div>';
       });
       html += '</div></span></div>';
+    } else if (sfdc.engaged_contact_titles && sfdc.engaged_contact_titles.length > 0) {
+      html += '<div class="priority-detail-row"><span class="priority-detail-icon">\uD83D\uDC64</span><span><span class="priority-detail-label">SFDC contacts engaged (90d)</span>' + esc(sfdc.engaged_contact_titles.slice(0,3).join(', ')) + '</span></div>';
     }
+  }
 
-    // People who engaged at this account (from Demandbase activity/new_people)
+  // SFDC activity history for this account
+  var acctActivities = (DATA.account_activities || {})[acc.name.toLowerCase()] || [];
+  if (acctActivities.length > 0) {
+    html += '<div class="priority-detail-row" style="align-items:flex-start;"><span class="priority-detail-icon">\uD83D\uDCCB</span><span style="flex:1;">';
+    html += '<span class="priority-detail-label">Recent SFDC activity</span>';
+    html += '<div style="margin-top:6px;display:flex;flex-direction:column;gap:5px;">';
+    acctActivities.forEach(function(act) {
+      var typeLabel = act.type || 'Activity';
+      var typeColor = act.type === 'Email' ? 'var(--accent2)' : act.type === 'Call' ? 'var(--teal)' : 'var(--warm)';
+      html += '<div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;">';
+      html += '<span style="font-weight:700;color:' + typeColor + ';white-space:nowrap;min-width:44px;">' + esc(typeLabel) + '</span>';
+      html += '<span style="color:var(--text-2);flex:1;">';
+      var contactLabel = act.contact_name || act.contact_title || '';
+      if (contactLabel) html += '<span style="color:var(--text-1);font-weight:500;">' + esc(contactLabel) + '</span>';
+      if (act.contact_name && act.contact_title) html += ' <span style="color:var(--text-3);">(' + esc(act.contact_title) + ')</span>';
+      if (contactLabel) html += ' \u00B7 ';
+      html += esc(act.subject || '');
+      html += '</span>';
+      if (act.date) html += '<span style="color:var(--text-3);white-space:nowrap;margin-left:6px;">' + esc(act.date) + '</span>';
+      html += '</div>';
+    });
+    html += '</div></span></div>';
+  }
+
+  // Recent news
+  var acctNews = (DATA.account_news || {})[acc.name.toLowerCase()] || [];
+  if (acctNews.length > 0) {
+    html += '<div class="priority-detail-row" style="align-items:flex-start;"><span class="priority-detail-icon">\uD83D\uDCF0</span><span style="flex:1;">';
+    html += '<span class="priority-detail-label">Recent news</span>';
+    html += '<div style="margin-top:6px;display:flex;flex-direction:column;gap:8px;">';
+    acctNews.forEach(function(article) {
+      html += '<div style="font-size:12px;">';
+      html += '<a href="' + esc(article.url) + '" target="_blank" rel="noopener" style="color:var(--text-1);text-decoration:none;font-weight:500;line-height:1.5;">' + esc(article.title) + '</a>';
+      html += '<div style="font-size:11px;color:var(--text-3);margin-top:2px;">';
+      if (article.source) html += esc(article.source);
+      if (article.source && article.date) html += ' \u00B7 ';
+      if (article.date) html += esc(article.date);
+      html += '</div></div>';
+    });
+    html += '</div></span></div>';
+  }
+
+  // People who engaged at this account (from Demandbase activity/new_people)
+  if (peopleLookup) {
     var acctPeople = peopleLookup[acc.name.toLowerCase()] || [];
     if (acctPeople.length > 0) {
       html += '<div class="priority-detail-row" style="align-items:flex-start;"><span class="priority-detail-icon">\uD83D\uDC65</span><span style="flex:1;">';
@@ -1928,7 +2023,6 @@ function renderTopAccounts(signals) {
         html += '<div style="font-weight:600;font-size:13px;color:var(--text-1);">' + esc(p.full_name || '—') + '</div>';
         html += '<div style="font-size:12px;color:var(--text-2);margin-top:2px;">' + esc(p.title || '') + '</div>';
         if (p.details) html += '<div style="font-size:11px;color:var(--text-3);margin-top:3px;font-style:italic;">' + esc(p.details) + '</div>';
-        // SFDC last contact
         var sc = p.sfdc_contact || {};
         if (sc.in_sfdc && sc.days_since_contact != null) {
           var cls = sc.days_since_contact > 90 ? 'sfdc-cold' : sc.days_since_contact > 14 ? 'sfdc-warm' : 'sfdc-fresh';
@@ -1938,7 +2032,6 @@ function renderTopAccounts(signals) {
         } else if (sc.in_sfdc === false) {
           html += '<div style="margin-top:5px;"><span class="sfdc-badge" style="font-size:10px;background:var(--bg-muted);color:var(--text-3);">Not in SFDC yet</span></div>';
         }
-        // Seniority
         if (p.seniority && p.seniority !== 'IC') {
           html += '<span style="float:right;margin-top:-28px;">' + renderSeniority(p.seniority) + '</span>';
         }
@@ -1946,17 +2039,15 @@ function renderTopAccounts(signals) {
       });
       html += '</div></span></div>';
     }
+  }
 
-    // SFDC action links
-    var links = [];
-    if (ad.account_url) links.push('<a href="' + esc(ad.account_url) + '" target="_blank" rel="noopener" style="color:var(--accent);font-weight:600;font-size:12px;text-decoration:none;">View in SFDC \u2197</a>');
-    if (ad.new_opportunity_url) links.push('<a href="' + esc(ad.new_opportunity_url) + '" target="_blank" rel="noopener" style="color:var(--accent2);font-weight:600;font-size:12px;text-decoration:none;">+ Create Opportunity</a>');
-    if (links.length > 0) {
-      html += '<div class="priority-detail-row" style="margin-top:8px;"><span class="priority-detail-icon">\uD83D\uDD17</span><span style="display:flex;gap:16px;flex-wrap:wrap;">' + links.join('') + '</span></div>';
-    }
-
-    html += '</div></div>';
-  });
+  // SFDC action links
+  var links = [];
+  if (ad.account_url) links.push('<a href="' + esc(ad.account_url) + '" target="_blank" rel="noopener" style="color:var(--accent);font-weight:600;font-size:12px;text-decoration:none;">View in SFDC \u2197</a>');
+  if (ad.new_opportunity_url) links.push('<a href="' + esc(ad.new_opportunity_url) + '" target="_blank" rel="noopener" style="color:var(--accent2);font-weight:600;font-size:12px;text-decoration:none;">+ Create Opportunity</a>');
+  if (links.length > 0) {
+    html += '<div class="priority-detail-row" style="margin-top:8px;"><span class="priority-detail-icon">\uD83D\uDD17</span><span style="display:flex;gap:16px;flex-wrap:wrap;">' + links.join('') + '</span></div>';
+  }
 
   html += '</div>';
   return html;
@@ -1987,7 +2078,7 @@ function computeTopPeople(signals) {
         seen[key] = true;
         var accountName = (row.account || '').toLowerCase();
         var acctBoost = 0;
-        ['mqa_new','hvp','intent_compete','hvp_all','intent_agentic'].forEach(function(st) {
+        ['mqa_new','hvp','intent_compete','g2_intent','hvp_all','intent_agentic'].forEach(function(st) {
           if ((signals[st] || []).some(function(r2){ return (r2.account||'').toLowerCase() === accountName; })) {
             acctBoost += SIGNAL_WEIGHTS[st] || 0;
           }
@@ -2204,7 +2295,9 @@ function suggestOutreach(person, signals) {
       return (signals[st] || []).some(function(r) { return (r.account||'').toLowerCase() === accountLower; });
     });
   };
-  if (inSignal('intent_compete')) {
+  if (inSignal('g2_intent')) {
+    parts.push('Account is actively comparing vendors on G2 right now — they\'re in evaluation mode. Best time to reach out is this week, not next');
+  } else if (inSignal('intent_compete')) {
     parts.push('Account is actively evaluating competitors this week — ideal time to get in front of them');
   } else if (inSignal('intent_agentic')) {
     parts.push('Account is researching AI commerce — lead with Shopify\'s AI-native checkout and Sidekick');
@@ -2243,48 +2336,51 @@ function renderTopPeople(signals) {
 
   people.forEach(function(p, i) {
     var sc = p.sfdc_contact || {};
-    html += '<div class="person-card">';
-    html += '<div class="person-rank' + (i < 3 ? ' r'+(i+1) : '') + '">' + (i+1) + '</div>';
-    html += '<div class="person-body">';
+    var cardId = 'person-card-' + i;
+    var rankCls = i < 3 ? ' r' + (i+1) : '';
 
-    // Name + title + company
-    html += '<div class="person-name">' + esc(p.name) + '</div>';
-    html += '<div class="person-meta">';
-    if (p.title) html += esc(p.title);
-    if (p.account) html += ' \u00B7 <strong>' + esc(p.account) + '</strong>';
-    html += '</div>';
-
-    // What they engaged with
-    if (p.engagements.length > 0) {
-      html += '<div style="font-size:12px;color:var(--text-3);margin-top:3px;font-style:italic;">';
-      html += esc(p.engagements.slice(0, 2).join(' · '));
-      html += '</div>';
-    }
-
-    // Tags row
-    html += '<div class="person-tags" style="margin-top:6px;">';
+    html += '<div class="priority-card" id="' + cardId + '">';
+    // Collapsed header — rank + name + title + expand arrow
+    html += '<div class="priority-card-header" data-card="' + cardId + '">';
+    html += '<div class="priority-rank' + rankCls + '">' + (i+1) + '</div>';
+    html += '<div class="priority-body">';
+    html += '<div class="priority-name">' + esc(p.name) + '</div>';
+    var metaParts = [];
+    if (p.title) metaParts.push(esc(p.title));
+    if (p.account) metaParts.push('<strong>' + esc(p.account) + '</strong>');
+    if (metaParts.length) html += '<div class="priority-why">' + metaParts.join(' \u00B7 ') + '</div>';
+    // Compact tags row in header
+    html += '<div class="priority-tags">';
     if (p.seniority && p.seniority !== 'IC') html += renderSeniority(p.seniority);
     if (p.isHvpAccount) html += '<span class="badge badge-hvp" style="font-size:10px;padding:2px 7px;">\u21A9 Previously CL</span>';
     if (p.accountHot && !p.isHvpAccount) html += '<span class="badge badge-mqa_new" style="font-size:10px;padding:2px 7px;">\u2605 Hot account</span>';
-    // SFDC last contact
     if (sc.in_sfdc && sc.days_since_contact != null) {
       var dcls = sc.days_since_contact > 60 ? 'sfdc-cold' : sc.days_since_contact > 14 ? 'sfdc-warm' : 'sfdc-fresh';
-      var dlabel = sc.days_since_contact === 0 ? 'Contacted today' : sc.days_since_contact + ' days since contacted';
+      var dlabel = sc.days_since_contact === 0 ? 'Contacted today' : sc.days_since_contact + 'd since contact';
       html += '<span class="sfdc-badge ' + dcls + '" style="font-size:10px;">' + esc(dlabel) + '</span>';
-    } else if (sc.in_sfdc) {
-      html += '<span class="sfdc-badge sfdc-contacts" style="font-size:10px;">In SFDC</span>';
     } else if (sc.in_sfdc === false) {
       html += '<span class="sfdc-badge" style="font-size:10px;background:var(--bg-muted);color:var(--text-3);">Not in SFDC</span>';
     }
     html += '</div>';
+    html += '</div>'; // priority-body
+    html += '<div class="priority-expand">\u2304</div>';
+    html += '</div>'; // priority-card-header
 
-    // Outreach suggestion
+    // Expanded detail
+    html += '<div class="priority-detail">';
+
+    // What they engaged with
+    if (p.engagements.length > 0) {
+      html += '<div style="font-size:12px;color:var(--text-3);margin-bottom:10px;font-style:italic;line-height:1.6;">' + esc(p.engagements.slice(0,3).join(' \u00B7 ')) + '</div>';
+    }
+
+    // Outreach angle
     var suggestion = suggestOutreach(p, signals);
     if (suggestion.length > 0) {
-      html += '<div style="margin-top:8px;padding:10px 12px;background:var(--accent-light);border-radius:8px;border-left:3px solid var(--accent);">';
+      html += '<div style="margin-bottom:12px;padding:10px 12px;background:var(--accent-light);border-radius:8px;border-left:3px solid var(--accent);">';
       html += '<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin-bottom:5px;">Outreach angle</div>';
       suggestion.forEach(function(line) {
-        html += '<div style="font-size:12px;color:var(--text-2);line-height:1.6;padding-left:10px;position:relative;">';
+        html += '<div style="font-size:12px;color:var(--text-2);line-height:1.6;padding-left:10px;position:relative;margin-bottom:3px;">';
         html += '<span style="position:absolute;left:0;color:var(--accent);">\u203A</span>' + esc(line);
         html += '</div>';
       });
@@ -2296,13 +2392,125 @@ function renderTopPeople(signals) {
     if (sc.email) contactLinks.push('<a href="mailto:' + esc(sc.email) + '" style="font-size:12px;color:var(--accent);text-decoration:none;font-weight:500;">\u2709 ' + esc(sc.email) + '</a>');
     if (sc.contact_url) contactLinks.push('<a href="' + esc(sc.contact_url) + '" target="_blank" rel="noopener" style="font-size:12px;color:var(--accent2);text-decoration:none;font-weight:500;">View in SFDC \u2197</a>');
     if (contactLinks.length > 0) {
-      html += '<div style="margin-top:6px;display:flex;gap:14px;flex-wrap:wrap;">' + contactLinks.join('') + '</div>';
+      html += '<div style="display:flex;gap:14px;flex-wrap:wrap;">' + contactLinks.join('') + '</div>';
     }
 
-    html += '</div></div>';
+    html += '</div>'; // priority-detail
+    html += '</div>'; // priority-card
   });
 
   html += '</div>';
+  return html;
+}
+
+function renderG2Section(signals) {
+  var rows = (signals.g2_intent || []);
+  if (!rows.length) return '';
+
+  // Build people lookup from activity/new_people (same as Top Accounts)
+  var peopleLookup = {};
+  ['activity', 'new_people'].forEach(function(st) {
+    (signals[st] || []).forEach(function(row) {
+      var key = (row.account || '').toLowerCase();
+      if (!key) return;
+      if (!peopleLookup[key]) peopleLookup[key] = [];
+      var already = peopleLookup[key].some(function(r) { return r.full_name === row.full_name; });
+      if (!already) peopleLookup[key].push(row);
+    });
+  });
+
+  // Sort: Grade A first, then by stage priority
+  var stageOrder = { 'MQA': 0, 'SAL Opportunity': 1, 'Intent': 2, 'Engaged': 3, 'Closed-Won': 4 };
+  var gradeOrder = { A: 0, B: 1, C: 2, D: 3 };
+  rows = rows.slice().sort(function(a, b) {
+    var ga = gradeOrder[a.grade] !== undefined ? gradeOrder[a.grade] : 9;
+    var gb = gradeOrder[b.grade] !== undefined ? gradeOrder[b.grade] : 9;
+    if (ga !== gb) return ga - gb;
+    var sa = stageOrder[a.journey_stage] !== undefined ? stageOrder[a.journey_stage] : 9;
+    var sb = stageOrder[b.journey_stage] !== undefined ? stageOrder[b.journey_stage] : 9;
+    return sa - sb;
+  });
+
+  var gradeBg    = { A: '#d1fae5', B: '#fef3c7', C: '#dbeafe', D: '#f3f4f6' };
+  var gradeColor = { A: '#065f46', B: '#92400e', C: '#1e3a5f', D: '#4b5563' };
+
+  var html = '<div class="top-section reveal" id="section-g2_intent">';
+  html += '<div class="top-section-label">🔍 Actively Researching on G2';
+  html += ' <button class="help-btn" data-help="g2_intent" aria-label="What is G2 Research?" style="margin-left:6px;">?</button>';
+  html += '</div>';
+
+  rows.forEach(function(row, i) {
+    var account  = row.account || '';
+    var grade    = row.grade || '';
+    var stage    = row.journey_stage || '';
+    var priority = row.priority || '';
+    var isCW     = (stage === 'Closed-Won');
+    var cardId   = 'g2-' + i;
+
+    // Build acc object in the same shape as computeTopAccounts outputs
+    var acc = {
+      name:        account,
+      signalTypes: ['g2_intent'],
+      sfdc:        row.sfdc || null,
+      keywords:    [],
+      details:     { g2_intent: row }
+    };
+
+    html += '<div class="priority-card" id="' + cardId + '">';
+    html += '<div class="priority-card-header" data-card="' + cardId + '">';
+
+    // Grade circle (replaces rank number)
+    html += '<div class="priority-rank" style="background:' + (gradeBg[grade]||'#f3f4f6') + ';color:' + (gradeColor[grade]||'#4b5563') + ';font-size:13px;font-weight:800;">' + (grade || '?') + '</div>';
+
+    html += '<div class="priority-body">';
+    html += '<div class="priority-name">' + esc(account) + '</div>';
+
+    // Why line — stage + G2 context
+    var whyParts = [];
+    if (isCW) {
+      whyParts.push('Existing customer — researching on G2');
+    } else if (stage === 'MQA') {
+      whyParts.push('MQA account actively comparing vendors on G2');
+    } else if (stage === 'SAL Opportunity') {
+      whyParts.push('Active opportunity — researching on G2 now');
+    } else if (stage === 'Intent') {
+      whyParts.push('Showing intent and comparing vendors on G2');
+    } else {
+      whyParts.push('Actively comparing vendors on G2');
+    }
+    html += '<div class="priority-why">' + esc(whyParts[0]) + '</div>';
+
+    // Tags — stage + priority fit segments
+    html += '<div class="priority-tags">';
+    if (isCW) {
+      html += '<span class="badge" style="background:#d1fae5;color:#065f46;font-size:11px;padding:2px 8px;">\u2713 Customer</span>';
+    } else if (stage) {
+      html += '<span class="badge badge-g2_intent" style="font-size:11px;padding:2px 8px;">' + esc(stage) + '</span>';
+    }
+    if (priority) {
+      priority.split(';').forEach(function(p) {
+        p = p.trim(); if (!p) return;
+        var isHigh = p.indexOf('High') !== -1;
+        html += '<span class="badge" style="font-size:11px;padding:2px 8px;background:' + (isHigh ? '#fef3c7' : 'var(--bg-muted)') + ';color:' + (isHigh ? '#b45309' : 'var(--text-3)') + ';">' + esc(p) + '</span>';
+      });
+    }
+    html += '</div>';
+    html += '</div>'; // priority-body
+    html += '<div class="priority-expand">\u2304</div>';
+    html += '</div>'; // priority-card-header
+
+    // SFDC badges inline (visible without expanding)
+    if (acc.sfdc) {
+      html += '<div style="padding:6px 16px 4px;">' + renderSfdcBadges(acc.sfdc) + '</div>';
+    }
+
+    // Expanded detail — same as Top Accounts
+    html += renderAccountCardExpanded(acc, peopleLookup);
+
+    html += '</div>'; // priority-card
+  });
+
+  html += '</div>'; // top-section
   return html;
 }
 
@@ -2449,11 +2657,14 @@ function renderPersonal(sellerId) {
   html += renderTopAccounts(seller.signals);
   html += renderTopPeople(seller.signals);
 
+  // G2 Research section
+  html += renderG2Section(seller.signals);
+
   // Top Leads (Consumer team only)
   html += renderTopLeads(sellerId);
 
   // Signal sections — skip activity/new_people (Top People), hvp (merged into hvp_all), all intent + all_mqa (collapsed at bottom)
-  var SKIP_TYPES = ['activity', 'new_people', 'hvp', 'intent_agentic', 'intent_compete', 'intent_international', 'intent_marketing', 'intent_b2b', 'all_mqa'];
+  var SKIP_TYPES = ['activity', 'new_people', 'hvp', 'intent_agentic', 'intent_compete', 'intent_international', 'intent_marketing', 'intent_b2b', 'all_mqa', 'g2_intent'];
   var hasAnyData = false;
   types.forEach(function(t) {
     if (SKIP_TYPES.indexOf(t) !== -1) return;
@@ -2612,6 +2823,26 @@ function renderPersonal(sellerId) {
           var what = (last.subject||'').replace(/^(Email:|Call:|Meeting:)\s*/i,'');
           html += '<div class="priority-detail-row"><span class="priority-detail-icon">\uD83D\uDCCB</span><span><span class="priority-detail-label">Last contact</span>' + esc([who,what,last.date].filter(Boolean).join(' \u00B7 ')) + '</span></div>';
         }
+
+        // HVP People — people from this account visiting high-value pages (2+ engagement pts)
+        var hvpPeople = (DATA.hvp_people_by_account || {})[(row.account||'').toLowerCase()] || [];
+        if (hvpPeople.length > 0) {
+          html += '<div class="priority-detail-row" style="align-items:flex-start;margin-top:10px;"><span class="priority-detail-icon">\uD83D\uDC65</span><span style="flex:1;">';
+          html += '<span class="priority-detail-label" style="display:block;margin-bottom:6px;">People visiting these pages</span>';
+          hvpPeople.forEach(function(p) {
+            var senBadge = p.seniority && p.seniority !== 'other' ? '<span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:1px 6px;border-radius:8px;margin-left:6px;background:var(--warm-light);color:var(--warm);">'+esc(p.seniority)+'</span>' : '';
+            html += '<div style="display:flex;justify-content:space-between;align-items:flex-start;padding:7px 10px;margin-bottom:5px;background:var(--bg);border-radius:8px;border:1px solid var(--border-soft);">';
+            html += '<div style="flex:1;min-width:0;">';
+            html += '<div style="font-size:12px;font-weight:600;color:var(--text-1);">' + esc(p.full_name||'Unknown') + senBadge + '</div>';
+            if (p.title) html += '<div style="font-size:11px;color:var(--text-3);margin-top:1px;">' + esc(p.title) + '</div>';
+            if (p.email) html += '<div style="margin-top:4px;"><a href="mailto:'+esc(p.email)+'" style="font-size:11px;color:var(--accent);text-decoration:none;">\u2709 '+esc(p.email)+'</a></div>';
+            html += '</div>';
+            html += '<div style="font-size:11px;color:var(--text-3);white-space:nowrap;margin-left:10px;padding-top:2px;">' + p.engagement_7d.toFixed(p.engagement_7d % 1 === 0 ? 0 : 2) + ' pts</div>';
+            html += '</div>';
+          });
+          html += '</span></div>';
+        }
+
         if (ad.account_url || ad.new_opportunity_url) {
           html += '<div class="priority-detail-row" style="margin-top:6px;"><span class="priority-detail-icon">\uD83D\uDD17</span><span style="display:flex;gap:14px;flex-wrap:wrap;">';
           if (ad.account_url) html += '<a href="'+esc(ad.account_url)+'" target="_blank" rel="noopener" style="font-size:12px;color:var(--accent);font-weight:600;text-decoration:none;">View in SFDC \u2197</a>';
@@ -2899,6 +3130,11 @@ function bindMasterEvents() {
     el.addEventListener('click', handler);
     activateOnKey(el, handler);
   });
+  $$('.coach-link').forEach(function(el) {
+    var handler = function() { var slug = this.dataset.coach; if (slug) showCoach(slug); };
+    el.addEventListener('click', handler);
+    activateOnKey(el, handler);
+  });
   $$('.archive-link').forEach(function(el) {
     var handler = function() { var w = this.dataset.week; if (w) loadWeek(w); };
     el.addEventListener('click', handler);
@@ -3007,7 +3243,7 @@ function applyCardFilters(q) {
 
 function loadWeek(week, sellerId) {
   var isLatest = !week || week === LATEST_WEEK;
-  var url = isLatest ? 'data/current.json' : 'data/' + week + '.json';
+  var url = isLatest ? 'data/current-v2.json' : 'data/' + week + '.json';
 
   var activeView = sellerId ? '#personalView' : '#masterView';
   $(activeView).style.opacity = '0.4';
@@ -3101,7 +3337,7 @@ document.addEventListener('keydown', function(e) {
 function init() {
   var params = new URLSearchParams(location.search);
   var weekParam = params.get('week');
-  var dataUrl = weekParam ? 'data/' + weekParam + '.json' : 'data/current.json';
+  var dataUrl = weekParam ? 'data/' + weekParam + '.json' : 'data/current-v2.json';
   var bust = '?v=' + Date.now();
 
   Promise.all([
@@ -3133,7 +3369,7 @@ function init() {
       else { showMaster(); }
     }
   }).catch(function(err) {
-    $('#loadingView').innerHTML = '<p style="color:var(--rose);">Failed to load data. Check that data/current.json exists.</p>';
+    $('#loadingView').innerHTML = '<p style="color:var(--rose);">Failed to load data. Check that data/current-v2.json exists.</p>';
     console.error(err);
   });
 }

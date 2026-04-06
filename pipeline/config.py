@@ -242,7 +242,6 @@ ALL_KNOWN_REPS = [
     "Kristin Sutton",
     "Kristy Shimkus",
     "Lauren Critten",
-    "Madeline Michelson",
     "Melanie Wollnitza",
     "Morgan Moran de Sanchez",
     "Nathan Frost",
@@ -263,6 +262,27 @@ ALL_KNOWN_REPS = [
     "Zachary Alton",
 ]
 
+
+# ---------------------------------------------------------------------------
+# CSM / non-seller exclusions
+# These names appear as Demandbase account owners but are CSMs, not AEs.
+# Signals owned by these people are silently dropped — they don't get reports.
+# ---------------------------------------------------------------------------
+EXCLUDED_OWNERS: set[str] = {
+    "Arte Hernandez",
+    "Gareth Kerr",
+    "Haley Bergin",
+    "Hillary Hunt",
+    "Hillary Knoll",
+    "Jack McLaughlin",
+    "Jo Morgan",
+    "Lizzy Prendiville",
+    "Madeline Michelson",
+    "Melissa Travis",
+    "Neely Cox",
+    "Victoria DiRaimo",
+    "Yana Repina",
+}
 
 # ---------------------------------------------------------------------------
 # Territory codes (from Enterprise Reps spreadsheet, for future use)
