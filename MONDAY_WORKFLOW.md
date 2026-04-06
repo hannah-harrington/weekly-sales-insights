@@ -14,20 +14,21 @@
 
 Log into Demandbase and export these reports as CSV:
 
-**Weekly signals (run every week):**
-1. New Accounts Moved to MQA in Last Week (New MQA)
-2. Accounts Visiting High Value Pages with Lost Opp in Last 12 Months
-3. Accounts Visiting High Value Pages (all accounts)
-4. Engaged People This Week - Activity Report _(use the broad "Engaged" version, not "Newly Engaged")_
-5. Enterprise Intent Report _(filename must contain `EntIntent`)_
+**Weekly signals (export all as CSV, drop into your dated folder):**
 
-**Optional weekly (skip if inaccurate):**
-6. Newly Engaged People This Week _(only first-time contacts — skip if data looks off)_
+| # | Report | Demandbase link | Notes |
+|---|---|---|---|
+| 1 | Accounts Moved to MQA in Last Week w/ No Sales Touches | [Link](https://web.demandbase.com/o/al/20331/r/f/rd/3825/pm) | Priority — accounts with no rep contact yet |
+| 2 | Accounts Moved to MQA in Last Week | [Link](https://web.demandbase.com/o/al/20331/r/f/rd/3826/pm) | Full MQA list for the week |
+| 3 | Accounts Visiting High Value Pages | [Link](https://web.demandbase.com/o/al/20331/r/f/rd/3858/pm) | HVP account-level intent |
+| 4 | People Visiting High Value Pages | [Link](https://web.demandbase.com/o/al/20331/r/f/rd/4023/pm) | **Filter: ENG points > 2** before exporting |
+| 5 | Newly Engaged People This Week — Activity Report | [Link](https://web.demandbase.com/o/al/20331/r/f/rd/4155/sb) | Skip if data looks thin or inaccurate |
+| 6 | G2 Intent Report | [Link](https://web.demandbase.com/o/d/a/l/26634/l) | G2 research activity by account |
 
-**Snapshot (run once, or refresh periodically):**
-7. All Accounts at MQA (ENT_Acq_MQA Journey Stage Account List)
+> **Tip — set up subscriptions so exports arrive automatically:**
+> Open each report, click Subscribe, apply your BoB filter, and set delivery to the morning you plan to run the pipeline. Demandbase emails you the CSVs — save them to your dated folder and hand to Pi or Cursor.
 
-> **What the pipeline does with these:** Top accounts per rep get 3 live Google News headlines pulled automatically (no setup — it just runs). If `SALESLOFT_API_KEY` is set, Salesloft email click signals are also included. The blacklist (`pipeline/blacklist.json`) suppresses low-signal accounts (Big Tech, universities, parent entities) before any signals are surfaced to reps.
+> **What the pipeline does with these:** Top accounts per rep get 3 live Google News headlines pulled automatically (no setup). If `SALESLOFT_API_KEY` is set, Salesloft email click signals are also layered in. The blacklist (`pipeline/blacklist.json`) suppresses low-signal accounts (Big Tech, universities, parent entities) before anything surfaces to reps.
 
 ## Step 2: Drop them into a dated subfolder
 

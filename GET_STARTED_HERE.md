@@ -97,14 +97,23 @@ Cursor will update the configuration file with your team's details.
 
 ### Step 5: Test it with your data
 
-First, go to Demandbase and export these reports as CSV files for your team:
+Go to Demandbase and export these reports as CSV files for your team. The links below are the NA Enterprise originals — you'll set up your own subscriptions filtered to your BoB (see setup note below).
 
-1. New Accounts Moved to MQA in Last Week
-2. Accounts Visiting High Value Pages with Lost Opp in Last 12 Months
-3. Accounts Visiting High Value Pages (all accounts)
-4. Engaged People This Week - Activity Report _(use the broad "Engaged" version — it's the superset)_
-5. Enterprise Intent Report _(filename must contain `EntIntent` — powers the 5 intent signal sections per seller)_
-6. Newly Engaged People This Week _(optional — skip if data looks off that week)_
+| # | Report | Link |
+|---|---|---|
+| 1 | Accounts Moved to MQA in Last Week w/ No Sales Touches | [Open in Demandbase](https://web.demandbase.com/o/al/20331/r/f/rd/3825/pm) |
+| 2 | Accounts Moved to MQA in Last Week | [Open in Demandbase](https://web.demandbase.com/o/al/20331/r/f/rd/3826/pm) |
+| 3 | Accounts Visiting High Value Pages | [Open in Demandbase](https://web.demandbase.com/o/al/20331/r/f/rd/3858/pm) |
+| 4 | People Visiting High Value Pages _(filter: ENG points > 2)_ | [Open in Demandbase](https://web.demandbase.com/o/al/20331/r/f/rd/4023/pm) |
+| 5 | Newly Engaged People This Week — Activity Report | [Open in Demandbase](https://web.demandbase.com/o/al/20331/r/f/rd/4155/sb) |
+| 6 | G2 Intent Report | [Open in Demandbase](https://web.demandbase.com/o/d/a/l/26634/l) |
+
+> **Setting up your own subscriptions:**
+> 1. Open each report link above
+> 2. Click **Subscribe** (or duplicate the report for your own account)
+> 3. Apply your **Book of Business account filter** so you only see your territory
+> 4. Set the delivery day to match when you plan to run the pipeline (Monday morning works well)
+> 5. Demandbase will email you the export — save all CSVs to your dated folder and hand them to Pi or Cursor to run
 
 Save them to the folder you specified in Step 2. Then paste this into Cursor:
 
