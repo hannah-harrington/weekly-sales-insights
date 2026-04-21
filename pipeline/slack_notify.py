@@ -105,41 +105,131 @@ def lookup_slack_user(email: str, token: str) -> str | None:
         return None
 
 
+def _build_highlights(signals: dict) -> list[str]:
+    """Pull 3-4 specific account/person highlights to surface in the DM."""
+    lines = []
+
+    # 1. New MQA — highest priority, name the account + why
+    for row in signals.get("mqa_new", [])[:2]:
+        acct = row.get("account", "")
+        platform = row.get("platform", "")
+        pages = row.get("pages_visited", "")
+        if not acct:
+            continue
+        detail = ""
+        if platform and "shopify" not in platform.lower():
+            detail = f" — on {platform}"
+        elif pages:
+            first_page = pages.split(",")[0].strip().split("/")[-1].replace("-", " ")
+            if first_page:
+                detail = f" — researching {first_page}"
+        lines.append(f"🟢 *{acct}* just moved to MQA{detail}")
+
+    # 2. Compete intent — name the account
+    for row in signals.get("intent_compete", [])[:1]:
+        acct = row.get("account", "")
+        if acct:
+            lines.append(f"⚔️ *{acct}* is actively researching competitors")
+
+    # 3. Named person from activity
+    for row in signals.get("activity", [])[:2]:
+        name = row.get("full_name", "") or row.get("name", "")
+        title = row.get("title", "")
+        acct = row.get("account", "")
+        if name and acct:
+            short_title = title.split(",")[0].strip()[:45] if title else ""
+            detail = f" ({short_title})" if short_title else ""
+            lines.append(f"👤 *{name}*{detail} at {acct} engaged this week")
+            break
+
+    # 4. G2 — strong buying signal
+    for row in signals.get("g2_intent", [])[:1]:
+        acct = row.get("account", "")
+        if acct:
+            lines.append(f"🔍 *{acct}* is comparing vendors on G2")
+
+    # 4b. LinkedIn High/Very High engagement (max 1)
+    for row in signals.get("li_very_high", [])[:1]:
+        acct = row.get("account", "")
+        if acct:
+            lines.append(f"💼 *{acct}* — High or Very High LinkedIn engagement this week")
+
+    # 5. HVP fallback if nothing else
+    if len(lines) < 2:
+        hvp_rows = signals.get("hvp", []) + signals.get("hvp_all", [])
+        for row in hvp_rows[:2]:
+            acct = row.get("account", "")
+            if acct and not any(acct in l for l in lines):
+                lines.append(f"📈 *{acct}* is visiting high-value pages")
+
+    return lines[:4]
+
+
 def build_dm_blocks(
     seller_name: str,
     summary: dict,
     signal_types: dict,
     week_of: str,
     personal_url: str,
+    signals: dict | None = None,
 ) -> list[dict]:
     """Build Slack Block Kit blocks for a personalized DM."""
     first_name = seller_name.split()[0]
     total = summary.get("total", 0)
 
+    # Count line — only signal types with data
     parts = []
     for st_key, st_meta in signal_types.items():
         count = summary.get(st_key, 0)
         if count > 0:
             parts.append(f"{count} {st_meta['short_label']}")
-    breakdown = ", ".join(parts) if parts else "check your report for details"
+    breakdown = ", ".join(parts) if parts else "signals waiting"
+
+    # Build highlights from real account data if available
+    highlights = _build_highlights(signals or {})
+
+    li_count = summary.get("li_very_high", 0)
+    mqa_count = summary.get("mqa_new", 0)
+
+    if highlights:
+        highlight_text = "\n".join(f"• {h}" for h in highlights)
+        body = (
+            f"*Hey {first_name}* — your weekly signals are in. Here's what's hot:\n\n"
+            f"{highlight_text}\n\n"
+            f"_+ {total} total signals this week ({breakdown})_"
+        )
+    else:
+        body = (
+            f"*Hey {first_name}* — your weekly sales insights are ready.\n\n"
+            f"You have *{total} signal{'s' if total != 1 else ''}* this week: {breakdown}"
+        )
+
+    # MQA explanation for reps
+    if mqa_count:
+        body += "\n\n_MQA = accounts likely entering a buying cycle._"
+
+    # LinkedIn new feature callout
+    li_note = (
+        "\n\n🆕 *New this week:* We're now showing LinkedIn signals. "
+        "These are accounts with High or Very High engagement with Shopify content on LinkedIn — "
+        "a new signal to layer on top of your existing report."
+    )
 
     blocks = [
         {
             "type": "section",
-            "text": {
-                "type": "mrkdwn",
-                "text": (
-                    f"*Hey {first_name}* — your weekly sales insights are ready.\n\n"
-                    f"You have *{total} signal{'s' if total != 1 else ''}* this week: {breakdown}"
-                ),
-            },
+            "text": {"type": "mrkdwn", "text": li_note},
+        },
+        {
+            "type": "section",
+            "text": {"type": "mrkdwn", "text": body},
         },
         {
             "type": "actions",
             "elements": [
                 {
                     "type": "button",
-                    "text": {"type": "plain_text", "text": "View your report"},
+                    "text": {"type": "plain_text", "text": "View your full report →"},
                     "url": personal_url,
                     "style": "primary",
                 }
@@ -150,7 +240,7 @@ def build_dm_blocks(
             "elements": [
                 {
                     "type": "mrkdwn",
-                    "text": f"📊 Week of {week_of} · Powered by Weekly Sales Insights",
+                    "text": f"📊 Week of {week_of} · Sales Insights Hub",
                 }
             ],
         },
@@ -161,11 +251,18 @@ def build_dm_blocks(
 def send_dm(user_id: str, blocks: list[dict], fallback_text: str, token: str) -> bool:
     """Send a DM to a Slack user. Returns True on success."""
     try:
+        # Personal tokens (xoxc-) can't post to a user ID directly —
+        # need to open the DM channel first to get a channel ID.
+        channel = user_id
+        if token.startswith("xoxc-"):
+            open_result = _api_call("conversations.open", token, {"users": user_id})
+            if open_result.get("ok"):
+                channel = open_result["channel"]["id"]
         result = _api_call(
             "chat.postMessage",
             token,
             {
-                "channel": user_id,
+                "channel": channel,
                 "blocks": blocks,
                 "text": fallback_text,
             },
@@ -174,6 +271,24 @@ def send_dm(user_id: str, blocks: list[dict], fallback_text: str, token: str) ->
     except (urllib.error.URLError, json.JSONDecodeError) as exc:
         print(f"  [Slack] Failed to DM user {user_id}: {exc}")
         return False
+
+
+def validate_token(token: str) -> tuple[bool, str]:
+    """Check the token is valid via auth.test. Returns (ok, error_message)."""
+    try:
+        result = _api_call("auth.test", token)
+        if result.get("ok"):
+            return True, ""
+        error = result.get("error", "unknown_error")
+        if error in ("invalid_auth", "token_expired", "token_revoked", "not_authed", "account_inactive"):
+            return False, (
+                f"Slack token is invalid or expired (error: {error}).\n"
+                f"  Fix: node ~/pi-backup/refresh-callm-creds.js\n"
+                f"  Then re-run --notify."
+            )
+        return False, f"Slack auth.test failed: {error}"
+    except Exception as exc:
+        return False, f"Slack auth check failed: {exc}"
 
 
 def notify_all(data: dict, site_url: str, token: str) -> dict:
@@ -186,6 +301,14 @@ def notify_all(data: dict, site_url: str, token: str) -> dict:
     signal_types = data.get("signal_types", {})
     week_of = data.get("meta", {}).get("week_of", "")
     stats = {"sent": 0, "skipped": 0, "failed": 0}
+
+    # Validate token before attempting any sends — fail fast on auth errors
+    ok, err = validate_token(token)
+    if not ok:
+        print(f"  [Slack] ❌ Auth failed — aborting DM send.")
+        print(f"  [Slack] {err}")
+        stats["failed"] = len(sellers)
+        return stats
 
     for sid, seller in sellers.items():
         name = seller.get("name", "")
@@ -208,7 +331,7 @@ def notify_all(data: dict, site_url: str, token: str) -> dict:
             continue
 
         personal_url = f"{site_url}?seller={urllib.parse.quote(sid)}"
-        blocks = build_dm_blocks(name, seller["summary"], signal_types, week_of, personal_url)
+        blocks = build_dm_blocks(name, seller["summary"], signal_types, week_of, personal_url, signals=seller.get("signals", {}))
         fallback = f"Your weekly sales insights are ready — {total} signals this week: {personal_url}"
 
         ok = send_dm(user_id, blocks, fallback, token)
@@ -294,6 +417,16 @@ def _build_start_here(signals: dict, summary: dict, account_news: dict | None = 
     if len(callouts) >= 3:
         return callouts
 
+    # 3b. LinkedIn High/Very High (max 1)
+    for row in signals.get("li_very_high", [])[:1]:
+        if "li" not in used_types:
+            account = row.get("account", "")
+            add(f"*{account}* — High or Very High LinkedIn engagement this week. They're actively engaging with Shopify content on LinkedIn.", "li", account)
+            break
+
+    if len(callouts) >= 3:
+        return callouts
+
     # 4. Best compete account (max 1 — pick highest engagement)
     compete = sorted(signals.get("intent_compete", []), key=lambda r: float(r.get("engagement_3mo") or 0), reverse=True)
     for row in compete:
@@ -341,11 +474,13 @@ def _clean_summary_line(summary: dict) -> str:
         "intent_agentic", "intent_compete", "intent_international",
         "intent_marketing", "intent_b2b",
     ])
+    li     = summary.get("li_very_high", 0)
     parts = []
     if mqa:    parts.append(f"{mqa} New MQA (accounts likely entering a buying cycle)")
     if hvp:    parts.append(f"{hvp} Previously CL")
     if people: parts.append(f"{people} engaged people")
     if intent: parts.append(f"{intent} intent signals")
+    if li:     parts.append(f"{li} LinkedIn High/Very High")
     return " · ".join(parts) if parts else "signals this week"
 
 
@@ -437,6 +572,48 @@ def notify_all_personal(data: dict, site_url: str, token: str) -> dict:
         time.sleep(0.5)
 
     return stats
+
+
+# Hannah's Slack user ID — always notify her on pipeline runs
+_HANNAH_SLACK_ID = "U02SQJTUQDT"
+
+
+def notify_hannah(success: bool, week_date: str, details: str = "", token: str | None = None) -> None:
+    """Send Hannah a Slack DM with the Friday pipeline result.
+
+    Called at the end of friday_pipeline.py whether the run succeeds or fails.
+    If no token is available, prints a warning to the log instead.
+    """
+    tok = token or get_token()
+    if not tok:
+        print("[Slack] Cannot notify Hannah — no Slack token available.")
+        print("[Slack] Run: node ~/pi-backup/refresh-callm-creds.js")
+        return
+
+    if success:
+        text = (
+            f":white_check_mark: *Friday pipeline complete* — week of {week_date}\n"
+            f"Site is live and ready for Monday Slacks.\n"
+            f"salesinsights-hub.quick.shopify.io\n"
+            + (f"\n{details}" if details else "")
+        )
+    else:
+        text = (
+            f":x: *Friday pipeline FAILED* — week of {week_date}\n"
+            f"The site may be stale. Check the log:\n"
+            f"`~/Desktop/Cursor Brain/sales-insights/logs/friday-pipeline.log`\n"
+            + (f"\n*Error:* {details}" if details else "")
+        )
+
+    blocks = [
+        {
+            "type": "section",
+            "text": {"type": "mrkdwn", "text": text},
+        }
+    ]
+    sent = send_dm(_HANNAH_SLACK_ID, blocks, text, tok)
+    if not sent:
+        print("[Slack] Warning: Hannah notification DM failed to send.")
 
 
 def get_token() -> str | None:

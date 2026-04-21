@@ -30,6 +30,7 @@ from pipeline.config import (
     PROJECT_ROOT,
     REGION_MAP,
     SALES_NAV_LEADS_FILE,
+    BOB_FILE,
     SITE_DIR,
     SITE_URL,
     TEAM_LEADS,
@@ -44,6 +45,7 @@ from pipeline.sources import demandbase_anz
 from pipeline.sources import salesnav
 from pipeline.sources import sfdc_bq
 from pipeline.sources import news as news_fetcher
+from pipeline.sources import linkedin as linkedin_source
 from pipeline import slack_notify
 from pipeline import lead_notify
 
@@ -417,11 +419,33 @@ def main():
         "--no-news", action="store_true",
         help="Skip Google News fetch (useful for quick/offline runs).",
     )
+    parser.add_argument(
+        "--dry-run", action="store_true",
+        help=(
+            "Build JSON to a temp file only. Does NOT write current.json, "
+            "does NOT deploy. Safe for testing without touching production data."
+        ),
+    )
     args = parser.parse_args()
+
+    if args.dry_run and args.deploy:
+        print("ERROR: --dry-run and --deploy are mutually exclusive.", file=sys.stderr)
+        sys.exit(1)
 
     week_date = args.date or get_monday_date().isoformat()
     input_dir = Path(args.input_dir) if args.input_dir else CSV_INPUT_DIR
     anz_input_dir = Path(args.anz_input_dir) if args.anz_input_dir else None
+
+    # --- Startup validation (fail fast before any work) ---
+    if not BOB_FILE.exists():
+        print(
+            f"ERROR: Book of Business file not found at:\n"
+            f"  {BOB_FILE}\n\n"
+            f"LinkedIn routing requires this file. Update BOB_FILE in pipeline/config.py\n"
+            f"or copy the BoB CSV to the expected path before running.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
 
     print("Weekly Sales Insights — Pipeline")
     print(f"  Week:      {week_date}")
@@ -461,6 +485,85 @@ def main():
         print(f"  Warning: Missing CSVs for: {', '.join(labels)}")
     print()
 
+    # --- Load LinkedIn data ---
+    _li_history_dir = PROJECT_ROOT / "pipeline" / "linkedin_history"
+    _li_blacklist = set(json.loads((PROJECT_ROOT / "pipeline" / "blacklist.json").read_text()).get("accounts", []))
+    li_data = linkedin_source.load(
+        input_dir,
+        week_date=week_date,
+        history_dir=_li_history_dir,
+        blacklist=_li_blacklist,
+    )
+    if li_data["file_found"]:
+        _li_set = li_data["li_very_high_set"]
+        print(f"LinkedIn: {len(_li_set)} Very High engagement accounts  <- {li_data['file_found']}")
+        # Annotate matching signal rows — same dict objects used in signals_by_seller
+        for _sig_rows in source_data["raw_signals"].values():
+            for _row in _sig_rows:
+                if isinstance(_row, dict) and _row.get("account", "").lower() in _li_set:
+                    _row["li_very_high"] = True
+        # Snapshot of accounts already in Hub (before routing LinkedIn)
+        _hub_accounts_pre: set[str] = {
+            _row.get("account", "").lower()
+            for _st_rows in source_data["raw_signals"].values()
+            for _row in _st_rows
+            if isinstance(_row, dict) and _row.get("account") and _st_rows is not source_data["raw_signals"].get("li_very_high", [])
+        }
+        # --- Route LinkedIn Very High BoB accounts to sellers ---
+        _bob_map = linkedin_source.load_bob_owner_map(BOB_FILE)
+        # Load name aliases — maps LI names (lowercase) → BoB names (lowercase)
+        _alias_file = PROJECT_ROOT / "pipeline" / "linkedin_aliases.json"
+        _li_aliases: dict[str, str] = {}
+        if _alias_file.exists():
+            try:
+                _li_aliases = json.loads(_alias_file.read_text()).get("aliases", {})
+            except Exception:
+                pass
+        _routed = 0
+        for _key in list(_li_set):
+            if _key in _hub_accounts_pre:
+                continue  # already in Hub via Demandbase — badge only
+            # Apply alias: if LI name maps to a different BoB name, use that for lookup
+            _bob_key = _li_aliases.get(_key, _key)
+            _bob_entry = _bob_map.get(_bob_key)
+            if not _bob_entry:
+                continue
+            _owner = _bob_entry["owner"]
+            # Match owner name to a known seller
+            _matched = None
+            for _sname in source_data["signals_by_seller"]:
+                if _sname.lower().strip() == _owner.lower().strip():
+                    _matched = _sname
+                    break
+            if not _matched:
+                # Try partial first-name + last-name match
+                for _sname in source_data["signals_by_seller"]:
+                    if _owner.lower() in _sname.lower() or _sname.lower() in _owner.lower():
+                        _matched = _sname
+                        break
+            if not _matched:
+                # Seller not in this week's signals_by_seller — add them
+                _matched = _owner
+            li_row = dict(li_data["li_all_rows"][_key])
+            li_row["journey_stage"] = _bob_entry["journey_stage"]
+            li_row["territory"] = _bob_entry["territory"]
+            if _matched not in source_data["signals_by_seller"]:
+                source_data["signals_by_seller"][_matched] = {}
+            if "li_very_high" not in source_data["signals_by_seller"][_matched]:
+                source_data["signals_by_seller"][_matched]["li_very_high"] = []
+            source_data["signals_by_seller"][_matched]["li_very_high"].append(li_row)
+            if "li_very_high" not in source_data["raw_signals"]:
+                source_data["raw_signals"]["li_very_high"] = []
+            source_data["raw_signals"]["li_very_high"].append(li_row)
+            _routed += 1
+        # Add signal type metadata
+        source_data["signal_types"].update(linkedin_source.SIGNAL_TYPE_META)
+        print(f"  Routed {_routed} LinkedIn Very High BoB accounts to sellers")
+    else:
+        _li_set = set()
+        print("LinkedIn: no LinkedIn CSV found in input dir — skipping")
+    print()
+
     # --- Load ANZ source data ---
     anz_source_data = None
     if anz_input_dir:
@@ -486,7 +589,7 @@ def main():
         # Collect all unique accounts across all signal types (mqa_new, hvp_all, intent_*)
         _sfdc_signal_types = ["mqa_new", "hvp_all", "hvp",
                               "intent_agentic", "intent_compete", "intent_international",
-                              "intent_marketing", "intent_b2b"]
+                              "intent_marketing", "intent_b2b", "li_very_high"]
         all_sfdc_names: list[str] = []
         all_sfdc_websites: list[str] = []
         for _st in _sfdc_signal_types:
@@ -560,7 +663,7 @@ def main():
     # --- Google News fetch ---
     if not args.no_news:
         _news_signal_types = ["mqa_new", "hvp", "hvp_all",
-                              "intent_agentic", "intent_compete", "g2_intent"]
+                              "intent_agentic", "intent_compete", "g2_intent", "li_very_high"]
         news_account_names = list({
             r["account"]
             for _st in _news_signal_types
@@ -598,6 +701,21 @@ def main():
     print("Building JSON data model...")
     data = build_json(week_date, source_data, anz_source_data=anz_source_data)
 
+    # --- LinkedIn Very High accounts not already in any seller signal ---
+    _hub_accounts: set[str] = set()
+    for _seller in data["sellers"].values():
+        for _st_rows in _seller["signals"].values():
+            for _row in _st_rows:
+                if isinstance(_row, dict) and _row.get("account"):
+                    _hub_accounts.add(_row["account"].lower())
+    data["li_very_high_new"] = [
+        li_data["li_all_rows"][key]
+        for key in li_data["li_very_high_set"]
+        if key not in _hub_accounts
+    ]
+    if data["li_very_high_new"]:
+        print(f"  LinkedIn Very High (not in Hub): {len(data['li_very_high_new'])} accounts")
+
     seller_count = data["meta"]["total_sellers"]
     signal_count = data["meta"]["sellers_with_signals"]
     print(f"  {seller_count} sellers total, {signal_count} with signals this week")
@@ -607,12 +725,25 @@ def main():
     print()
 
     # --- Write JSON ---
-    print("Writing JSON...")
-    json_path = write_json(data, week_date)
-    print(f"  {json_path}")
-    print(f"  {DATA_DIR / 'current.json'}")
-    print(f"  {DATA_DIR / 'weeks.json'}")
-    print()
+    if args.dry_run:
+        import tempfile
+        tmp = tempfile.NamedTemporaryFile(
+            suffix=f"-{week_date}-dry-run.json", delete=False, mode="w", encoding="utf-8"
+        )
+        json.dump(data, tmp, indent=2, ensure_ascii=False)
+        tmp.close()
+        print(f"DRY RUN — JSON written to temp file (current.json NOT touched):")
+        print(f"  {tmp.name}")
+        print()
+        print("Dry run complete. No files were modified. No deploy. No Slacks.")
+        return
+    else:
+        print("Writing JSON...")
+        json_path = write_json(data, week_date)
+        print(f"  {json_path}")
+        print(f"  {DATA_DIR / 'current.json'}")
+        print(f"  {DATA_DIR / 'weeks.json'}")
+        print()
 
     # --- Log featured accounts ---
     print("Logging featured accounts...")

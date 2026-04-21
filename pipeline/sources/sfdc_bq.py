@@ -45,7 +45,14 @@ def _run_bq(sql: str) -> list[dict]:
     output = result.stdout.strip()
     if not output or output == "[]":
         return []
-    return json.loads(output)
+    try:
+        return json.loads(output)
+    except json.JSONDecodeError as exc:
+        raise RuntimeError(
+            f"BigQuery returned unexpected output (not valid JSON).\n"
+            f"Parse error: {exc}\n"
+            f"Raw output (first 500 chars): {output[:500]}"
+        ) from exc
 
 
 def _normalize_domain(website: str) -> str:
