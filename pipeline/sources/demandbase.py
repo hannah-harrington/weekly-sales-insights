@@ -420,6 +420,40 @@ SIGNAL_TYPE_META["g2_intent"] = {
 }
 
 
+# ---------------------------------------------------------------------------
+# Pipeline participation flags
+#
+# Single source of truth for which signal types participate in each
+# downstream pipeline step. Add a new signal type here — ingest.py and
+# the enrichment functions derive their lists automatically.
+#
+# sfdc_enrich  — account gets SFDC BQ enrichment (open opps, activity, contacts)
+# news_fetch   — account gets Google News headlines
+# hub_enrich   — account gets signal_hub_enrichment (platform, pages visited)
+# ---------------------------------------------------------------------------
+_PIPELINE_FLAGS: dict[str, dict[str, bool]] = {
+    "mqa_new":              {"sfdc_enrich": True,  "news_fetch": True,  "hub_enrich": True},
+    "hvp":                  {"sfdc_enrich": True,  "news_fetch": True,  "hub_enrich": False},
+    "hvp_all":              {"sfdc_enrich": True,  "news_fetch": True,  "hub_enrich": True},
+    "new_people":           {"sfdc_enrich": False, "news_fetch": False, "hub_enrich": False},
+    "activity":             {"sfdc_enrich": False, "news_fetch": False, "hub_enrich": False},
+    "all_mqa":              {"sfdc_enrich": False, "news_fetch": False, "hub_enrich": True},
+    "intent_agentic":       {"sfdc_enrich": True,  "news_fetch": True,  "hub_enrich": False},
+    "intent_compete":       {"sfdc_enrich": True,  "news_fetch": True,  "hub_enrich": False},
+    "intent_international": {"sfdc_enrich": True,  "news_fetch": False, "hub_enrich": False},
+    "intent_marketing":     {"sfdc_enrich": True,  "news_fetch": False, "hub_enrich": False},
+    "intent_b2b":           {"sfdc_enrich": True,  "news_fetch": False, "hub_enrich": False},
+    "g2_intent":            {"sfdc_enrich": False, "news_fetch": True,  "hub_enrich": True},
+    # li_very_high is defined in linkedin.py — its flags live there
+}
+
+# Merge flags into SIGNAL_TYPE_META so callers can derive lists programmatically:
+#   sfdc_types = [k for k, v in SIGNAL_TYPE_META.items() if v.get("sfdc_enrich")]
+for _sig, _flags in _PIPELINE_FLAGS.items():
+    if _sig in SIGNAL_TYPE_META:
+        SIGNAL_TYPE_META[_sig].update(_flags)
+
+
 def _safe_float(val: str | None) -> float:
     try:
         return float(val)
@@ -824,10 +858,12 @@ def enrich_briefs_with_sfdc(source_data: dict, sfdc_data: dict) -> int:
 
     # Signal types that get the full text brief re-generated
     BRIEF_TYPES = {"mqa_new"}
-    # Signal types that get structured sfdc dict only
-    SFDC_TYPES = {"mqa_new", "hvp", "hvp_all",
-                  "intent_agentic", "intent_compete", "intent_international",
-                  "intent_marketing", "intent_b2b"}
+    # Derived from _PIPELINE_FLAGS; li_very_high added explicitly because it
+    # is defined in linkedin.py and not in this module's SIGNAL_TYPE_META.
+    SFDC_TYPES = (
+        {k for k, v in SIGNAL_TYPE_META.items() if v.get("sfdc_enrich")}
+        | {"li_very_high"}
+    )
 
     updated = 0
 
@@ -924,7 +960,7 @@ def load(directory: Path) -> dict:
     file_map = detect_csv_files(directory)
     enrichment = _load_enrichment(directory)
     blacklist = _load_blacklist()
-    enrich_types = {"hvp_all", "all_mqa", "mqa_new", "g2_intent"}
+    enrich_types = {k for k, v in SIGNAL_TYPE_META.items() if v.get("hub_enrich")}
 
     signals_by_seller: dict[str, dict[str, list]] = {}
     raw_signals: dict[str, list] = {}
@@ -1000,12 +1036,12 @@ def load(directory: Path) -> dict:
             acct = (row.get("Account Name") or "").strip()
             if not acct:
                 continue
-            # Filter to ≥2 engagement points
+            # Filter to >2 engagement points (strictly greater than 2)
             try:
                 eng = float(row.get("Engagement Points (7 days)") or 0)
             except ValueError:
                 eng = 0.0
-            if eng < 2:
+            if eng <= 2:
                 continue
             # Skip blacklisted accounts
             if blacklist and acct.lower() in blacklist:
@@ -1024,7 +1060,7 @@ def load(directory: Path) -> dict:
         # Sort each account's people by engagement descending
         for key in hvp_people_by_account:
             hvp_people_by_account[key].sort(key=lambda p: p["engagement_7d"], reverse=True)
-        print(f"  People Visiting HVP: {sum(len(v) for v in hvp_people_by_account.values())} people (≥2 eng pts) across {len(hvp_people_by_account)} accounts  <- {hvp_people_file.name}")
+        print(f"  People Visiting HVP: {sum(len(v) for v in hvp_people_by_account.values())} people (>2 eng pts) across {len(hvp_people_by_account)} accounts  <- {hvp_people_file.name}")
 
     # Log blacklist suppressions
     if blacklist_filtered:

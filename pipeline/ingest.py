@@ -585,11 +585,13 @@ def main():
             print()
 
     # --- SFDC enrichment from BigQuery ---
+    # Derive signal type lists from metadata flags — no hardcoded lists to maintain.
+    # To add a new signal type: set sfdc_enrich/news_fetch in its SIGNAL_TYPE_META entry.
+    _all_signal_meta = {**demandbase.SIGNAL_TYPE_META, **linkedin_source.SIGNAL_TYPE_META}
+    _sfdc_signal_types = [k for k, v in _all_signal_meta.items() if v.get("sfdc_enrich")]
+    _news_signal_types = [k for k, v in _all_signal_meta.items() if v.get("news_fetch")]
+
     if not args.no_sfdc:
-        # Collect all unique accounts across all signal types (mqa_new, hvp_all, intent_*)
-        _sfdc_signal_types = ["mqa_new", "hvp_all", "hvp",
-                              "intent_agentic", "intent_compete", "intent_international",
-                              "intent_marketing", "intent_b2b", "li_very_high"]
         all_sfdc_names: list[str] = []
         all_sfdc_websites: list[str] = []
         for _st in _sfdc_signal_types:
@@ -662,8 +664,6 @@ def main():
 
     # --- Google News fetch ---
     if not args.no_news:
-        _news_signal_types = ["mqa_new", "hvp", "hvp_all",
-                              "intent_agentic", "intent_compete", "g2_intent", "li_very_high"]
         news_account_names = list({
             r["account"]
             for _st in _news_signal_types

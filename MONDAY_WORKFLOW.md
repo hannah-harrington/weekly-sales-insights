@@ -122,7 +122,50 @@ If `--anz-input-dir` is not passed, the pipeline runs NA-only as before. ANZ dat
 | "No CSV files found" | CSVs aren't in the folder or wrong directory |
 | Script errors | Paste the error into Cursor or Pi chat and ask to fix it |
 | Need to backfill a past week | Ask: "Run the weekly report for [date] and deploy" |
-| Want to preview before deploying | Ask: "Run the weekly report but don't deploy yet" |
+| Want to preview before deploying | Use `--dry-run` — builds everything but doesn't touch the live site |
+| Slack token expired | Run `node ~/pi-backup/refresh-callm-creds.js` then retry `--notify` |
+
+### Rolling back a bad deployment
+
+If a pipeline run deployed bad data to the live site, you can roll back to any previous week in under a minute.
+
+**Step 1 — find the week you want to restore:**
+Weekly JSON files are stored in `site/data/`. Each file is named by date, e.g. `2026-04-13.json`.
+
+```bash
+ls ~/Desktop/"Cursor Brain"/sales-insights/site/data/
+```
+
+**Step 2 — copy it over current.json:**
+
+```bash
+cp ~/Desktop/"Cursor Brain"/sales-insights/site/data/2026-04-13.json \
+   ~/Desktop/"Cursor Brain"/sales-insights/site/data/current.json
+cp ~/Desktop/"Cursor Brain"/sales-insights/site/data/2026-04-13.json \
+   ~/Desktop/"Cursor Brain"/sales-insights/site/data/current-v2.json
+```
+
+**Step 3 — redeploy:**
+
+```bash
+cd ~/Desktop/"Cursor Brain"/sales-insights/site && quick deploy . sales-insights-hub --force
+```
+
+The live site will immediately reflect the previous week's data. Reps won't notice any downtime.
+
+### Testing without touching the live site
+
+Use `--dry-run` to run the full pipeline safely. It builds the JSON and prints a summary but writes nothing to `current.json` and does not deploy:
+
+```bash
+cd ~/Desktop/"Cursor Brain"/sales-insights && .venv/bin/python3 -m pipeline.ingest \
+  --input-dir "../Demandbase weeklys/April 20" \
+  --date 2026-04-20 \
+  --no-sfdc --no-news \
+  --dry-run
+```
+
+Safe to run any time — nothing live is touched.
 
 ---
 
