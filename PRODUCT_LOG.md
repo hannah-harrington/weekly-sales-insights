@@ -39,3 +39,68 @@ We expanded SFDC enrichment so deal status, last activity, and contact titles no
 Google News integration added — each rep's top accounts now surface 3 relevant news articles inline, giving reps a real-time talking point before outreach. G2 intent was also integrated as a new signal source, feeding into account prioritisation alongside existing Demandbase data. Slack DM copy was overhauled for both rep and coach messages — rep DMs now highlight the top 2–3 accounts with a personalised "start here" section, and coach DMs link directly to the coach view. Both `slack_notify.py` and `lead_notify.py` were updated with the new copy (ready to send Monday).
 
 ---
+
+## Week of March 27, 2026 (afternoon)
+
+Full seller page rebuild shipped to production. The page structure was redesigned from signal tables to a prioritised action flow: Top Accounts to Act On first, then Top Engaged People, then HVP, then intent tables collapsed at the bottom. Top Accounts are scored by signal weight + SFDC deal status + days cold + contact seniority — up to 5 accounts per rep. Top Engaged People surfaces up to 8 people ranked by seniority and account signal strength. HVP and HVP All were merged into a single section with Previously CL accounts highlighted in pink. Outreach angle blocks added to both account and people cards — smart templates covering signal context, platform migration angle, industry angle, deal context, and intent keyword hooks. 20+ role patterns supported for people-level angles. Named SFDC contacts with email + SFDC links added to account cards (requires sdp-pii permit). Full SFDC activity history (last 6 months) and rich account briefs (merchant_overview, industry, revenue, tech stack, competitor contract end date, risk notes) now appear in expanded account cards. Compact centred seller page header with 4-column stat grid and a "This week" contextual summary (pure logic, no API). "Previously CL" used everywhere instead of "Closed Lost".
+
+---
+
+## Week of April 6, 2026
+
+Three additions shipped. First, a new Demandbase CSV type was added: People Visiting High Value Pages. It identifies named individuals (not just companies) who engaged with high-value Shopify pages, filtered to anyone with more than 2 engagement points. These people show up inside expanded HVP account cards with name, title, email, seniority badge, and engagement score. Second, a SUPPRESSION filter was added to the pipeline — any activity or new_people row containing the word "SUPPRESSION" is dropped at parse time before reaching any rep report (60 rows removed in the first run). Third, Top Engaged People cards were redesigned to use the same expand/collapse pattern as Top Accounts — collapsed by default showing name, title, company and badges; expanded showing full engagement detail and outreach angle.
+
+---
+
+## Week of April 13, 2026
+
+Blacklist expanded from 293 accounts to 19,559. The full 2026 Enterprise Blacklist CSV was imported from SFDC and merged with the existing list — covering Big Tech, Big-Box Retail, Telecom, Airlines, CPG parent entities, holding companies, Apple resellers, defunct companies, and 189 universities (student research inflates intent scores). A new Demandbase export type was added: G2 Intent, which surfaces accounts actively researching on G2. `people_contact_data()` enrichment now also matches SFDC contacts by title overlap when exact name match fails. Slack personal token handling was fixed — `conversations.open` now runs before `chat.postMessage` so rep DMs land correctly.
+
+---
+
+## Week of April 17, 2026
+
+LinkedIn Campaign Manager integrated as a new signal source. A new pipeline plugin (`pipeline/sources/linkedin.py`) detects and routes LinkedIn exports automatically. The pipeline filters to High and Very High engagement accounts, merges multiple LinkedIn files if more than one is dropped in the folder, deduplicates by account name, and cross-references against the Book of Business to route accounts to the correct rep. Matched accounts surface a LinkedIn badge (blue `in` icon) on their Hub card. A dedicated "LinkedIn Activity This Week" section was added to every seller page — after HVP, before intent tables — showing account name, journey stage, engagement level, paid impressions, organic engagements, Google News headlines, and SFDC badges. LinkedIn accounts are now fully included in SFDC enrichment and Google News fetching. Admin master view shows LinkedIn-only accounts not routed to any rep. History files save weekly for future delta tracking. Result from first run: 29 BoB accounts routed to reps across all teams.
+
+---
+
+## Week of April 20, 2026 — Founder Review + Reliability Sprint
+
+Full founder (gstack) review of the system was run against the live codebase. Six critical gaps were identified:
+
+1. **Silent Slack DM failure** — if the token expired, all 44 rep DMs failed silently with no alert
+2. **Friday launchd failure invisible** — errors went to `/tmp` (wiped on reboot) with no notification
+3. **BOB file missing = silent 0 LinkedIn routes** — `load_bob_owner_map()` returned `{}` with no warning
+4. **BQ JSON parse error = pipeline crash** — `JSONDecodeError` from BigQuery not caught anywhere
+5. **Test run overwrites prod JSON** — any `--no-sfdc --deploy` debugging run silently clobbered `current.json`
+6. **Zero tests** — no automated coverage, every change relied on manual verification
+
+All 6 gaps were fixed in the same session. Seven total fixes shipped:
+
+| Fix | What it does |
+|---|---|
+| BOB_FILE startup check | Fails immediately with a clear error if the file is missing or renamed |
+| BQ JSON error handling | Catches `JSONDecodeError`, logs raw output, pipeline continues without crashing |
+| Persistent logs | Logs moved from `/tmp` to `sales-insights/logs/` — survive reboots |
+| Friday Slack DM | Pipeline DMs Hannah on every Friday run — pass or fail — with what happened |
+| Token validation | `validate_token()` runs before DM sends — fails fast with fix instructions instead of 44 silent failures |
+| `--dry-run` flag | Builds JSON to a temp file, never touches `current.json`, blocks `--deploy` — safe for debugging |
+| 8 automated tests | Routing, blacklist, email derivation, config integrity — all green with pytest |
+
+Founder review doc: [Sales Insights Hub — Founder Review](https://docs.google.com/document/d/1gNYYaB6HvgIE0o1Sifi2CqB7Q_QBLG-QxyMFhWrGt7E/edit)
+
+Two additional improvements shipped in the same session:
+
+**Signal type list centralisation** — adding a new signal type previously required updating 5 separate hardcoded lists across 2 files (a known source of bugs — LinkedIn was missed on both lists when first added). Each signal type now carries its own flags (`sfdc_enrich`, `news_fetch`, `hub_enrich`) inside `SIGNAL_TYPE_META`. All downstream lists are derived automatically. One flag change is now all it takes to add a new signal type to the pipeline.
+
+**Frontend extraction** — `index.html` was 3,510 lines of HTML, CSS, and JavaScript in a single file. The CSS (667 lines) was extracted to `styles.css` and the JavaScript (2,669 lines) to `app.js`. `index.html` is now 44 lines of pure structure. No logic was changed. Future edits to styles or JS no longer require navigating a 3,500-line file.
+
+**Rollback procedure** documented in `MONDAY_WORKFLOW.md` — step-by-step instructions for restoring any previous week's data to the live site in under a minute.
+
+---
+
+## April 23, 2026
+
+Built product log system — PRODUCT_LOG.md caught up through April 20 (founder review + 7 fixes), log.sh script created for auto-dated entries, HTML viewer built at outputs/plans/sales-insights-product-log.html, product log rule added to AGENTS.md
+
+---
