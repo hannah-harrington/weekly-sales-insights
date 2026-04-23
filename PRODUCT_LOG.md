@@ -99,6 +99,26 @@ Two additional improvements shipped in the same session:
 
 ---
 
+---
+
+## Remaining — from April 20 Founder Review
+
+These were identified in the gstack review and deferred. Pick up in order.
+
+**1. Signal-to-pipeline tracking** (roadmap #8)
+The missing ROI proof. Did last week's signals turn into SFDC opportunities? Currently there is no way to answer this question. Requires BigQuery write access to log which accounts were surfaced each week and then query whether an opp was created or progressed. This is the single highest-value thing to build next — it proves the system is working and gives Hannah data to show leadership.
+
+**2. Async Google News fetch**
+First run of each week fetches news for 500+ accounts sequentially — takes ~5 minutes. Switching to `asyncio` + `aiohttp` (parallel fetching) drops it to ~20 seconds. Cache still applies on re-runs so this only matters once per week. Low risk, high convenience.
+
+**3. Week-over-week LinkedIn delta**
+History files are being collected weekly in `pipeline/linkedin_history/`. After 2 weeks of data, the pipeline can calculate paid impression/click spikes (e.g. 100%+ jump week-over-week = worth surfacing separately). Not buildable until there are at least 2 history files — check after the next Friday run.
+
+**4. Frontend blank page protection**
+If a JavaScript error occurs in `app.js`, reps see a completely blank page with no explanation. An error boundary (try/catch around `init()` with a fallback message) would at minimum tell reps something went wrong and give them a link to contact Hannah. Small change, high user impact if it ever fires.
+
+---
+
 ## April 23, 2026
 
 Built product log system — PRODUCT_LOG.md caught up through April 20 (founder review + 7 fixes), log.sh script created for auto-dated entries, HTML viewer built at outputs/plans/sales-insights-product-log.html, product log rule added to AGENTS.md
