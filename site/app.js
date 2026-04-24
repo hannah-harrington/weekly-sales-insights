@@ -3,6 +3,7 @@
 
 var DATA = null;
 var WEEKS = [];
+var SIGNAL_TRACKER = null;
 var CURRENT_SELLER = null;
 var CURRENT_COACH = null;
 var ACTIVE_FILTER = 'all';
@@ -689,6 +690,99 @@ function renderCoach(coachData) {
 /* ═══════════════════════════════════════════
    Render: Master
    ═══════════════════════════════════════════ */
+/* ═══════════════════════════════════════════
+   Signal Impact Widget
+   ═══════════════════════════════════════════ */
+function renderSignalImpact() {
+  if (!SIGNAL_TRACKER) return '';
+
+  var ov = SIGNAL_TRACKER.overall || {};
+  var featured = ov.featured_accounts || 0;
+  var converted = ov.converted || 0;
+  var rate = ov.rate || 0;
+  var byType = SIGNAL_TRACKER.by_signal_type || {};
+  var byWeek = SIGNAL_TRACKER.by_week || {};
+  var weeks = Object.keys(byWeek).sort();
+  var asOf = SIGNAL_TRACKER.as_of || '';
+
+  // Only show signal types that have at least 1 conversion OR top 5 by featured count
+  var typeKeys = Object.keys(byType);
+  var hasAnyConversion = typeKeys.some(function(k) { return byType[k].converted > 0; });
+  var visibleTypes = typeKeys.filter(function(k) {
+    return byType[k].converted > 0 || byType[k].featured >= 50;
+  });
+  if (visibleTypes.length === 0) visibleTypes = typeKeys.slice(0, 5);
+
+  // Max rate for bar normalisation
+  var maxRate = visibleTypes.reduce(function(m, k) {
+    return Math.max(m, byType[k].rate || 0);
+  }, 0.01);
+
+  // Best converting signal
+  var bestKey = visibleTypes.reduce(function(best, k) {
+    if (!best) return k;
+    return (byType[k].rate || 0) > (byType[best].rate || 0) ? k : best;
+  }, null);
+
+  var html = '';
+  html += '<div class="wrap section-wrap">';
+  html += '<div class="section-emoji reveal">📈</div>';
+  html += '<div class="section-kicker reveal">Signal performance</div>';
+  html += '<div class="section-head reveal">How Hub Signals Are Converting</div>';
+  html += '<div class="section-deck reveal">';
+  html += 'Past ' + weeks.length + ' weeks · ' + featured.toLocaleString() + ' accounts tracked';
+  if (bestKey && byType[bestKey].converted > 0) {
+    html += ' · <strong>' + esc(byType[bestKey].label) + '</strong> converts best at ' + byType[bestKey].rate + '%';
+  }
+  html += '</div>';
+
+  // Overall stat row
+  html += '<div class="signal-impact-overall reveal">';
+  html += '<div class="sio-stat">';
+  html += '<div class="sio-number">' + converted + '</div>';
+  html += '<div class="sio-label">accounts opened<br>pipeline from signals</div>';
+  html += '</div>';
+  html += '<div class="sio-stat">';
+  html += '<div class="sio-number">' + rate + '%</div>';
+  html += '<div class="sio-label">conversion rate<br>(prospect → pipeline)</div>';
+  html += '</div>';
+  html += '<div class="sio-stat">';
+  html += '<div class="sio-number">' + featured.toLocaleString() + '</div>';
+  html += '<div class="sio-label">accounts<br>tracked</div>';
+  html += '</div>';
+  if (weeks.length > 0) {
+    html += '<div class="sio-stat">';
+    html += '<div class="sio-number">' + weeks.length + '</div>';
+    html += '<div class="sio-label">weeks of<br>data</div>';
+    html += '</div>';
+  }
+  html += '</div>';
+
+  // Signal type bars
+  html += '<div class="signal-impact-bars reveal">';
+  html += '<div class="sib-header"><span>Signal type</span><span>Conversion</span><span>Count</span></div>';
+  visibleTypes.forEach(function(k) {
+    var d = byType[k];
+    var barWidth = maxRate > 0 ? Math.round((d.rate / maxRate) * 100) : 0;
+    var isEmpty = d.converted === 0;
+    html += '<div class="sib-row' + (isEmpty ? ' sib-row-empty' : '') + '">';
+    html += '<div class="sib-label">' + esc(d.label) + '</div>';
+    html += '<div class="sib-bar-wrap">';
+    html += '<div class="sib-bar" style="width:' + barWidth + '%"></div>';
+    html += '<span class="sib-rate">' + (d.rate > 0 ? d.rate + '%' : '—') + '</span>';
+    html += '</div>';
+    html += '<div class="sib-count">' + d.converted + '/' + d.featured.toLocaleString() + '</div>';
+    html += '</div>';
+  });
+  html += '</div>';
+
+  if (asOf) {
+    html += '<div class="sib-footer">Last updated ' + esc(asOf) + ' · Measures opp creation after first appearance in hub</div>';
+  }
+  html += '</div>';
+  return html;
+}
+
 function renderMaster() {
   var m = DATA.meta;
   var types = Object.keys(DATA.signal_types).filter(function(t) { return t !== 'top_leads'; });
@@ -880,6 +974,9 @@ function renderMaster() {
   html += '</div>';
   html += '<div id="noResults" style="display:none;text-align:center;color:var(--text-3);padding:48px 0;font-size:15px;" aria-live="polite">No sellers match your search.</div>';
   html += '</div>';
+
+  // Signal Impact
+  html += renderSignalImpact();
 
   // Archive
   html += '<div class="wrap section-wrap">';
@@ -2633,11 +2730,13 @@ function init() {
   Promise.all([
     fetch(dataUrl + bust).then(function(r) { return r.json(); }),
     fetch('data/weeks.json' + bust).then(function(r) { return r.json(); }).catch(function() { return []; }),
-    fetchIAPEmail()
+    fetchIAPEmail(),
+    fetch('data/signal_tracker.json' + bust).then(function(r) { return r.json(); }).catch(function() { return null; })
   ]).then(function(results) {
     DATA = results[0];
     WEEKS = results[1];
     IAP_EMAIL = results[2];
+    SIGNAL_TRACKER = results[3];
     CURRENT_WEEK = DATA.meta.week_of;
     if (!LATEST_WEEK) LATEST_WEEK = WEEKS.length > 0 ? WEEKS[0] : CURRENT_WEEK;
     document.title = 'Weekly Sales Insights \u2014 ' + CURRENT_WEEK;

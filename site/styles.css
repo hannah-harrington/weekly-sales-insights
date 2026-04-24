@@ -665,3 +665,112 @@ html.dark .fit-poor { background: var(--bg-muted); color: var(--text-3); }
   .filter-group { flex-shrink: 0; }
   .filter-group .filter-tag { min-height: 44px; display: inline-flex; align-items: center; }
 }
+
+/* ─── Signal Impact Widget ─────────────────────────────────────────────── */
+.signal-impact-overall {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin: 24px 0 28px;
+}
+@media (max-width: 640px) {
+  .signal-impact-overall { grid-template-columns: repeat(2, 1fr); }
+}
+.sio-stat {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 18px 16px;
+  text-align: center;
+}
+.sio-number {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  color: var(--accent);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.sio-label {
+  font-size: 11px;
+  color: var(--text-3);
+  line-height: 1.4;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.signal-impact-bars {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+.sib-header {
+  display: grid;
+  grid-template-columns: 180px 1fr 80px;
+  gap: 12px;
+  padding: 10px 16px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-muted);
+}
+.sib-row {
+  display: grid;
+  grid-template-columns: 180px 1fr 80px;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  transition: background .15s;
+}
+.sib-row:last-child { border-bottom: none; }
+.sib-row:hover { background: var(--bg-muted); }
+.sib-row-empty { opacity: .45; }
+.sib-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sib-bar-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.sib-bar {
+  height: 8px;
+  background: var(--accent);
+  border-radius: 4px;
+  min-width: 3px;
+  transition: width .4s ease;
+}
+.sib-row-empty .sib-bar { background: var(--border); }
+.sib-rate {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  white-space: nowrap;
+  min-width: 34px;
+}
+.sib-row-empty .sib-rate { color: var(--text-3); }
+.sib-count {
+  font-size: 12px;
+  color: var(--text-3);
+  text-align: right;
+  white-space: nowrap;
+}
+.sib-footer {
+  font-size: 11px;
+  color: var(--text-3);
+  padding: 4px 0 8px;
+}
+@media (max-width: 640px) {
+  .sib-header, .sib-row { grid-template-columns: 1fr 1fr 60px; }
+  .sib-header span:first-child, .sib-label { font-size: 12px; }
+}

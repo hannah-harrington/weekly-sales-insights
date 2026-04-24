@@ -48,6 +48,7 @@ from pipeline.sources import news as news_fetcher
 from pipeline.sources import linkedin as linkedin_source
 from pipeline import slack_notify
 from pipeline import lead_notify
+from pipeline import signal_tracker
 
 
 def get_monday_date() -> date:
@@ -759,6 +760,16 @@ def main():
     else:
         print("Skipping CSV archive (--no-archive).")
     print()
+
+    # --- Signal tracker ---
+    if not args.dry_run:
+        print("Updating signal pipeline tracker...")
+        try:
+            signal_tracker.run_tracker(window_days=180, dry_run=False)
+            print("  signal_tracker.json written.")
+        except Exception as exc:
+            print(f"  [warn] Signal tracker failed: {exc}")
+        print()
 
     # --- Deploy ---
     if args.deploy:
